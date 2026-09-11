@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\RoleUserEnum;
+use App\Enums\JenjangJabatanEnum;
 use App\Enums\StatusJadwalUjianEnum;
-use App\Enums\TujuanUjianEnum;
 use App\Repositories\JadwalUjianRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
@@ -30,26 +29,24 @@ class DashboardPesertaController extends Controller
 
         // Ujian terjadwal
         $ujian = $this->jadwalUjianRepository->getByPesertaAndStatus($user->id, StatusJadwalUjianEnum::TERJADWAL->value);
-      
-        // Handling show jenjang_tujuan or jabatan_tujuan
-        if ($ujian->tujuan_ujian->value == TujuanUjianEnum::KENAIKAN_JENJANG->value) {
-            $jenjangJabatanTujuan = $ujian->jejang_tujuan;
-            $lebelJenjangJabatanTujuan = 'Jenjang Dituju';
-        }elseif ($ujian->tujuan_ujian->value == TujuanUjianEnum::PERPINDAHAN_JABATAN->value) {
-            $jenjangJabatanTujuan = $ujian->jabatan_tujuan;
-            $lebelJenjangJabatanTujuan = 'Jabatan Dituju';
-        }else {
-            $lebelJenjangJabatanTujuan = '-';
-            $jenjangJabatanTujuan = '-';
+       
+        // level
+        if ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_PERTAMA->value) {
+            $level = 'level 1';
+        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
+            $level = 'level 2 dan 3';
+        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MADYA->value) {
+            $level = 'level 4';
+        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
+            $level = 'level 5';
+        }else{
+            $level = '-';
         }
-
-
 
         return view('peserta.beranda', compact(
             'user', 
             'ujian',
-            'lebelJenjangJabatanTujuan',
-            'jenjangJabatanTujuan'
+            'level',
         ));
     }
 }

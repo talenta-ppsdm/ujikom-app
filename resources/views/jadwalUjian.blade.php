@@ -161,7 +161,7 @@
                         <option value="" 
                                 disabled 
                                 {{ old('jenjang_tujuan', $j->jenjang_tujuan) ? '' : 'selected' }}>Pilih Jenjang Tujuan...</option>
-                        @foreach(['Ahli Pertama', 'Ahli Muda', 'Ahli Madya', 'Ahli Utama'] as $jenjang)
+                        @foreach(['ahli pertama', 'ahli muda', 'ahli madya', 'ahli utama'] as $jenjang)
                           <option value="{{ $jenjang }}" {{ old('jenjang_tujuan', $j->jenjang_tujuan) == $jenjang ? 'selected' : '' }}>
                             {{ $jenjang }}
                           </option>
