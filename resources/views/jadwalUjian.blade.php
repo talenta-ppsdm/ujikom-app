@@ -56,7 +56,9 @@
           <tr>
             <td>{{ $no++ }}</td>
             <td><strong>{{ $j->peserta->nama }}</strong><br><small>{{ $j->peserta->nip }}</small></td>
-            <td>{{ ucfirst($j->tujuan_ujian) }}</td>
+            <td>
+              <strong>{{ ucfirst($j->tujuan_ujian?->value) }}</strong><br> {{ $j->tujuan_formatted }}
+            </td>
             <td>
               <strong>{{ \Carbon\Carbon::parse($j->tanggal_ujian)->format('d M Y') }}</strong>
               <br>
@@ -135,7 +137,12 @@
                     <!-- Tujuan Ujian -->
                     <div class="col-md-6">
                       <label for="tujuan_ujian_{{ $j->id }}" class="form-label">Tujuan Ujian*</label>
-                      <select class="form-control form-select-custom" id="tujuan_ujian_{{ $j->id }}" name="tujuan_ujian" required>
+                      
+                      <select class="form-control form-select-custom select-tujuan-ujian" 
+                              id="tujuan_ujian_{{ $j->id }}" 
+                              name="tujuan_ujian" 
+                              data-target-suffix="{{ $j->id }}" 
+                              required>
                         <option value="" disabled {{ old('tujuan_ujian', $j->tujuan_ujian) ? '' : 'selected' }}>Pilih Tujuan Ujian...</option>
                         @foreach($tujuan as $key => $value)
                           <option value="{{ $key }}" {{ old('tujuan_ujian', $j->tujuan_ujian) == $key ? 'selected' : '' }}>
@@ -143,6 +150,33 @@
                           </option>
                         @endforeach
                       </select>
+                    </div>
+                    
+                    <!-- Jenjang Tujuan -->
+                    <div class="col-md-12 d-none" id="wrapper-jenjang-{{ $j->id }}">
+                      <label class="form-label" for="jenjang_tujuan_{{ $j->id }}">Jenjang Tujuan*</label>
+                      
+                      <select class="form-control form-select-custom" 
+                              id="jenjang_tujuan_{{ $j->id }}" 
+                              name="jenjang_tujuan">
+                        <option value="" disabled {{ old('jenjang_tujuan', $j->jenjang_tujuan) ? '' : 'selected' }}>Pilih Jenjang Tujuan...</option>
+                        @foreach(['Ahli Pertama', 'Ahli Muda', 'Ahli Madya', 'Ahli Utama'] as $jenjang)
+                          <option value="{{ $jenjang }}" {{ old('jenjang_tujuan', $j->jenjang_tujuan) == $jenjang ? 'selected' : '' }}>
+                            {{ $jenjang }}
+                          </option>
+                        @endforeach
+                      </select>
+                    </div>
+                    
+                    <!-- Jabatan Tujuan -->
+                    <div class="col-md-12 d-none" id="wrapper-jabatan-{{ $j->id }}">
+                      <label for="jabatan_tujuan_{{ $j->id }}" class="form-label">Jabatan Tujuan*</label>
+                      <input type="text" 
+                             class="form-control" 
+                             id="jabatan_tujuan_{{ $j->id }}" 
+                             name="jabatan_tujuan" 
+                             placeholder="Masukkan nama jabatan tujuan..."
+                             value="{{ old('jabatan_tujuan', $j->jabatan_tujuan) }}">
                     </div>
               
                     <!-- Penilai Teknis / Penguji -->
@@ -241,6 +275,22 @@
                 @endforeach
               </select>
             </div>
+
+            <div class="col-md-12 d-none" id="wrapper-jenjang-create">
+              <label for="jenjang_tujuan_create" class="form-label">Jenjang Tujuan*</label>
+              <select class="form-control form-select-custom" id="jenjang_tujuan_create">
+                  <option selected disabled>Pilih Jenjang Tujuan...</option>
+                  <option value="ahli pertama">Ahli Pertama</option>
+                  <option value="ahli muda">Ahli Muda</option>
+                  <option value="ahli madya">Ahli Madya</option>
+                  <option value="ahli utama">Ahli Utama</option>
+              </select>
+            </div>
+
+            <div class="col-md-12 d-none" id="wrapper-jabatan">
+              <label for="jabatan_tujuan_create">Jabatan Tujuan*</label>
+              <input type="text" class="form-control" id="jabatan_tujuan_create" name="jabatan_tujuan" placeholder="Masukkan nama jabtan tujuan...">
+            </div>
               
             <div class="col-md-12">
               <label for="penguji" class="form-label">Penilai Teknis*</label>
@@ -287,3 +337,39 @@
   </div>
 </div>
 <!-- END Modal Tambah Jadwal Ujian -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const allTujuanSelects = document.querySelectorAll('.select-tujuan-ujian');
+
+    allTujuanSelects.forEach(selectEl => {
+        const suffix = selectEl.getAttribute('data-target-suffix');
+        
+        const wrapperJenjang = document.getElementById(`wrapper-jenjang-${suffix}`);
+        const wrapperJabatan = document.getElementById(`wrapper-jabatan-${suffix}`);
+        const inputJenjang = document.getElementById(`jenjang_tujuan_${suffix}`);
+        const inputJabatan = document.getElementById(`jabatan_tujuan_${suffix}`);
+
+        function updateVisibility(val) {
+            if (wrapperJenjang) wrapperJenjang.classList.add('d-none');
+            if (wrapperJabatan) wrapperJabatan.classList.add('d-none');
+            if (inputJenjang) inputJenjang.removeAttribute('required');
+            if (inputJabatan) inputJabatan.removeAttribute('required');
+
+            if (val === 'kenaikan jenjang') {
+                if (wrapperJenjang) wrapperJenjang.classList.remove('d-none');
+                if (inputJenjang) inputJenjang.setAttribute('required', 'required');
+            } else if (val === 'perpindahan jabatan') {
+                if (wrapperJabatan) wrapperJabatan.classList.remove('d-none');
+                if (inputJabatan) inputJabatan.setAttribute('required', 'required');
+            }
+        }
+
+        updateVisibility(selectEl.value);
+
+        selectEl.addEventListener('change', function () {
+            updateVisibility(this.value);
+        });
+    });
+});
+</script>

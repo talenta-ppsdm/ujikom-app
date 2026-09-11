@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jadwal_ujian', function (Blueprint $table) {
-            $table->string('jabatan_tujuan', 225)->nullable();
-            $table->string('jenjang_tujuan', 225)->nullable();
+            $table->string('jabatan_tujuan', 255)->nullable();
+            $table->string('jenjang_tujuan', 255)->nullable();
         });
     }
 

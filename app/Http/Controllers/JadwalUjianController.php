@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TujuanUjianEnum;
 use App\Models\JadwalUjian;
 use App\Repositories\JadwalUjianRepository;
 use App\Repositories\PengujiRepository;
@@ -30,7 +31,7 @@ class JadwalUjianController extends Controller
         $jadwalUjian = $this->jadwalUjianRepository->all();
         $peserta = $this->pesertaRepository->all();
         $penguji = $this->pengujiRepository->all();
-        $tujuan = JadwalUjian::getTujuanLabels();
+        $tujuan = TujuanUjianEnum::options();
         $listStatus = JadwalUjian::getStatusLabels();
 
         return view('jadwalUjian', compact(
@@ -53,6 +54,8 @@ class JadwalUjianController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'lokasi' => 'required|string|max:255',
             'keterangan' => 'nullable|string|max:255',
+            'jabatan_tujuan' => 'nullable|string|max:255',
+            'jenjang_tujuan' => 'nullable|string|max:255',
         ]);
 
         // count the duration in minutes
@@ -79,6 +82,8 @@ class JadwalUjianController extends Controller
             'lokasi' => 'required|string|max:255',
             'keterangan' => 'nullable|string|max:255',
             'status' => 'required|in:' . implode(',', array_keys(JadwalUjian::getStatusLabels())),
+            'jabatan_tujuan' => 'nullable|string|max:255',
+            'jenjang_tujuan' => 'nullable|string|max:255',
         ]);
 
         // count the duration in minutes

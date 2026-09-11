@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TujuanUjianEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class JadwalUjian extends Model
@@ -18,24 +19,27 @@ class JadwalUjian extends Model
         'keterangan',
         'status',
         'tujuan_ujian',
+        'jabatan_tujuan',
+        'jenjang_tujuan'
     ];
 
     protected $casts = [
         'tanggal_ujian' => 'date',
+        'tujuan_ujian' => TujuanUjianEnum::class
     ];
 
-    public static function getTujuanLabels()
+    // Menampilkan jabatan tujuan atau jenjang tujuan berdasarkan tujuan ujikom. Pemanggilan di blade $j->tujuan_formated
+    public function getTujuanFormattedAttribute(): string
     {
-        return [
-            'kenaikan jenjang' => 'Ujian Kompetensi Kenaikan Jenjang Jabatan',
-            'perpindahan jabatan' => 'Ujian Kompetensi Perpindahan Jabatan',
-        ];
-    }
+        if (! $this->tujuan_ujian) {
+            return '-';
+        }
 
-    public function getTujuanAttribute(string $value)
-    {
-        $tujuanLabels = self::getTujuanLabels();
-        return $tujuanLabels[$value] ?? $value;
+        return match ($this->tujuan_ujian) {
+            TujuanUjianEnum::PERPINDAHAN_JABATAN => ($this->jabatan_tujuan ?? '-'),
+            TujuanUjianEnum::KENAIKAN_JENJANG => ($this->jenjang_tujuan ?? '-'),
+            default => $this->tujuan_ujian->label(),
+        };
     }
 
     public static function getStatusLabels()
