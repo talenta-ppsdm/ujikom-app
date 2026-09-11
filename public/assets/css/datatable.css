@@ -1,0 +1,17 @@
+.table-card-custom .dt-container {
+    padding: 1.25rem;
+}
+
+.table-card-custom .dt-container .dt-search input,
+.table-card-custom .dt-container .dt-length select {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-sm);
+    padding: 0.45rem 0.65rem;
+    background: var(--card-background);
+}
+
+.table-card-custom .dt-container .dt-paging .dt-paging-button.current {
+    background: var(--brand-lime);
+    border-color: var(--brand-lime);
+    color: #fff !important;
+}
