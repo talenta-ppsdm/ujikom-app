@@ -54,7 +54,6 @@ class JadwalUjianController extends Controller
             'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
             'lokasi' => 'required|string|max:255',
             'keterangan' => 'nullable|string|max:255',
-            'jabatan_tujuan' => 'nullable|string|max:255',
             'jenjang_tujuan' => 'nullable|string|max:255',
         ]);
 
@@ -65,7 +64,13 @@ class JadwalUjianController extends Controller
 
         $status = array_key_first(JadwalUjian::getStatusLabels());
 
-        $this->jadwalUjianRepository->create(array_merge($validatedData, ['durasi' => $durasi, 'status' => $status]));
+        $jabatanTujuan = 'penata kelola perumahan';
+
+        $this->jadwalUjianRepository->create(array_merge($validatedData, [
+            'durasi' => $durasi, 
+            'status' => $status, 
+            'jabatan_tujuan' => $jabatanTujuan
+        ]));
 
         return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
     }
@@ -91,7 +96,9 @@ class JadwalUjianController extends Controller
         $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
         $durasi = $waktuMulai->diffInMinutes($waktuSelesai);
 
-        $this->jadwalUjianRepository->update(array_merge($validatedData, ['durasi' => $durasi]), $id);
+        $jabatanTujuan = 'penata kelola perumahan';
+
+        $this->jadwalUjianRepository->update(array_merge($validatedData, ['durasi' => $durasi, 'jabatan_tujuan' => $jabatanTujuan]), $id);
 
         return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diperbarui.');
     }

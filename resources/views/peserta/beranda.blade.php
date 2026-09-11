@@ -39,7 +39,7 @@
             <div class="ui-card-heading">
                 <div>
                     <p class="ui-eyebrow">Status Partisipasi Uji Kompetensi</p>
-                    <h2 class="ui-card-title" id="exam-status-title">{{ ucwords($ujian['tujuan_ujian']) }}</h2>
+                    <h2 class="ui-card-title" id="exam-status-title">{{ ucwords($ujian['tujuan_ujian']->value) }}</h2>
                 </div>
                 <span class="ui-status-badge">{{ $ujian['status']}}</span>
             </div>
@@ -62,12 +62,8 @@
                     <span class="ui-metric-value">{{ $ujian->durasi }} Menit</span>
                 </div>
                 <div>
-                    <span class="ui-metric-label">Jenjang Dituju</span>
-                    <span class="ui-metric-value ui-metric-value-accent">{{ $user->peserta->jenjang ?? 'JF Ahli Pertama' }}</span>
-                </div>
-                <div>
-                    <span class="ui-metric-label">Cakupan Level</span>
-                    <span class="ui-metric-value ui-metric-value-warning">Level 1 (Acak)</span>
+                    <span class="ui-metric-label">{{ $lebelJenjangJabatanTujuan }}</span>
+                    <span class="ui-metric-value ui-metric-value-accent">{{ $jenjangJabatanTujuan }}</span>
                 </div>
             </div>
 

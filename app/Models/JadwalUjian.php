@@ -28,20 +28,6 @@ class JadwalUjian extends Model
         'tujuan_ujian' => TujuanUjianEnum::class
     ];
 
-    // Menampilkan jabatan tujuan atau jenjang tujuan berdasarkan tujuan ujikom. Pemanggilan di blade $j->tujuan_formated
-    public function getTujuanFormattedAttribute(): string
-    {
-        if (! $this->tujuan_ujian) {
-            return '-';
-        }
-
-        return match ($this->tujuan_ujian) {
-            TujuanUjianEnum::PERPINDAHAN_JABATAN => ($this->jabatan_tujuan ?? '-'),
-            TujuanUjianEnum::KENAIKAN_JENJANG => ($this->jenjang_tujuan ?? '-'),
-            default => $this->tujuan_ujian->label(),
-        };
-    }
-
     public static function getStatusLabels()
     {
         return [
