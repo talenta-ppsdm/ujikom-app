@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardPesertaController;
 use App\Http\Controllers\JadwalUjianController;
 use App\Http\Controllers\PengujiController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\UjianController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,3 +43,5 @@ Route::put('/jadwal-ujian/{id}', [JadwalUjianController::class, 'update'])->name
 Route::delete('/jadwal-ujian/{id}', [JadwalUjianController::class, 'destroy'])->name('jadwal-ujian.destroy');
 
 Route::get('/beranda', [DashboardPesertaController::class, 'index'])->name('dashboard-peserta.index');
+
+Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.start');

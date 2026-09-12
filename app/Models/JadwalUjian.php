@@ -20,12 +20,18 @@ class JadwalUjian extends Model
         'status',
         'tujuan_ujian',
         'jabatan_tujuan',
-        'jenjang_tujuan'
+        'jenjang_tujuan',
+        'realtime_mulai',
+        'realtime_selesai',
+        'target_selesai'
     ];
 
     protected $casts = [
         'tanggal_ujian' => 'date',
-        'tujuan_ujian' => TujuanUjianEnum::class
+        'tujuan_ujian' => TujuanUjianEnum::class,
+        'realtime_mulai' => 'datetime',
+        'realtime_selesai' => 'datetime',
+        'target_selesai' => 'datetime',
     ];
 
     public static function getStatusLabels()

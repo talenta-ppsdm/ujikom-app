@@ -73,11 +73,13 @@
                     </div>
                 </div>
     
-                <button class="ui-card-action" type="button">
-                    <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                    Masuk Ruang Ujian CBT Sekarang
-                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                </button>
+                <a href="{{ route('ujian.start', $ujian->id) }}">
+                    <button class="ui-card-action" type="submit">
+                        <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
+                        Masuk Ruang Ujian CBT Sekarang
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </a>
             </section>
         </div>
     
