@@ -11,6 +11,7 @@ class BankSoal extends Model
         'kode',
         'kategori',
         'level',
+        'poin',
         'soal',
         'jawaban_a',
         'jawaban_b',

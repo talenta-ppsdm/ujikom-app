@@ -202,6 +202,11 @@
                       </select>
                     </div>
 
+                    <div class="col-md-2">
+                      <label for="poin" class="form-label">Poin*</label>
+                      <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', $bs->poin ?? 2) }}" min="1" required>
+                    </div>
+
                     <div class="col-md-12">
                       <label for="soal" class="form-label">Pertanyaan*</label>
                       <textarea class="form-control-custom" id="soal" name="soal" rows="3" required>{{  $bs->soal }}</textarea>
@@ -288,6 +293,11 @@
                     <option value="{{ $levelValue }}">{{ $levelLabel }}</option>
                 @endforeach
               </select>
+            </div>
+
+            <div class="col-md-2">
+              <label for="poin" class="form-label">Poin*</label>
+              <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', 2) }}" min="1" required>
             </div>
 
             <div class="col-md-12">

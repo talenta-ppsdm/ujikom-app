@@ -39,8 +39,8 @@ class UjianController extends Controller
         }
 
         // check if the exam time is over (for example, the user closes the tab and then opens it again when the time runs out)
-        if (now()->greaterThanOrEqualTo($jadwalUjian->target_selesai)) {
-            if ($jadwalUjian->status !== StatusJadwalUjianEnum::MENUNGGU_HASIL->value) {
+        if ($jadwalUjian->target_selesai && now()->greaterThanOrEqualTo($jadwalUjian->target_selesai)) {
+            if ($jadwalUjian->getRawOriginal('status') !== StatusJadwalUjianEnum::MENUNGGU_HASIL->value) {
                 $jadwalUjian->update([
                     'realtime_selesai' => $jadwalUjian->target_selesai,
                     'status'           => StatusJadwalUjianEnum::MENUNGGU_HASIL->value,
@@ -52,7 +52,6 @@ class UjianController extends Controller
         // Change target_selesai to unix format
         $targetTimestamp = $jadwalUjian->target_selesai->timestamp;
 
-
         // HANDLING EXAM QUESTION
         $totalSoal = 30;
 
@@ -62,31 +61,29 @@ class UjianController extends Controller
             'ahli madya'    => [4],
             'ahli utama'    => [5],
         ];
-        $levelPeserta = $levelQuest[strtolower($jadwalUjian->jenjang_tujuan)];
+        $levelPeserta = $levelQuest[strtolower($jadwalUjian->jenjang_tujuan)] ?? [];
 
         $listKategoriSoal = $this->bankSoalRepository->getCategoryByLevel($levelPeserta);
         $jumlahKategori = $listKategoriSoal->count();
 
-        if ($jumlahKategori === 0) {
-            return redirect('/beranda')->with('error', 'Belum ada soal tersedia untuk jenajng tujuan anda');
-        }
-
-        $limitPerKategori = (int) floor($totalSoal / $jumlahKategori);
-        $sisaSoal = $totalSoal % $jumlahKategori;
-
         $soalUjian = collect();
-        foreach ($listKategoriSoal as $index => $kategori) {
-            // If there's a remainder (for example 30/7 = 4 remainder 2), the first 2 categories can get 1 extra question
-            $limit = $limitPerKategori + ($index < $sisaSoal ? 1 : 0);
-    
-            $soal = $this->bankSoalRepository->getByLevalAndCategory($levelPeserta, $kategori, $limit);
-    
-            $soalUjian = $soalUjian->merge($soal);
+        if ($jumlahKategori > 0) {
+            $limitPerKategori = (int) floor($totalSoal / $jumlahKategori);
+            $sisaSoal = $totalSoal % $jumlahKategori;
+
+            foreach ($listKategoriSoal as $index => $kategori) {
+                // If there's a remainder (for example 30/7 = 4 remainder 2), the first 2 categories can get 1 extra question
+                $limit = $limitPerKategori + ($index < $sisaSoal ? 1 : 0);
+
+                $soal = $this->bankSoalRepository->getByLevalAndCategory($levelPeserta, $kategori, $limit);
+
+                $soalUjian = $soalUjian->merge($soal);
+            }
         }
     
         // Shuffle question
         $soalUjian = $soalUjian->shuffle();
-
-        return view('ujian.show', compact('jadwalUjian', 'targetTimestamp', 'soalUjian'));
+ 
+        return view('peserta.ujian', compact('jadwalUjian', 'targetTimestamp', 'soalUjian'));
     }
 }

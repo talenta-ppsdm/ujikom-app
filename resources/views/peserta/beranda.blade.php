@@ -72,14 +72,25 @@
                         <span class="ui-metric-value ui-metric-value-accent">{{ ucwords($level) }}</span>
                     </div>
                 </div>
-    
-                <a href="{{ route('ujian.start', $ujian->id) }}">
-                    <button class="ui-card-action" type="submit">
-                        <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                        Masuk Ruang Ujian CBT Sekarang
-                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                    </button>
-                </a>
+
+                @if(strtolower($ujian->status) === $statusUjian[1])
+                    <a href="{{ route('ujian.start', $ujian->id) }}">
+                        <button class="ui-card-action" type="submit">
+                            <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
+                            Lanjutkan Ujian Sekarang
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                @else
+                    <a href="{{ route('ujian.start', $ujian->id) }}">
+                        <button class="ui-card-action" type="submit">
+                            <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
+                            Mulai Ujian Sekarang
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                @endif
+                
             </section>
         </div>
     

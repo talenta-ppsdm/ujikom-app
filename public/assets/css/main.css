@@ -1918,6 +1918,325 @@ body.sidebar-minimized .sidebar-profile {
     }
 }
 
+/* Participant exam workspace */
+.peserta-exam-page {
+    padding-bottom: 1rem;
+}
+
+.ui-exam-question-card,
+.ui-exam-sidebar {
+    height: 100%;
+}
+
+.ui-exam-question-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 680px;
+}
+
+.ui-exam-heading {
+    align-items: center;
+}
+
+.ui-exam-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.ui-exam-number,
+.ui-exam-points,
+.ui-exam-category {
+    padding: 0.4rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.ui-exam-number {
+    color: #FFFFFF;
+    background: #3F54E4;
+}
+
+.ui-exam-category {
+    color: #52627D;
+    background: #F1F4F8;
+}
+
+.ui-exam-points {
+    color: #4059D8;
+    background: #EEF1FF;
+}
+
+.ui-exam-timer {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.85rem;
+    border: 1px solid #DDE4F0;
+    border-radius: 10px;
+    color: #4059D8;
+    background: #F8FAFD;
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.ui-exam-timer i {
+    color: #46A174;
+}
+
+.ui-exam-progress {
+    height: 4px;
+    margin: 1.25rem 0 1.75rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #EEF1F6;
+}
+
+.ui-exam-progress span {
+    display: block;
+    width: 6%;
+    height: 100%;
+    border-radius: inherit;
+    background: #3F54E4;
+}
+
+.ui-exam-question {
+    flex: 1;
+}
+
+.ui-exam-question .ui-eyebrow {
+    margin-bottom: 0.75rem;
+    color: #91A0BB;
+}
+
+.ui-exam-question-title {
+    max-width: 900px;
+    margin: 0 0 1.7rem;
+    color: #111A2B;
+    font-size: 1.2rem;
+    line-height: 1.65;
+}
+
+.ui-exam-options {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.ui-exam-option {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    padding: 1rem 1.1rem;
+    border: 1px solid #E3E9F2;
+    color: #172033;
+    background: #FFFFFF;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ui-exam-option:hover,
+.ui-exam-option.is-selected {
+    border-color: #5577F1;
+    background: #F5F8FF;
+    box-shadow: 0 0 0 3px rgba(85, 119, 241, 0.08);
+}
+
+.ui-exam-option-letter {
+    display: grid;
+    flex: 0 0 2rem;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 10px;
+    color: #52627D;
+    background: #F1F4F8;
+    font-weight: 800;
+}
+
+.ui-exam-option.is-selected .ui-exam-option-letter {
+    color: #FFFFFF;
+    background: #3F54E4;
+}
+
+.ui-exam-option-check {
+    margin-left: auto;
+    color: #3F54E4;
+    opacity: 0;
+}
+
+.ui-exam-option.is-selected .ui-exam-option-check {
+    opacity: 1;
+}
+
+.ui-exam-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #E7ECF3;
+}
+
+.ui-exam-secondary,
+.ui-exam-doubt {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.65rem 1rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.ui-exam-secondary {
+    border: 1px solid #E3E9F2;
+    color: #AAB4C5;
+    background: #FFFFFF;
+}
+
+.ui-exam-secondary:not(:disabled) {
+    color: #52627D;
+    cursor: pointer;
+}
+
+.ui-exam-doubt {
+    border: 1px solid #F3D995;
+    color: #B87916;
+    background: #FFF9E9;
+    cursor: pointer;
+}
+
+.ui-exam-next {
+    width: auto;
+    min-width: 9rem;
+    margin-top: 0;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.ui-exam-sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 1.65rem;
+}
+
+.ui-exam-sidebar .ui-card-heading {
+    align-items: center;
+    padding-bottom: 1rem;
+}
+
+.ui-exam-sidebar .ui-card-title {
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.ui-exam-answered-count {
+    color: #3F54E4;
+    font-size: 0.78rem;
+}
+
+.ui-exam-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #E7ECF3;
+    color: #74829A;
+    font-size: 0.7rem;
+}
+
+.ui-exam-legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.ui-exam-legend i {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 3px;
+    background: #E8EDF4;
+}
+
+.ui-exam-legend i.is-answered { background: #46A174; }
+.ui-exam-legend i.is-doubt { background: #EBA313; }
+.ui-exam-legend i.is-empty { border: 1px solid #D8E0EB; }
+
+.ui-exam-number-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    align-content: start;
+    padding: 1rem 0;
+}
+
+.ui-exam-number {
+    min-height: 2.35rem;
+    padding: 0.45rem;
+    border: 1px solid #E3E9F2;
+    border-radius: 11px;
+    color: #52627D;
+    background: #F8FAFD;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.ui-exam-number.is-current {
+    border-color: #3F54E4;
+    color: #FFFFFF;
+    background: #3F54E4;
+}
+
+.ui-exam-number.is-answered {
+    border-color: #46A174;
+    color: #FFFFFF;
+    background: #46A174;
+}
+
+.ui-exam-number.is-doubt {
+    border-color: #EBA313;
+    color: #9A680E;
+    background: #FFF5D9;
+}
+
+.ui-exam-submit {
+    margin-top: auto;
+    border-radius: 12px;
+    background: #46A174;
+    box-shadow: 0 10px 18px rgba(70, 161, 116, 0.18);
+    font-size: 0.78rem;
+}
+
+@media (max-width: 768px) {
+    .ui-exam-question-card {
+        min-height: 0;
+    }
+
+    .ui-exam-heading,
+    .ui-exam-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .ui-exam-timer,
+    .ui-exam-next,
+    .ui-exam-secondary,
+    .ui-exam-doubt {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
 /* Stat-specific cards */
 .card-stat {
     height: 100%;

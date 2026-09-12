@@ -26,9 +26,10 @@ class DashboardPesertaController extends Controller
     public function index()
     {
         $user = $this->userRepository->with('peserta')->find(Auth::id());
+        $statusUjian = [StatusJadwalUjianEnum::TERJADWAL->value, StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value];
 
         // Ujian terjadwal
-        $ujian = $this->jadwalUjianRepository->getByPesertaAndStatus($user->id, StatusJadwalUjianEnum::TERJADWAL->value);
+        $ujian = $this->jadwalUjianRepository->getByPesertaAndStatus($user->id, $statusUjian);
        
         // level
         if ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_PERTAMA->value) {
@@ -47,6 +48,7 @@ class DashboardPesertaController extends Controller
             'user', 
             'ujian',
             'level',
+            'statusUjian',
         ));
     }
 }

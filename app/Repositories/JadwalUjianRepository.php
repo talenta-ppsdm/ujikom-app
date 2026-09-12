@@ -27,12 +27,11 @@ class JadwalUjianRepository extends BaseRepository
         // Add your boot logic here
     }
 
-    public function getByPesertaAndStatus(int $pesertId, string $status)
+    public function getByPesertaAndStatus(int $pesertId, array $status)
     {
-        $jadwal = $this->model->where([
-            ['peserta_id', '=', $pesertId],
-            ['status', '=', $status]
-        ])->first();
+        $jadwal = $this->model->where('peserta_id', '=', $pesertId)
+            ->whereIn('status', $status)
+            ->first();
         return $jadwal;
     }
 }
