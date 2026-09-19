@@ -67,7 +67,7 @@
       <thead>
         <tr>
           <th>No</th>
-          <th>Pertanyaan</th>
+          <th class="bank-soal-question-column">Pertanyaan</th>
           <th>Kategori</th>
           <th>Level & Target Jenjang</th>
           <th class="text-center">Aksi</th>
@@ -78,7 +78,7 @@
         @foreach($bankSoal as $bs)
         <tr>
           <td class="table-order-id">{{ $no++ }}</td>
-          <td>
+          <td class="bank-soal-question-column">
             <div class="table-user-cell">
               <div>
                   <span class="badge-table primary">{{ $bs->kode }}</span>
@@ -116,6 +116,7 @@
                 <div class="d-flex flex-wrap gap-2 mb-4">
                   <span class="badge-table primary">{{ $bs->level_name }}</span>
                   <span class="badge-table primary">{{ ucwords($bs->kategori) }}</span>
+                  <span class="badge-table primary">Poin {{ $bs->poin }}</span>
                 </div>
 
                 <div class="alert-custom alert-custom-primary mb-4">
@@ -180,12 +181,17 @@
                 @method('PUT')
                 <div class="modal-body">
                   <div class="row g-3">
-                    <div class="col-md-2">
+                    <div class="col-md-6">
                       <label for="kode" class="form-label">Kode*</label>
                       <input type="text" class="form-control" id="kode" name="kode" value="{{ $bs->kode }}" required>
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="col-md-6">
+                      <label for="poin" class="form-label">Poin*</label>
+                      <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', $bs->poin ?? 2) }}" min="1" required>
+                    </div>
+
+                    <div class="col-md-6">
                       <label for="kategori" class="form-label">Kategori*</label>
                       <select class="form-control form-select-custom" id="kategori" name="kategori" required>
                         <option disabled {{ old('kategori', $bs->kategori ?? '') == '' ? 'selected' : '' }}>
@@ -200,7 +206,7 @@
                       </select>
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="col-md-6">
                       <label for="level" class="form-label">Level*</label>
                       <select class="form-control form-select-custom" id="level" name="level" required>
                         <option disabled {{ old('level', $bs->level ?? '') == '' ? 'selected' : '' }}>
@@ -213,11 +219,6 @@
                             </option>
                         @endforeach
                       </select>
-                    </div>
-
-                    <div class="col-md-2">
-                      <label for="poin" class="form-label">Poin*</label>
-                      <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', $bs->poin ?? 2) }}" min="1" required>
                     </div>
 
                     <div class="col-md-12">
@@ -281,12 +282,17 @@
         @csrf 
         <div class="modal-body">
           <div class="row g-3">
-            <div class="col-md-2">
+            <div class="col-md-6">
                 <label for="kode" class="form-label">Kode*</label>
                 <input type="text" class="form-control" id="kode" name="kode" value="{{ $newCode }}" readonly required>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-6">
+              <label for="poin" class="form-label">Poin*</label>
+              <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', 2) }}" min="1" required>
+            </div>
+
+            <div class="col-md-6">
               <label for="kategori" class="form-label">Kategori*</label>
               <select class="form-control form-select-custom" id="kategori" name="kategori" required>
                 <option selected disabled>Pilih Kategori soal...</option>
@@ -297,7 +303,7 @@
               </select>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-6">
               <label for="level" class="form-label">Level*</label>
               <select class="form-control form-select-custom" id="level" name="level" required>
                 <option selected disabled>Pilih Level...</option>
@@ -306,11 +312,6 @@
                     <option value="{{ $levelValue }}">{{ $levelLabel }}</option>
                 @endforeach
               </select>
-            </div>
-
-            <div class="col-md-2">
-              <label for="poin" class="form-label">Poin*</label>
-              <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', 2) }}" min="1" required>
             </div>
 
             <div class="col-md-12">
@@ -367,6 +368,16 @@
       <form action="{{ route('banksoal.import') }}" method="POST" enctype="multipart/form-data">
         @csrf 
         <div class="modal-body">
+          <div class="d-flex align-items-center justify-content-between gap-3 p-3 mb-4 border rounded bg-light">
+            <div>
+              <h3 class="h6 mb-1">Belum punya template?</h3>
+              <p class="mb-0 text-muted small">Download template Excel untuk melihat format kolom yang diperlukan.</p>
+            </div>
+            <a href="{{ route('banksoal.template') }}" class="btn-custom btn-custom-primary flex-shrink-0">
+              <i class="bi bi-download me-1"></i>Download Template
+            </a>
+          </div>
+
           <div class="col-md-12">
             <label for="fileSoal" class="form-label">Pilih File (Excel)</label>
            <input class="form-control @error('fileBankSoal') is-invalid @enderror" type="file" id="fileSoal" name="fileBankSoal" accept=".xlsx, .xls" required>

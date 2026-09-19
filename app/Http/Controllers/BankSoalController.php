@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\BankSoalTemplateExport;
+use App\Exports\TemplateBankSoalExport;
 use App\Imports\BankSoalImport;
 use App\Repositories\BankSoalRepository;
 use App\Models\BankSoal;
@@ -69,6 +71,11 @@ class BankSoalController extends Controller
         Excel::import(new BankSoalImport($this->bankSoalRepository), $path);
 
         return redirect()->back()->with('success', 'Data soal berhasil di-import!');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new TemplateBankSoalExport(), 'template-import-bank-soal.xlsx');
     }
 
     public function update(Request $request, int $id)

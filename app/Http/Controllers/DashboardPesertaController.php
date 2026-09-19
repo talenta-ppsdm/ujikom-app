@@ -26,21 +26,23 @@ class DashboardPesertaController extends Controller
     public function index()
     {
         $user = $this->userRepository->with('peserta')->find(Auth::id());
-        $statusUjian = [StatusJadwalUjianEnum::TERJADWAL->value, StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value];
+        $ujian = $this->jadwalUjianRepository->getByPeserta($user->id);
 
-        // Ujian terjadwal
-        $ujian = $this->jadwalUjianRepository->getByPesertaAndStatus($user->id, $statusUjian);
-       
-        // level
-        if ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_PERTAMA->value) {
-            $level = 'level 1';
-        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
-            $level = 'level 2 dan 3';
-        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MADYA->value) {
-            $level = 'level 4';
-        }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
-            $level = 'level 5';
-        }else{
+        $statusUjian = strtolower($ujian->status);
+
+        if ($statusUjian == StatusJadwalUjianEnum::TERJADWAL || $statusUjian == StatusJadwalUjianEnum::SEDANG_BERLANGSUNG) {
+             if ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_PERTAMA->value) {
+                $level = 'level 1';
+            }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
+                $level = 'level 2 dan 3';
+            }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MADYA->value) {
+                $level = 'level 4';
+            }elseif ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_MUDA->value) {
+                $level = 'level 5';
+            }else{
+                $level = '-';
+            }
+        }else {
             $level = '-';
         }
 

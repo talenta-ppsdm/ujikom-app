@@ -58,4 +58,9 @@ class JadwalUjian extends Model
     {
         return $this->belongsTo(Penguji::class, 'penguji_id');
     }
+
+    public function jawabanUjian()
+    {
+        return $this->hasMany(JadwalUjian::class, 'jadwal_ujian_id');
+    }
 }

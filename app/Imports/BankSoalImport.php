@@ -14,7 +14,7 @@ class BankSoalImport implements ToModel, WithHeadingRow
     *
     * @return \Illuminate\Database\Eloquent\Model|null
     */
-    private string $lastKode;
+    private ?string $lastKode = null;
     protected BankSoalRepository $bankSoalRepository;
 
     public function __construct(BankSoalRepository $bankSoalRepository)
@@ -46,7 +46,7 @@ class BankSoalImport implements ToModel, WithHeadingRow
             'jawaban_c'     => $row['jawaban_c'],
             'jawaban_d'     => $row['jawaban_d'],
             'jawaban_e'     => $row['jawaban_e'],
-            'kunci'         => $row['kunci'],
+            'kunci'         => strtolower($row['kunci']),
             'level'         => $row['level'],
             'kategori'      => $row['kategori'],
             'poin'          => $row['poin'],

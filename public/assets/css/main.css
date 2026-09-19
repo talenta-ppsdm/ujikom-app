@@ -3554,6 +3554,13 @@ span.flatpickr-weekday {
     border-collapse: collapse;
 }
 
+#bankSoalTable .bank-soal-question-column {
+    width: 32% !important;
+    max-width: 32%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
 .table-custom th,
 .table-custom td {
     padding: 1rem 1.25rem;

@@ -34,6 +34,7 @@ Route::delete('/penguji/{id}', [PengujiController::class, 'destroy'])->name('pen
 
 Route::get('/bank-soal', [BankSoalController::class, 'index'])->name('banksoal.index');
 Route::post('/bank-soal', [BankSoalController::class, 'store'])->name('banksoal.store');
+Route::get('/bank-soal/template', [BankSoalController::class, 'downloadTemplate'])->name('banksoal.template');
 Route::post('/bank-soal/import', [BankSoalController::class, 'import'])->name('banksoal.import');
 Route::put('/bank-soal/{id}', [BankSoalController::class, 'update'])->name('banksoal.update');
 Route::delete('/bank-soal/{id}', [BankSoalController::class, 'destroy'])->name('banksoal.destroy');
@@ -46,3 +47,4 @@ Route::delete('/jadwal-ujian/{id}', [JadwalUjianController::class, 'destroy'])->
 Route::get('/beranda', [DashboardPesertaController::class, 'index'])->name('dashboard-peserta.index');
 
 Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.start');
+Route::post('/ujian/simpan', [UjianController::class, 'saveAnswer'])->name('ujian.saveAnswer');

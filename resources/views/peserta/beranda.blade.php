@@ -34,6 +34,25 @@
 <!-- END Hero Beranda -->
 
 <div class="row g-4">
+    <!-- Alert -->
+    @if(session('success'))
+    <div class="col-12 alert-custom alert-custom-success mt-3">
+        <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+        <div class="alert-custom-content">
+          {{ session('success') }}
+        </div>
+    </div>
+    @endif
+    @if(session('error'))
+    <div class="col-12 alert-custom alert-custom-danger mt-3">
+        <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+        <div class="alert-custom-content">
+          {{ session('error') }}
+        </div>
+    </div>
+    @endif
+    <!-- END Alert -->
+
     <!-- Left Section -->
     <div class="col-xl-8 col-lg-8">
         <div class="col-12 mb-3">
@@ -45,47 +64,64 @@
                     </div>
                     <span class="ui-status-badge">{{ $ujian['status']}}</span>
                 </div>
-    
-                <div class="ui-info-panel">
-                    <i class="bi bi-clock-history" aria-hidden="true"></i>
-                    <div>
-                        <p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
-                        <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <strong>{{ $ujian['jenjang_tujuan'] }}</strong>.</p>
+                
+                @if( $statusUjian == \App\Enums\StatusJadwalUjianEnum::TERJADWAL->value || $statusUjian == \App\Enums\StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value)
+                    <div class="ui-info-panel">
+                        <i class="bi bi-clock-history" aria-hidden="true"></i>
+                        <div>
+                            <p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
+                            <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <strong>{{ $ujian['jenjang_tujuan'] }}</strong>.</p>
+                        </div>
                     </div>
-                </div>
-    
-                <div class="ui-metric-grid">
-                    <div>
-                        <span class="ui-metric-label">Jumlah Soal</span>
-                        <span class="ui-metric-value">50 Butir</span>
+        
+                    <div class="ui-metric-grid">
+                        <div>
+                            <span class="ui-metric-label">Jumlah Soal</span>
+                            <span class="ui-metric-value">50 Butir</span>
+                        </div>
+                        <div>
+                            <span class="ui-metric-label">Durasi Ujian</span>
+                            <span class="ui-metric-value">{{ $ujian->durasi }} Menit</span>
+                        </div>
+                        <div>
+                            <span class="ui-metric-label">Jenjang Dituju</span>
+                            <span class="ui-metric-value ui-metric-value-accent">JF {{ $ujian->jenjang_tujuan }}</span>
+                        </div>
+                        <div>
+                            <span class="ui-metric-label">Cakupan Level</span>
+                            <span class="ui-metric-value ui-metric-value-accent">{{ ucwords($level) }}</span>
+                        </div>
                     </div>
-                    <div>
-                        <span class="ui-metric-label">Durasi Ujian</span>
-                        <span class="ui-metric-value">{{ $ujian->durasi }} Menit</span>
-                    </div>
-                    <div>
-                        <span class="ui-metric-label">Jenjang Dituju</span>
-                        <span class="ui-metric-value ui-metric-value-accent">JF {{ $ujian->jenjang_tujuan }}</span>
-                    </div>
-                    <div>
-                        <span class="ui-metric-label">Cakupan Level</span>
-                        <span class="ui-metric-value ui-metric-value-accent">{{ ucwords($level) }}</span>
-                    </div>
-                </div>
 
-                @if(strtolower($ujian->status) === $statusUjian[1])
-                    <a href="{{ route('ujian.start', $ujian->id) }}">
+                    @if(strtolower($ujian->status) === $statusUjian[1])
+                        <a href="{{ route('ujian.start', $ujian->id) }}">
+                            <button class="ui-card-action" type="submit">
+                                <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
+                                Lanjutkan Ujian Sekarang
+                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </a>
+                    @else
+                        <a href="{{ route('ujian.start', $ujian->id) }}">
+                            <button class="ui-card-action" type="submit">
+                                <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
+                                Mulai Ujian Sekarang
+                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                            </button>
+                        </a>
+                    @endif
+                @elseif( $statusUjian == \App\Enums\StatusJadwalUjianEnum::MENUNGGU_HASIL->value )
+                    <div class="ui-info-panel">
+                        <i class="bi bi-check-circle" aria-hidden="true"></i>
+                        <div>
+                            <p class="ui-info-title">Sesi Ujian Telah Dilaksanakan</p>
+                            <p class="ui-info-text">Silahkan pantau secara berkala untuk melihat hasil penilaian ujian</p>
+                        </div>
+                    </div>
+
+                    <a href="#">
                         <button class="ui-card-action" type="submit">
-                            <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                            Lanjutkan Ujian Sekarang
-                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                @else
-                    <a href="{{ route('ujian.start', $ujian->id) }}">
-                        <button class="ui-card-action" type="submit">
-                            <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                            Mulai Ujian Sekarang
+                            Lihat hasil ujian
                             <i class="bi bi-arrow-right" aria-hidden="true"></i>
                         </button>
                     </a>
