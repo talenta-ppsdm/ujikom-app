@@ -46,7 +46,6 @@
 					<div class="ui-exam-options">
 						@foreach (['a', 'b', 'c', 'd', 'e'] as $option)
 							@php
-								// Cek apakah opsi ini adalah jawaban yang tersimpan di DB
 								$isSelected = strtolower($jawabanTerpilih) === $option;
 							@endphp
 			
@@ -233,7 +232,6 @@
 		document.querySelector('[data-previous]').addEventListener('click', () => renderQuestion(current - 1));
 		document.querySelector('[data-next]').addEventListener('click', () => renderQuestion(current === questions.length - 1 ? 0 : current + 1));
 		document.querySelector('[data-submit]').addEventListener('click', () => window.confirm('Kumpulkan jawaban ujian sekarang?'));
-		document.querySelector('[data-doubt]').addEventListener('click', () => numbers[current]?.classList.toggle('is-doubt'));
 
         // Handling time counter
         if (!timer) {
