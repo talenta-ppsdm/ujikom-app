@@ -34,6 +34,7 @@ Route::delete('/penguji/{id}', [PengujiController::class, 'destroy'])->name('pen
 
 Route::get('/bank-soal', [BankSoalController::class, 'index'])->name('banksoal.index');
 Route::post('/bank-soal', [BankSoalController::class, 'store'])->name('banksoal.store');
+Route::post('/bank-soal/import', [BankSoalController::class, 'import'])->name('banksoal.import');
 Route::put('/bank-soal/{id}', [BankSoalController::class, 'update'])->name('banksoal.update');
 Route::delete('/bank-soal/{id}', [BankSoalController::class, 'destroy'])->name('banksoal.destroy');
 

@@ -21,9 +21,22 @@
       <h1 class="page-title">Bank Soal</h1>
       <p class="page-subtitle">Koleksi butir soal standar kompetensi Jabatan Fungsional Penata Kelola Perumahan (0 butir terdaftar)</p>
     </div>
-    <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahSoalModal">
-      <i class="bi bi-plus-lg me-1"></i>Tambah Soal
-    </button>
+
+    <div class="d-flex gap-2">
+      <button class="btn-custom btn-custom-primary" 
+        type="button" 
+        data-bs-toggle="modal" 
+        data-bs-target="#importSoalModal">
+        <i class="bi bi-plus-lg me-1"></i>Import Soal
+      </button>
+
+      <button class="btn-custom btn-custom-primary" 
+        type="button" 
+        data-bs-toggle="modal" 
+        data-bs-target="#tambahSoalModal">
+        <i class="bi bi-plus-lg me-1"></i>Tambah Soal
+      </button>
+    </div>
 
     <div class="row">
       @if(session('success'))
@@ -342,6 +355,39 @@
   </div>
 </div>
 <!-- END Modal Tambah Soal -->
+
+<!-- Modal Import Soal -->
+<div class="modal fade modal-standard" id="importSoalModal" tabindex="-1" aria-labelledby="importSoalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content bg-white">
+      <div class="modal-header px-6 py-4 ">
+        <h2 class="modal-title fs-5" id="importSoalModalLabel">Import Bank Soal</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <form action="{{ route('banksoal.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf 
+        <div class="modal-body">
+          <div class="col-md-12">
+            <label for="fileSoal" class="form-label">Pilih File (Excel)</label>
+           <input class="form-control @error('fileBankSoal') is-invalid @enderror" type="file" id="fileSoal" name="fileBankSoal" accept=".xlsx, .xls" required>
+
+           @error('fileBankSoal')
+               <div class="invalid-feedback">
+                   {{ $message }}
+               </div>
+           @enderror
+    
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn-custom btn-custom-primary">Import Soal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- END Modal Import Soal -->
 
 @section('scripts')
 <script>

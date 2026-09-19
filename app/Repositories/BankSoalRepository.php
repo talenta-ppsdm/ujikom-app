@@ -29,8 +29,11 @@ class BankSoalRepository extends BaseRepository
 
     public function getLastKode()
     {
-        $lastBankSoal = $this->model->orderBy('kode', 'desc')->first();
-        return $lastBankSoal ? $lastBankSoal->kode : null;
+        $lastKode = $this->model->where('kode', 'LIKE', 'S-%')
+            ->orderByRaw('CAST(SUBSTRING(kode, 3) AS UNSIGNED) DESC')
+            ->value('kode');
+
+        return $lastKode ? $lastKode : null;;
     }
 
     public function getCategoryByLevel(array $level)

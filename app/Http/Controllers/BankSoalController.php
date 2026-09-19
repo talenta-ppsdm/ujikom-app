@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\BankSoalImport;
 use App\Repositories\BankSoalRepository;
 use App\Models\BankSoal;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BankSoalController extends Controller
 {
@@ -58,6 +60,17 @@ class BankSoalController extends Controller
         }
     }
 
+    public function import(Request $request)
+    {
+        $request->validate([
+            'fileBankSoal' => 'required|extensions:xlsx,xls',
+        ]);
+        $path = $request->file('fileBankSoal')->store('imports');
+        Excel::import(new BankSoalImport($this->bankSoalRepository), $path);
+
+        return redirect()->back()->with('success', 'Data soal berhasil di-import!');
+    }
+
     public function update(Request $request, int $id)
     {
         try{
@@ -93,5 +106,4 @@ class BankSoalController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data.');
         }
     }
-
 }
