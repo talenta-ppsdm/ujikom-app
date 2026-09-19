@@ -53,4 +53,9 @@ class BankSoalRepository extends BaseRepository
             ->get();
         return $soal;
     }
+
+    public function getByIds($ids)
+    {
+        return $this->model->whereIn('id', $ids)->get();
+    }
 }

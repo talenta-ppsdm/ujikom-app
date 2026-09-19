@@ -46,3 +46,4 @@ Route::delete('/jadwal-ujian/{id}', [JadwalUjianController::class, 'destroy'])->
 Route::get('/beranda', [DashboardPesertaController::class, 'index'])->name('dashboard-peserta.index');
 
 Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.start');
+Route::post('/ujian/simpan', [UjianController::class, 'saveAnswer'])->name('ujian.saveAnswer');
