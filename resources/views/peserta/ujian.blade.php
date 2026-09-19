@@ -31,31 +31,36 @@
 				</div>
 
 				@forelse ($soalUjian as $index => $soal)
-					<article class="ui-exam-question {{ $index === 0 ? 'is-current' : 'd-none' }}" 
-						data-question="{{ $index }}" 
-						data-question-id ="{{$soal->id}}"
-						data-level="{{ $soal->level_name }}" 
-						data-category="{{ $soal->category_nama }}" 
-						data-points="{{ $soal->poin }}">
-						
-						<p class="ui-eyebrow">{{ $index + 1 }} / {{ $soalUjian->count() }} Soal</p>
-						<h1 class="ui-exam-question-title" id="question-title">{{ $soal->soal }}</h1>
-
-						<div class="ui-exam-options" role="radiogroup" aria-label="Pilihan jawaban">
-							@foreach (['a', 'b', 'c', 'd', 'e'] as $option)
-								<button class="ui-level-option ui-exam-option" 
+				@php
+					$saved = $keyJawabanTerpilih->get($soal->id);
+					$jawabanPeserta = $keyJawabanTerpilih->where('soal_id', $soal->id)->first();
+					$jawabanTerpilih = $jawabanPeserta?->jawaban_terpilih;
+				@endphp
+				<article class="ui-exam-question {{ $index === 0 ? 'is-current' : 'd-none' }}" 
+					data-question="{{ $index }}" 
+					data-question-id="{{ $soal->id }}">
+			
+					<p class="ui-eyebrow">{{ $index + 1 }} / {{ $soalUjian->count() }} Soal</p>
+					<h1 class="ui-exam-question-title">{{ $soal->soal }}</h1>
+			
+					<div class="ui-exam-options">
+						@foreach (['a', 'b', 'c', 'd', 'e'] as $option)
+							@php
+								// Cek apakah opsi ini adalah jawaban yang tersimpan di DB
+								$isSelected = strtolower($jawabanTerpilih) === $option;
+							@endphp
+			
+							<button class="ui-level-option ui-exam-option {{ $isSelected ? 'is-selected' : '' }}" 
 									type="button" 
 									data-answer="{{ $option }}" 
-									role="radio" 
-									aria-checked="false">
-
-									<span class="ui-exam-option-letter">{{ strtoupper($option) }}</span>
-									<span>{{ $soal->{'jawaban_' . $option} }}</span>
-									<i class="bi bi-check-circle ui-exam-option-check" aria-hidden="true"></i>
-								</button>
-							@endforeach
-						</div>
-					</article>
+									aria-checked="{{ $isSelected ? 'true' : 'false' }}">
+								<span class="ui-exam-option-letter">{{ strtoupper($option) }}</span>
+								<span>{{ $soal->{'jawaban_' . $option} }}</span>
+								<i class="bi bi-check-circle ui-exam-option-check" aria-hidden="true"></i>
+							</button>
+						@endforeach
+					</div>
+				</article>
 				@empty
 					<div class="ui-info-panel">
 						<i class="bi bi-info-circle" aria-hidden="true"></i>
@@ -101,7 +106,20 @@
 
 				<div class="ui-exam-number-grid">
 					@foreach ($soalUjian as $index => $soal)
-						<button class="ui-exam-number {{ $index === 0 ? 'is-current' : '' }}" type="button" data-number="{{ $index }}">{{ $index + 1 }}</button>
+						@php
+							$saved = $keyJawabanTerpilih->get($soal->id);
+
+							$hasAnswer = !is_null($saved?->jawaban_terpilih) && $saved?->jawaban_terpilih !== '';
+							$isRagu = (bool) $saved?->is_ragu;
+						@endphp
+						<button class="ui-exam-number 
+										{{ $index === 0 ? 'is-current' : '' }} 
+										{{ $hasAnswer ? 'is-answered' : '' }} 
+										{{ $isRagu ? 'is-doubt' : '' }}" 
+								data-number="{{ $index }}"
+								data-question-id="{{ $soal->id }}">
+							{{ $index + 1 }}
+						</button>
 					@endforeach
 				</div>
 
@@ -123,11 +141,47 @@
 		const timer = document.querySelector('.ui-exam-timer');
 		let current = 0;
 
+		function saveAnswers(soalId, answer, isRagu = false) {
+			const container = document.getElementById('exam-container');
+			const jadwalId = container?.dataset.jadwalId;
+		
+			// Ambil Token CSRF
+			const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+		
+			if (!csrfToken) {
+				console.error("CSRF Token tidak ditemukan! Pastikan <meta name='csrf-token'> sudah terpasang.");
+				return;
+			}
+		
+			fetch("/ujian/simpan", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-TOKEN': csrfToken
+				},
+				body: JSON.stringify({
+					jadwal_ujian_id: Number(jadwalId),
+					soal_id: Number(soalId),
+					jawaban: answer,
+					is_ragu: isRagu
+				})
+			})
+			.then(async res => {
+				if (!res.ok) {
+					const errData = await res.json();
+					throw new Error(errData.message || `HTTP error! Status: ${res.status}`);
+				}
+				return res.json();
+			});
+		}
+
 		const renderQuestion = (index) => {
 			if (!questions.length) return;
 			current = Math.max(0, Math.min(index, questions.length - 1));
 			questions.forEach((question, questionIndex) => question.classList.toggle('d-none', questionIndex !== current));
 			numbers.forEach((number, numberIndex) => number.classList.toggle('is-current', numberIndex === current));
+			
 			const activeQuestion = questions[current];
 			document.querySelector('[data-meta-level]').textContent = activeQuestion.dataset.level;
 			document.querySelector('[data-meta-category]').textContent = activeQuestion.dataset.category;
@@ -141,22 +195,45 @@
 		document.querySelectorAll('.ui-exam-option').forEach((option) => {
 			option.addEventListener('click', () => {
 				const question = option.closest('[data-question]');
+				const soalId = question.dataset.questionId;
+				const answer = option.dataset.answer;
+				const isRagu = numbers[current]?.classList.contains('is-doubt') ?? false;
+
 				question.querySelectorAll('.ui-exam-option').forEach((item) => {
 					item.classList.remove('is-selected');
 					item.setAttribute('aria-checked', 'false');
 				});
 				option.classList.add('is-selected');
 				option.setAttribute('aria-checked', 'true');
+				
 				numbers[current].classList.add('is-answered');
 				document.querySelector('.ui-exam-answered-count').textContent = `${document.querySelectorAll('.ui-exam-number.is-answered').length}/${numbers.length}`;
+
+				// Trigger save answer
+				saveAnswers(soalId, answer, isRagu);
 			});
+		});
+
+		document.querySelector('[data-doubt]')?.addEventListener('click', () => {
+			if (!numbers[current]) return;
+	
+			const isDoubt = numbers[current].classList.toggle('is-doubt');
+			const activeQuestion = questions[current];
+			const soalId = activeQuestion.dataset.questionId;
+			
+			const selectedOption = activeQuestion.querySelector('.ui-exam-option.is-selected');
+			const pilihanJawaban = selectedOption ? selectedOption.dataset.answer : null;
+	
+			if (pilihanJawaban) {
+				saveAnswers(soalId, pilihanJawaban, isDoubt);
+			}
 		});
 
 		numbers.forEach((number) => number.addEventListener('click', () => renderQuestion(Number(number.dataset.number))));
 		document.querySelector('[data-previous]').addEventListener('click', () => renderQuestion(current - 1));
 		document.querySelector('[data-next]').addEventListener('click', () => renderQuestion(current === questions.length - 1 ? 0 : current + 1));
-		document.querySelector('[data-doubt]').addEventListener('click', () => numbers[current]?.classList.toggle('is-doubt'));
 		document.querySelector('[data-submit]').addEventListener('click', () => window.confirm('Kumpulkan jawaban ujian sekarang?'));
+		document.querySelector('[data-doubt]').addEventListener('click', () => numbers[current]?.classList.toggle('is-doubt'));
 
         // Handling time counter
         if (!timer) {
@@ -182,29 +259,7 @@
 		setInterval(updateTimer, 1000);
 
 		// Handling save choosed answer
-		const csrfToken = document.quesrySelector('meta[name=csrf-token')?.getAttribute('content');
-		
-		function saveAnswers(soalId, jawaban, isRagu=false)
-		{
-			const jadwalId = document.getEelementById('exam-container')?.dataset.jadwalId;
-
-			if (!jadwalId || !soalId) return;
-			
-			fetch("{{route('ujian.saveAnswer')}}",{
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'X-CSRF-TOKEN': csrfToken
-				},
-				body: JSON.stringify({
-					jadwal_ujian_id: Number(jadwalId),
-					soal_id: Number(soalId),
-					jawaban: jawaban,
-					is_ragu: isRagu
-				})
-			})
-			.then(res => res.json());
-		}
+		const csrfToken = document.querySelector('meta[name=csrf-token')?.getAttribute('content');
 	});
 	
 </script>

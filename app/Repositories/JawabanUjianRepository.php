@@ -26,4 +26,14 @@ class JawabanUjianRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getByPesertaAndJadwal(int $pesertaId, int $jadwalUjianId)
+    {
+        return $this->model->where(
+            [
+                'peserta_id'        => $pesertaId,
+                'jadwal_ujian_id'   => $jadwalUjianId
+            ]
+        )->get();
+    }
 }
