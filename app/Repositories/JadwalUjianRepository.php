@@ -34,4 +34,9 @@ class JadwalUjianRepository extends BaseRepository
             ->first();
         return $jadwal;
     }
+
+    public function getByPeserta(int $pesertId)
+    {
+        return $this->model->where('peserta_id', "=", $pesertId)->first();
+    }
 }

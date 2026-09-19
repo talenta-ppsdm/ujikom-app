@@ -5,20 +5,25 @@ namespace App\Http\Controllers;
 use App\Enums\StatusJadwalUjianEnum;
 use App\Repositories\BankSoalRepository;
 use App\Repositories\JadwalUjianRepository;
+use App\Repositories\JawabanUjianRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UjianController extends Controller
 {
     protected JadwalUjianRepository $jadwalUjianRepository;
     protected BankSoalRepository $bankSoalRepository;
+    protected JawabanUjianRepository $jawabanUjianRepository;
 
     public function __construct(
         JadwalUjianRepository $jadwalUjianRepository,
-        BankSoalRepository $bankSoalRepository
+        BankSoalRepository $bankSoalRepository,
+        JawabanUjianRepository $jawabanUjianRepository
     )
     {
         $this->jadwalUjianRepository = $jadwalUjianRepository;
         $this->bankSoalRepository = $bankSoalRepository;
+        $this->jawabanUjianRepository = $jawabanUjianRepository;
     }
 
     public function start(int $id)
@@ -85,5 +90,28 @@ class UjianController extends Controller
         $soalUjian = $soalUjian->shuffle();
  
         return view('peserta.ujian', compact('jadwalUjian', 'targetTimestamp', 'soalUjian'));
+    }
+
+    public function saveAnswer(Request $request)
+    {
+        dd($request->all());
+        $request->validate([
+            'jadwal_ujian_id' => 'required|exists:jadwal_ujian,id',
+            'soal_id'         => 'required|exists:soal,id',
+            'jawaban'         => 'nullable|in:a,b,c,d,e',
+            'is_ragu'         => 'boolean',
+        ]);
+
+        $this->jawabanUjianRepository->updateOrCreate([
+            'jadwal_ujian_id'   => $request->jadwal_ujian_id,
+            'peserta_id'        => Auth::id(),
+            'soal_id'           => $request->soal_id
+        ],
+        [
+            'jawaban_terpilih'  => $request->jawaban,
+            'is_ragu'           => $request->is_ragu ?? false,
+        ]);
+
+        return response()->json(['status' => 'success', 'message' => 'Jawaban tersimpan']);
     }
 }

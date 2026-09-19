@@ -2,7 +2,10 @@
 
 @section('content')
 <div class="col-12 peserta-exam-page">
-	<div class="row g-4">
+	<div class="row g-4" 
+		id="exam-container" 
+		data-jadwal-id="{{$jadwalUjian->id}}">
+		
 		<div class="col-xl-9 col-lg-8">
 			<section class="ui-card ui-exam-question-card" aria-labelledby="question-title">
 				<div class="ui-card-heading ui-exam-heading">
@@ -28,13 +31,24 @@
 				</div>
 
 				@forelse ($soalUjian as $index => $soal)
-					<article class="ui-exam-question {{ $index === 0 ? 'is-current' : 'd-none' }}" data-question="{{ $index }}" data-level="{{ $soal->level_name }}" data-category="{{ $soal->category_nama }}" data-points="{{ $soal->poin }}">
+					<article class="ui-exam-question {{ $index === 0 ? 'is-current' : 'd-none' }}" 
+						data-question="{{ $index }}" 
+						data-question-id ="{{$soal->id}}"
+						data-level="{{ $soal->level_name }}" 
+						data-category="{{ $soal->category_nama }}" 
+						data-points="{{ $soal->poin }}">
+						
 						<p class="ui-eyebrow">{{ $index + 1 }} / {{ $soalUjian->count() }} Soal</p>
 						<h1 class="ui-exam-question-title" id="question-title">{{ $soal->soal }}</h1>
 
 						<div class="ui-exam-options" role="radiogroup" aria-label="Pilihan jawaban">
 							@foreach (['a', 'b', 'c', 'd', 'e'] as $option)
-								<button class="ui-level-option ui-exam-option" type="button" data-answer="{{ $option }}" role="radio" aria-checked="false">
+								<button class="ui-level-option ui-exam-option" 
+									type="button" 
+									data-answer="{{ $option }}" 
+									role="radio" 
+									aria-checked="false">
+
 									<span class="ui-exam-option-letter">{{ strtoupper($option) }}</span>
 									<span>{{ $soal->{'jawaban_' . $option} }}</span>
 									<i class="bi bi-check-circle ui-exam-option-check" aria-hidden="true"></i>
@@ -99,6 +113,7 @@
 		</div>
 	</div>
 </div>
+@endsection
 
 @push('scripts')
 <script>
@@ -165,7 +180,32 @@
         };
 		updateTimer();
 		setInterval(updateTimer, 1000);
+
+		// Handling save choosed answer
+		const csrfToken = document.quesrySelector('meta[name=csrf-token')?.getAttribute('content');
+		
+		function saveAnswers(soalId, jawaban, isRagu=false)
+		{
+			const jadwalId = document.getEelementById('exam-container')?.dataset.jadwalId;
+
+			if (!jadwalId || !soalId) return;
+			
+			fetch("{{route('ujian.saveAnswer')}}",{
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'X-CSRF-TOKEN': csrfToken
+				},
+				body: JSON.stringify({
+					jadwal_ujian_id: Number(jadwalId),
+					soal_id: Number(soalId),
+					jawaban: jawaban,
+					is_ragu: isRagu
+				})
+			})
+			.then(res => res.json());
+		}
 	});
+	
 </script>
 @endpush
-@endsection
