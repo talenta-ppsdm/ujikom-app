@@ -28,7 +28,7 @@ class DashboardPesertaController extends Controller
         $user = $this->userRepository->with('peserta')->find(Auth::id());
         $ujian = $this->jadwalUjianRepository->getByPeserta($user->id);
 
-        $statusUjian = strtolower($ujian->status);
+        $statusUjian = strtolower($ujian->status); 
 
         if ($statusUjian == StatusJadwalUjianEnum::TERJADWAL || $statusUjian == StatusJadwalUjianEnum::SEDANG_BERLANGSUNG) {
              if ($ujian->jenjang_tujuan == JenjangJabatanEnum::AHLI_PERTAMA->value) {

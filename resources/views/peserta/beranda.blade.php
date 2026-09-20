@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    @if(strtolower($ujian->status) === $statusUjian[1])
+                    @if(strtolower($ujian->status) === \App\Enums\StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value)
                         <a href="{{ route('ujian.start', $ujian->id) }}">
                             <button class="ui-card-action" type="submit">
                                 <i class="bi bi-file-earmark-check" aria-hidden="true"></i>

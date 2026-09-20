@@ -1582,6 +1582,129 @@ body.sidebar-minimized .sidebar-profile {
     font-weight: 800;
 }
 
+/* Reusable confirmation dialog */
+.ui-confirm-modal[hidden] {
+    display: none;
+}
+
+.ui-confirm-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    display: grid;
+    place-items: center;
+    padding: 1.25rem;
+}
+
+.ui-confirm-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(11, 31, 58, 0.52);
+    backdrop-filter: blur(3px);
+}
+
+.ui-confirm-dialog {
+    position: relative;
+    width: min(100%, 29rem);
+    padding: 2rem;
+    border: 1px solid #E3E9F2;
+    border-radius: 24px;
+    background: #FFFFFF;
+    box-shadow: 0 24px 60px rgba(11, 31, 58, 0.2);
+    animation: ui-confirm-enter 0.2s ease-out;
+}
+
+.ui-confirm-icon {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.25rem;
+    margin-bottom: 1.25rem;
+    border-radius: 14px;
+    color: #3F54E4;
+    background: #EEF1FF;
+    font-size: 1.4rem;
+}
+
+.ui-confirm-title {
+    margin: 0 0 0.6rem;
+    color: #111A2B;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.ui-confirm-message {
+    margin: 0;
+    color: #74829A;
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.ui-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.ui-confirm-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-height: 2.75rem;
+    padding: 0.7rem 1rem;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.ui-confirm-button:hover {
+    transform: translateY(-1px);
+}
+
+.ui-confirm-button-secondary {
+    border: 1px solid #E3E9F2;
+    color: #52627D;
+    background: #FFFFFF;
+}
+
+.ui-confirm-button-primary {
+    border: 1px solid #3F54E4;
+    color: #FFFFFF;
+    background: #3F54E4;
+    box-shadow: 0 7px 16px rgba(63, 84, 228, 0.2);
+}
+
+.ui-confirm-button-primary:hover {
+    background: #3045D0;
+}
+
+body.ui-confirm-open {
+    overflow: hidden;
+}
+
+@keyframes ui-confirm-enter {
+    from { opacity: 0; transform: translateY(8px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 480px) {
+    .ui-confirm-dialog {
+        padding: 1.5rem;
+    }
+
+    .ui-confirm-actions {
+        flex-direction: column-reverse;
+    }
+
+    .ui-confirm-button {
+        width: 100%;
+    }
+}
+
 .ui-status-badge,
 .ui-level-badge {
     display: inline-flex;

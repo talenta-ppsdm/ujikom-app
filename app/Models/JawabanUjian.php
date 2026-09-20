@@ -12,7 +12,8 @@ class JawabanUjian extends Model
         'peserta_id',
         'soal_id',
         'jawaban_terpilih',
-        'is_ragu'
+        'is_ragu',
+        'is_benar'
     ];
 
     public function jadwalUjian()

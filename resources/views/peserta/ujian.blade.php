@@ -46,7 +46,6 @@
 					<div class="ui-exam-options">
 						@foreach (['a', 'b', 'c', 'd', 'e'] as $option)
 							@php
-								// Cek apakah opsi ini adalah jawaban yang tersimpan di DB
 								$isSelected = strtolower($jawabanTerpilih) === $option;
 							@endphp
 			
@@ -131,6 +130,29 @@
 		</div>
 	</div>
 </div>
+
+<!-- Modal Finish Exam -->
+<div class="ui-confirm-modal" data-confirm-modal hidden>
+	<div class="ui-confirm-modal-backdrop" data-confirm-close></div>
+	<section class="ui-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="confirm-title" aria-describedby="confirm-message" tabindex="-1">
+		<div class="ui-confirm-icon" aria-hidden="true">
+			<i class="bi bi-send-check"></i>
+		</div>
+		<div class="ui-confirm-content">
+			<p class="ui-eyebrow">Konfirmasi pengumpulan</p>
+			<h2 class="ui-confirm-title" id="confirm-title">Kirim jawaban sekarang?</h2>
+			<p class="ui-confirm-message" id="confirm-message">Pastikan semua jawaban sudah sesuai. Jawaban yang sudah dikirim tidak dapat diubah kembali.</p>
+		</div>
+		<div class="ui-confirm-actions">
+			<button class="ui-confirm-button ui-confirm-button-secondary" type="button" data-confirm-close>Periksa Lagi</button>
+			<button class="ui-confirm-button ui-confirm-button-primary" type="button" data-confirm-accept>
+				<i class="bi bi-send" aria-hidden="true"></i>
+				Kirim Jawaban
+			</button>
+		</div>
+	</section>
+</div>
+<!-- END Modal Finish Exam -->
 @endsection
 
 @push('scripts')
@@ -232,8 +254,92 @@
 		numbers.forEach((number) => number.addEventListener('click', () => renderQuestion(Number(number.dataset.number))));
 		document.querySelector('[data-previous]').addEventListener('click', () => renderQuestion(current - 1));
 		document.querySelector('[data-next]').addEventListener('click', () => renderQuestion(current === questions.length - 1 ? 0 : current + 1));
-		document.querySelector('[data-submit]').addEventListener('click', () => window.confirm('Kumpulkan jawaban ujian sekarang?'));
-		document.querySelector('[data-doubt]').addEventListener('click', () => numbers[current]?.classList.toggle('is-doubt'));
+
+		// Handle sending answers and finish exam
+		const confirmModal = document.querySelector('[data-confirm-modal]');
+		const confirmDialog = confirmModal?.querySelector('.ui-confirm-dialog');
+		let lastConfirmTrigger = null;
+
+		const closeConfirmModal = (confirmed = false) => {
+			if (!confirmModal) return;
+
+			confirmModal.hidden = true;
+			document.body.classList.remove('ui-confirm-open');
+			lastConfirmTrigger?.focus();
+			confirmModal.dispatchEvent(new CustomEvent('ui:confirm', {
+				detail: { confirmed, trigger: lastConfirmTrigger }
+			}));
+		};
+
+		const openConfirmModal = (trigger) => {
+			if (!confirmModal) return;
+
+			lastConfirmTrigger = trigger;
+			confirmModal.hidden = false;
+			document.body.classList.add('ui-confirm-open');
+			confirmDialog?.focus();
+		};
+
+		document.querySelector('[data-submit]')?.addEventListener('click', (event) => openConfirmModal(event.currentTarget));
+		confirmModal?.querySelectorAll('[data-confirm-close]').forEach((element) => {
+			element.addEventListener('click', () => closeConfirmModal());
+		});
+		confirmModal?.querySelector('[data-confirm-accept]')?.addEventListener('click', () => closeConfirmModal(true));
+		confirmModal?.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') closeConfirmModal();
+		});
+
+		confirmModal?.addEventListener('ui:confirm', (event) => {
+			if (event.detail.confirmed) {
+				finishExam();
+			}
+		});
+
+		function finishExam() {
+			const container = document.getElementById('exam-container');
+			const jadwalId = container?.dataset.jadwalId;
+			const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+		
+			if (!jadwalId || !csrfToken) {
+				console.error("Jadwal ID atau CSRF Token tidak ditemukan!");
+				return;
+			}
+		
+			// Disable tombol agar tidak ter-submit dua kali
+			const btnAccept = confirmModal?.querySelector('[data-confirm-accept]');
+			if (btnAccept) btnAccept.disabled = true;
+		
+			fetch("/ujian/selesai", {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+					'X-CSRF-TOKEN': csrfToken
+				},
+				body: JSON.stringify({
+					jadwal_ujian_id: Number(jadwalId)
+				})
+			})
+			.then(async res => {
+				const contentType = res.headers.get("content-type") || "";
+				
+				if (!res.ok) {
+					const errData = await res.json();
+					throw new Error(errData.message || `HTTP error! Status: ${res.status}`);
+				}
+				return res.json();
+			})
+			.then(data => {
+				if (data.redirect_url) {
+					window.location.href = data.redirect_url;
+				}
+			})
+			.catch(err => {
+				// console.error("Gagal mengumpulkan jawaban:", err);
+				alert("Terjadi kesalahan saat mengumpulkan jawaban. Silakan coba lagi.");
+				if (btnAccept) btnAccept.disabled = false;
+			});
+		}
 
         // Handling time counter
         if (!timer) {
