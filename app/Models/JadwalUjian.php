@@ -23,7 +23,8 @@ class JadwalUjian extends Model
         'jenjang_tujuan',
         'realtime_mulai',
         'realtime_selesai',
-        'target_selesai'
+        'target_selesai',
+        'total_skor'
     ];
 
     protected $casts = [

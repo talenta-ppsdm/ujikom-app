@@ -8,6 +8,7 @@ use App\Repositories\JadwalUjianRepository;
 use App\Repositories\JawabanUjianRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UjianController extends Controller
 {
@@ -127,7 +128,7 @@ class UjianController extends Controller
             'soal_id'           => $request->soal_id
         ],
         [
-            'jawaban_terpilih'  => $request->jawaban,
+            'jawaban_terpilih'  => strtolower($request->jawaban),
             'is_ragu'           => $request->is_ragu ?? false,
         ]);
 
@@ -136,5 +137,62 @@ class UjianController extends Controller
             'message' => 'Jawaban berhasil disimpan',
             'data' => $jawaban
         ], 200);
+    }
+
+    public function finish(Request $request)
+    {
+        $request->validate([
+            'jadwal_ujian_id' => 'required|integer',
+        ]);
+
+        $pesertaId = Auth::id();
+        $jadwalUjianId = $request->jadwal_ujian_id;
+
+        $skorFinal = 0;
+
+        try{
+            // 1. Ambil seluruh jawaban peserta pada jadwal itu
+            // 2. bandingin jawaban peserta dengan kunci jawaban
+            // 3. menyimpan jawabannya benar atau salah di db
+            // 4. hitung skornya
+
+            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalUjianId);
+            $jumlahJawaban = $jawabanPeserta->count();
+            $skorSoal = 100/$jumlahJawaban;
+            
+            foreach ($jawabanPeserta as $jawaban) {
+                $dataSoal = $jawaban->soal;
+
+                if ($jawaban->jawaban_terpilih === $dataSoal->kunci) {
+                    $skorFinal += $skorSoal;
+                    
+                    $jawaban->update([
+                        'is_benar' => true
+                    ]);
+                }
+
+            }
+
+            $jadwalUjian = $this->jadwalUjianRepository->find($jadwalUjianId);
+            if ($jadwalUjian) {
+                $jadwalUjian->update([
+                    'realtime_selesai'  => now(),
+                    'status'            => StatusJadwalUjianEnum::SELESAI->value,
+                    'total_skor'        => $skorFinal
+                ]);
+            }
+
+            return response()->json([
+                'status'       => 'success',
+                'message'      => 'Ujian berhasil dikumpulkan.',
+                'redirect_url' => route('dashboard-peserta.index'), 
+            ]);
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'message' => 'Gagal mengoreksi ujian: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

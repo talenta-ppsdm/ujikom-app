@@ -67,19 +67,26 @@
             <td>{{ $j->penguji->nama }}</td>
             <td>{{ ucfirst($j->lokasi) }}</td>
             <td>
-              @php
-              $statusValue = array_search($j->status, $listStatus, true);
-              $statusClass = match ($statusValue) {
-                'terjadwal' => 'pending',
-                'sedang berlangsung' => 'success',
-                'menunggu hasil' => 'primary',
-                default => 'primary',
-              };
-              @endphp
-              <span class="badge-table {{ $statusClass }}">{{ ucfirst($j->status) }}</span>
-            </td>
-            <td>
-              <div class="d-flex justify-content-center gap-1">
+                @php
+                  $statusString = strtolower($j->status);
+                  
+                  $statusClass = match ($statusString) {
+                    'terjadwal'          => 'pending',
+                    'sedang berlangsung' => 'warning',
+                    'menunggu hasil'     => 'primary',
+                    'selesai'            => 'success',
+                    default              => 'primary',
+                  };
+                @endphp
+              
+                <span class="badge-table {{ $statusClass }}">{{ ucfirst($j->status) }}</span>
+              
+                @if($statusString === 'selesai')
+                  <span class="badge-table success">Poin: {{ number_format($j->total_skor, 2, ',', '.') }}</span>
+                @endif
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-1">
                 <button class="table-btn-action" 
                   title="Edit row" 
                   type="button" 
