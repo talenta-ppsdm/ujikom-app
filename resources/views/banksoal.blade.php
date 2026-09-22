@@ -204,7 +204,7 @@
 
                     <div class="col-md-2">
                       <label for="poin" class="form-label">Poin*</label>
-                      <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', $bs->poin ?? 2) }}" min="1" required>
+                      <input type="number" class="form-control" id="poin" name="poin" value="{{ old('poin', $bs->poin ?? 2) }}" min="1">
                     </div>
 
                     <div class="col-md-12">
