@@ -43,7 +43,7 @@ class BankSoalController extends Controller
                 'kode' => 'required|string|max:50|unique:banksoal,kode',
                 'kategori' => 'required|string|max:100',
                 'level' => 'required|string|max:50',
-                'poin' => 'required|integer|min:1',
+                'poin' => 'integer|min:1',
                 'soal' => 'required|string',
                 'jawaban_a' => 'required|string',
                 'jawaban_b' => 'required|string',
@@ -51,7 +51,7 @@ class BankSoalController extends Controller
                 'jawaban_d' => 'required|string',
                 'jawaban_e' => 'required|string',
                 'kunci' => 'required|string|max:50',
-                'pembahasan' => 'required|string',
+                'pembahasan' => 'string',
             ]);
             
             $this->bankSoalRepository->create($validatedData);
@@ -85,7 +85,7 @@ class BankSoalController extends Controller
                 'kode' => 'required|string|max:50|unique:banksoal,kode,' . $id,
                 'kategori' => 'required|string|max:100',
                 'level' => 'required|string|max:50',
-                'poin' => 'required|integer|min:1',
+                'poin' => 'integer|min:1',
                 'soal' => 'required|string',
                 'jawaban_a' => 'required|string',
                 'jawaban_b' => 'required|string',
@@ -93,7 +93,7 @@ class BankSoalController extends Controller
                 'jawaban_d' => 'required|string',
                 'jawaban_e' => 'required|string',
                 'kunci' => 'required|string|max:50',
-                'pembahasan' => 'required|string',
+                'pembahasan' => 'string',
             ]);
     
             $this->bankSoalRepository->update($validatedData, $id);
