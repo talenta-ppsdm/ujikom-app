@@ -9,18 +9,16 @@
                 <span class="peserta-welcome-badge">Portal Peserta Uji Kompetensi</span>
                 <span class="peserta-welcome-badge peserta-welcome-badge-accent">
                     <i class="bi bi-mortarboard-fill" aria-hidden="true"></i>
-                    Jenjang: {{ $user->peserta->jenjang ?? 'JF Ahli Pertama' }}
+                    Jabatan: {{ ucfirst($user->peserta->jabatan) }}
                 </span>
             </div>
 
-            <h1 id="welcome-title">Selamat Datang, {{ $user->name }}</h1>
+            <h1 id="welcome-title">Selamat Datang, {{ $user->peserta->nama}}</h1>
             <p class="peserta-welcome-identity">
-                NIP: {{ $user->nip }}
-                <span aria-hidden="true">•</span>
-                {{ $user->peserta->jabatan }}
+                NIP: {{ $user->peserta->nip }}
             </p>
             <p class="peserta-welcome-unit">
-                {{ $user->peserta->unit }} ({{ $user->peserta->instansi }})
+                {{ ucwords($user->peserta->unit) }} | {{ ucwords($user->peserta->instansi) }}
             </p>
         </div>
 
@@ -34,25 +32,6 @@
 <!-- END Hero Beranda -->
 
 <div class="row g-4">
-    <!-- Alert -->
-    @if(session('success'))
-    <div class="col-12 alert-custom alert-custom-success mt-3">
-        <i class="bi bi-check-circle-fill alert-custom-icon"></i>
-        <div class="alert-custom-content">
-          {{ session('success') }}
-        </div>
-    </div>
-    @endif
-    @if(session('error'))
-    <div class="col-12 alert-custom alert-custom-danger mt-3">
-        <i class="bi bi-check-circle-fill alert-custom-icon"></i>
-        <div class="alert-custom-content">
-          {{ session('error') }}
-        </div>
-    </div>
-    @endif
-    <!-- END Alert -->
-
     <!-- Left Section -->
     <div class="col-xl-8 col-lg-8">
         <div class="col-12 mb-3">
@@ -60,77 +39,102 @@
                 <div class="ui-card-heading">
                     <div>
                         <p class="ui-eyebrow">Status Partisipasi Uji Kompetensi</p>
-                        <h2 class="ui-card-title" id="exam-status-title">{{ ucwords($ujian['tujuan_ujian']->value) }}</h2>
+                        <!-- <h2 class="ui-card-title" id="exam-status-title">Status Partisipasi Uji Kompetensi</h2> -->
                     </div>
-                    <span class="ui-status-badge">{{ $ujian['status']}}</span>
                 </div>
-                
-                @if( $statusUjian == \App\Enums\StatusJadwalUjianEnum::TERJADWAL->value || $statusUjian == \App\Enums\StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value)
-                    <div class="ui-info-panel">
-                        <i class="bi bi-clock-history" aria-hidden="true"></i>
-                        <div>
-                            <p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
-                            <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <strong>{{ $ujian['jenjang_tujuan'] }}</strong>.</p>
+
+                <!-- Card List Jadwal Ujian -->
+                @foreach($ujian as $dataUjian)
+                    @php
+                    $statusBadgeClass = match(strtolower($dataUjian->status)){
+                        'terjadwal'          => 'ui-badge-warning',
+                        'sedang berlangsung' => 'ui-badge-info',
+                        'selesai'            => 'ui-badge-success',
+                        default              => 'ui-badge-secondary',
+                    };
+
+                    $levelUjian = match(strtolower($dataUjian->jenjang_tujuan)){
+                        'ahli pertama'  => 'level 1', 
+                        'ahli muda'  => 'level 2 & 3', 
+                        'ahli madya'  => 'level 4', 
+                        'ahli utama'  => 'level 5', 
+                    };
+
+                    $wordingButton = match(strtolower($dataUjian->status)){
+                        'terjadwal'         => 'Kerjakan Ujian',
+                        'sedang berlangsung'=> 'Kerjakan Ujian',
+                        'selesai'           => 'Lihat Hasil Ujian',
+                        default             => 'Lihat Selengkapnya'
+                    }
+                    @endphp
+                    <div class="ui-card mb-3">
+                        <div class="ui-card-heading">
+                            <h2 class="ui-card-title" id="exam-status-title">{{ ucwords($dataUjian->tujuan_ujian->value) }}</h2>
+                            <span class="ui-status-badge {{ $statusBadgeClass }}">{{ ucwords($dataUjian->status) }}</span>
                         </div>
-                    </div>
+
+                        @if($dataUjian->status == 'selesai')
+                        <div class="ui-info-panel ui-info-panel-success">
+                            <i class="bi bi-check-circle" aria-hidden="true"></i>
+                            <div>
+                                <p class="ui-info-title">Ujian Telah Diselesaikan</p>
+                                <p class="ui-info-text">Hasil ujian telah tersedia. Tinjau ringkasan dan pembahasan jawaban Anda.</p>
+                            </div>
+                            <div class="ui-info-panel-score">
+                                <span class="ui-info-panel-score-label">Nilai Akhir</span>
+                                <span class="ui-info-panel-score-value">{{ number_format($dataUjian->total_skor ?? 0, 0) }}<small>/100</small></span>
+                            </div>
+                        </div>
+                        @else
+                        <div class="ui-info-panel">
+                            <i class="bi bi-clock-history" aria-hidden="true"></i>
+                            <div>
+                                <p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
+                                <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang Ahli Muda</p>
+                            </div>
+                        </div>
+                        @endif
         
-                    <div class="ui-metric-grid">
-                        <div>
-                            <span class="ui-metric-label">Jumlah Soal</span>
-                            <span class="ui-metric-value">50 Butir</span>
+                        <div class="ui-metric-grid">
+                            <div>
+                                <span class="ui-metric-label">Jumlah Soal</span>
+                                <span class="ui-metric-value">30 Butir</span>
+                            </div>
+                            <div>
+                                <span class="ui-metric-label">Durasi Ujian</span>
+                                <span class="ui-metric-value">{{$dataUjian->durasi}} Menit</span>
+                            </div>
+                            <div>
+                                <span class="ui-metric-label">Level</span>
+                                <span class="ui-metric-value">{{ucfirst($levelUjian)}}</span>
+                            </div>
+                            <div>
+                                <span class="ui-metric-label">Jenjang Dituju</span>
+                                <span class="ui-metric-value ui-metric-value-accent">JF {{$dataUjian->jenjang_tujuan}}</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="ui-metric-label">Durasi Ujian</span>
-                            <span class="ui-metric-value">{{ $ujian->durasi }} Menit</span>
-                        </div>
-                        <div>
-                            <span class="ui-metric-label">Jenjang Dituju</span>
-                            <span class="ui-metric-value ui-metric-value-accent">JF {{ $ujian->jenjang_tujuan }}</span>
-                        </div>
-                        <div>
-                            <span class="ui-metric-label">Cakupan Level</span>
-                            <span class="ui-metric-value ui-metric-value-accent">{{ ucwords($level) }}</span>
-                        </div>
-                    </div>
-
-                    @if(strtolower($ujian->status) === \App\Enums\StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value)
-                        <a href="{{ route('ujian.start', $ujian->id) }}">
-                            <button class="ui-card-action" type="submit">
-                                <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                                Lanjutkan Ujian Sekarang
+        
+                        <a href="#">
+                            <button class="ui-card-action" type="button">
+                                {{$wordingButton}}
                                 <i class="bi bi-arrow-right" aria-hidden="true"></i>
                             </button>
                         </a>
-                    @else
-                        <a href="{{ route('ujian.start', $ujian->id) }}">
-                            <button class="ui-card-action" type="submit">
-                                <i class="bi bi-file-earmark-check" aria-hidden="true"></i>
-                                Mulai Ujian Sekarang
-                                <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                            </button>
-                        </a>
-                    @endif
-                @elseif( $statusUjian == \App\Enums\StatusJadwalUjianEnum::MENUNGGU_HASIL->value )
-                    <div class="ui-info-panel">
-                        <i class="bi bi-check-circle" aria-hidden="true"></i>
-                        <div>
-                            <p class="ui-info-title">Sesi Ujian Telah Dilaksanakan</p>
-                            <p class="ui-info-text">Silahkan pantau secara berkala untuk melihat hasil penilaian ujian</p>
-                        </div>
                     </div>
+                @endforeach
+                <!-- END Card List Ujian -->
 
-                    <a href="#">
-                        <button class="ui-card-action" type="submit">
-                            Lihat hasil ujian
-                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                        </button>
-                    </a>
-                @endif
-                
+                <div class="d-flex justify-content-center mt-3">
+                    <button type="button" class="ui-card-action ui-card-action-ghost">
+                        Selengkapnya
+                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                    </button>
+                </div>
             </section>
         </div>
     
         <!-- Card Ujikom question level -->
+         @if($ujianTerjadwal !== null)
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">
                 <h2 class="ui-section-heading" id="level-title">
@@ -139,29 +143,36 @@
                 </h2>
     
                 <div class="ui-level-grid">
-                    <article class="ui-level-option {{ $ujian->jenjang_tujuan == \App\Enums\JenjangJabatanEnum::AHLI_PERTAMA->value ? 'is-selected' : ''}}">
+                    <article @class(["ui-level-option", 
+                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli pertama"])
+                    >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Pertama</span>
                             <span class="ui-level-badge">Level 1</span>
                         </div>
                         <p class="ui-level-description">Pemahaman dasar perumahan swadaya &amp; regulasi</p>
-                        <!-- <span class="ui-level-selected-label"><i class="bi bi-check-circle" aria-hidden="true"></i> Jenjang Terpilih Anda</span> -->
                     </article>
-                    <article class="ui-level-option {{ $ujian->jenjang_tujuan == \App\Enums\JenjangJabatanEnum::AHLI_MUDA->value ? 'is-selected' : ''}}">
+                    <article @class(["ui-level-option", 
+                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli muda"])
+                    >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Muda</span>
                             <span class="ui-level-badge">Level 2 &amp; 3</span>
                         </div>
                         <p class="ui-level-description">Pengawasan PSU, pengelolaan rusun &amp; koordinasi</p>
                     </article>
-                    <article class="ui-level-option {{ $ujian->jenjang_tujuan == \App\Enums\JenjangJabatanEnum::AHLI_MADYA->value ? 'is-selected' : ''}}">
+                    <article @class(["ui-level-option", 
+                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli madya"])
+                    >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Madya</span>
                             <span class="ui-level-badge">Level 4</span>
                         </div>
                         <p class="ui-level-description">Evaluasi program, mitigasi bencana &amp; kebijakan</p>
                     </article>
-                    <article class="ui-level-option {{ $ujian->jenjang_tujuan == \App\Enums\JenjangJabatanEnum::AHLI_UTAMA->value ? 'is-selected' : ''}}">
+                    <article @class(["ui-level-option", 
+                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli utama"])
+                    >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Utama</span>
                             <span class="ui-level-badge">Level 5</span>
@@ -171,6 +182,7 @@
                 </div>
             </section>
         </div>
+        @endif
         <!-- END Card Ujikom question level -->
     
         <!-- Card Ujikom Rules -->
@@ -198,29 +210,46 @@
     <div class="col-xl-4 col-lg-4">
         <!-- Test Session Detail Information -->
         <div class="col-12 mb-3">
-            <section class="ui-card ui-session-card" aria-labelledby="session-title">
-                <div>
-                    <h2 class="ui-section-heading" id="session-title">
-                        <i class="bi bi-calendar" aria-hidden="true"></i>
-                        Informasi Sesi Ujian
-                    </h2>
+            <section class="ui-card ui-session-card ui-summary-card" aria-labelledby="session-title">
+                <div class="ui-summary-header">
+                    <div class="ui-summary-title-wrap">
+                        <span class="ui-summary-icon" aria-hidden="true">
+                            <i class="bi bi-card-checklist"></i>
+                        </span>
+                        <h2 class="ui-summary-heading" id="session-title">Rekapitulasi Ujian</h2>
+                    </div>
+                    <span class="ui-summary-total">7 ujian</span>
                 </div>
-                <div class="ui-session-details">
-                    <p class="ui-metric-label">Tanggal pelaksanaan</p>
-                    <p class="ui-metric-value mb-3">{{ $ujian->tanggal_ujian->format('Y-m-d') }}</p>
 
-                    <p class="ui-metric-label">Waktu sesi</p>
-                    <p class="ui-metric-value ui-session-time mb-3">{{ $ujian->waktu_mulai }} - {{ $ujian->waktu_selesai }}</p>
+                <div class="ui-summary-list">
+                    <div class="ui-summary-row ui-summary-row-success">
+                        <div class="ui-summary-meta">
+                            <span class="ui-summary-badge ui-badge-success">
+                                <i class="bi bi-check-lg" aria-hidden="true"></i>
+                            </span>
+                            <span class="ui-summary-label">Ujian Lulus</span>
+                        </div>
+                        <span class="ui-summary-value ui-summary-value-success">4</span>
+                    </div>
 
-                    <p class="ui-metric-label">Pelaksanaan</p>
-                    <p class="ui-metric-value">{{ $ujian->lokasi }}</p>
-                </div>
-                <div class="ui-session-examiner">
-                    <p class="ui-metric-label">Penguji Teknis</p>
+                    <div class="ui-summary-row ui-summary-row-danger">
+                        <div class="ui-summary-meta">
+                            <span class="ui-summary-badge ui-badge-danger">
+                                <i class="bi bi-x-lg" aria-hidden="true"></i>
+                            </span>
+                            <span class="ui-summary-label">Ujian Tidak Lulus</span>
+                        </div>
+                        <span class="ui-summary-value ui-summary-value-danger">1</span>
+                    </div>
 
-                    <div class="ui-examiner">
-                        <span class="ui-examiner-avatar" aria-hidden="true">{{ mb_substr($ujian->penguji->nama, 0, 1) }}</span>
-                        <strong>{{ $ujian->penguji->nama }}</strong>
+                    <div class="ui-summary-row ui-summary-row-warning">
+                        <div class="ui-summary-meta">
+                            <span class="ui-summary-badge ui-badge-warning">
+                                <i class="bi bi-calendar-check" aria-hidden="true"></i>
+                            </span>
+                            <span class="ui-summary-label">Ujian Terjadwal</span>
+                        </div>
+                        <span class="ui-summary-value ui-summary-value-warning">2</span>
                     </div>
                 </div>
             </section>
@@ -261,6 +290,4 @@
     </div>
     <!-- END Right Section -->
 </div>
-
-
 @endsection

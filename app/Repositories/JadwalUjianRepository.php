@@ -31,12 +31,12 @@ class JadwalUjianRepository extends BaseRepository
     {
         $jadwal = $this->model->where('peserta_id', '=', $pesertId)
             ->whereIn('status', $status)
-            ->first();
+            ->get();
         return $jadwal;
     }
 
     public function getByPeserta(int $pesertId)
     {
-        return $this->model->where('peserta_id', "=", $pesertId)->first();
+        return $this->model->where('peserta_id', "=", $pesertId)->get();
     }
 }
