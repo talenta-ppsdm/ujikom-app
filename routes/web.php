@@ -49,3 +49,4 @@ Route::get('/beranda', [DashboardPesertaController::class, 'index'])->name('dash
 Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.start');
 Route::post('/ujian/simpan', [UjianController::class, 'saveAnswer'])->name('ujian.saveAnswer');
 Route::post('/ujian/selesai', [UjianController::class, 'finish'])->name('ujian.finish');
+Route::get('/ujian/{id}/hasil', [UjianController::class, 'result'])->name('ujian.result');

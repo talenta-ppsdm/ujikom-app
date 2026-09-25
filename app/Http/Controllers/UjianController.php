@@ -151,11 +151,6 @@ class UjianController extends Controller
         $skorFinal = 0;
 
         try{
-            // 1. Ambil seluruh jawaban peserta pada jadwal itu
-            // 2. bandingin jawaban peserta dengan kunci jawaban
-            // 3. menyimpan jawabannya benar atau salah di db
-            // 4. hitung skornya
-
             $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalUjianId);
             $jumlahJawaban = $jawabanPeserta->count();
             $skorSoal = 100/$jumlahJawaban;
@@ -194,5 +189,18 @@ class UjianController extends Controller
                 'message' => 'Gagal mengoreksi ujian: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function result(int $jadwalUjianId)
+    {
+        $jadwalUjian = $this->jadwalUjianRepository->find($jadwalUjianId, 'id')->first();
+
+        abort_unless($jadwalUjian && (int) $jadwalUjian->peserta_id === (int) Auth::id(), 404);
+
+        $jawabanUjian = $this->jawabanUjianRepository
+            ->getByPesertaAndJadwal(Auth::id(), $jadwalUjianId)
+            ->load('soal');
+
+        return view('peserta.hasilUjian', compact('jadwalUjian', 'jawabanUjian'));
     }
 }

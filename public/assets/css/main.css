@@ -434,6 +434,333 @@ body.sidebar-minimized .sidebar-profile {
     justify-content: flex-start;
 }
 
+.peserta-result-page {
+    max-width: 930px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    color: #253452;
+}
+
+.result-score-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 1.25rem;
+    min-height: 13.5rem;
+    padding: 1.8rem 2rem;
+    border: 1px solid #b9dfca;
+    border-radius: 14px;
+    background: #f2fbf5;
+}
+
+.result-overline {
+    margin: 0 0 0.45rem;
+    color: #4b8f6a;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.result-score-value {
+    margin: 0;
+    color: #327b54;
+    font-size: 5.8rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+}
+
+.result-score-value small {
+    color: #639579;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: 0;
+}
+
+.result-subtitle {
+    margin: 0.8rem 0 0;
+    color: #60806f;
+    font-size: 1.05rem;
+}
+
+.result-score-meta {
+    display: flex;
+    min-width: 5.2rem;
+    min-height: 5.2rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.7rem;
+    border-left: 0;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.result-score-meta span {
+    color: #6b9179;
+    font-size: 0.82rem;
+}
+
+.result-score-meta strong {
+    color: #328158;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+.result-score-meta.is-wrong span,
+.result-score-meta.is-wrong strong {
+    color: #d25d65;
+}
+
+.result-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.result-metrics > div {
+    min-width: 0;
+    min-height: 7.5rem;
+    padding: 1.3rem 1.2rem;
+    border: 1px solid #e1e6ee;
+    border-radius: 9px;
+    background: #ffffff;
+}
+
+.result-metric-label,
+.result-metric-value {
+    display: block;
+}
+
+.result-metric-label {
+    margin-bottom: 0.65rem;
+    color: #7b8ba5;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.result-metric-label i {
+    margin-right: 0.2rem;
+    color: #5869dc;
+}
+
+.result-metric-value {
+    overflow: hidden;
+    color: #233452;
+    font-size: 1rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.result-question-list {
+    margin-top: 1.6rem;
+}
+
+.result-question-card {
+    margin-bottom: 1rem;
+    padding: 2rem 2.1rem;
+    border: 1px solid #e0e5ed;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.result-question-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.15rem;
+}
+
+.result-question-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    min-width: 0;
+}
+
+.result-question-number {
+    display: inline-grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    flex: 0 0 1.8rem;
+    place-items: center;
+    border-radius: 50%;
+    color: #5968d8;
+    background: #eef0ff;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.result-question-title h2 {
+    margin: 0;
+    color: #243452;
+    font-size: 1.35rem;
+    font-weight: 800;
+}
+
+.result-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.result-status.is-correct {
+    color: #328458;
+    background: #eaf8ef;
+}
+
+.result-status.is-wrong {
+    color: #d15b62;
+    background: #fff0f0;
+}
+
+.result-question-text {
+    margin: 0 0 1.1rem;
+    color: #34435d;
+    font-size: 1.08rem;
+    line-height: 1.6;
+}
+
+.result-options {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.result-option {
+    display: grid;
+    grid-template-columns: 0.75rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.65rem;
+    min-height: 3.5rem;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid #e5e9f0;
+    border-radius: 6px;
+    background: #fafbfd;
+    color: #46546c;
+    font-size: 0.95rem;
+}
+
+.result-option-mark {
+    display: inline-flex;
+    color: #c7ced8;
+    font-size: 1.2rem;
+}
+
+.result-option-text {
+    min-width: 0;
+}
+
+.result-option-label {
+    color: #4c9268;
+    font-size: 0.7rem;
+    white-space: nowrap;
+}
+
+.result-option.is-key {
+    border-color: #b9dfc8;
+    background: #edf9f1;
+}
+
+.result-option.is-key .result-option-mark,
+.result-option.is-key .result-option-label {
+    color: #439663;
+}
+
+.result-option.is-answer-wrong {
+    border-color: #efc2c4;
+    background: #fff1f1;
+}
+
+.result-option.is-answer-wrong .result-option-mark,
+.result-option.is-answer-wrong .result-option-label {
+    color: #d15b62;
+}
+
+.result-explanation {
+    margin-top: 1.05rem;
+    padding: 1.1rem 1.2rem;
+    border-radius: 7px;
+    background: #f3f5fa;
+}
+
+.result-explanation-title {
+    margin: 0 0 0.5rem;
+    color: #5868d8;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.result-explanation p:last-child {
+    margin: 0;
+    color: #71809a;
+    font-size: 0.9rem;
+    line-height: 1.65;
+}
+
+.result-empty {
+    padding: 1rem;
+    border: 1px solid #e0e5ed;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.result-empty p {
+    margin: 0 0 0.25rem;
+    color: #263654;
+    font-size: 0.85rem;
+    font-weight: 800;
+}
+
+.result-empty span {
+    color: #71809a;
+    font-size: 0.7rem;
+}
+
+@media (max-width: 575.98px) {
+    .peserta-result-page {
+        padding-right: 0.25rem;
+        padding-left: 0.25rem;
+    }
+
+    .result-score-card {
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 0.45rem;
+        min-height: 8rem;
+        padding: 0.75rem;
+    }
+
+    .result-score-value {
+        font-size: 3rem;
+    }
+
+    .result-score-meta {
+        min-width: 2.65rem;
+        padding-left: 0.45rem;
+    }
+
+    .result-metrics {
+        gap: 0.35rem;
+    }
+
+    .result-metrics > div {
+        min-height: 4.5rem;
+        padding: 0.5rem;
+    }
+
+    .result-question-card {
+        padding: 1rem;
+    }
+}
 .peserta-page .main-wrapper > .row {
     width: 100%;
     max-width: 1640px;

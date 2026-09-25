@@ -59,13 +59,6 @@
                         'ahli madya'  => 'level 4', 
                         'ahli utama'  => 'level 5', 
                     };
-
-                    $wordingButton = match(strtolower($dataUjian->status)){
-                        'terjadwal'         => 'Kerjakan Ujian',
-                        'sedang berlangsung'=> 'Kerjakan Ujian',
-                        'selesai'           => 'Lihat Hasil Ujian',
-                        default             => 'Lihat Selengkapnya'
-                    }
                     @endphp
                     <div class="ui-card mb-3">
                         <div class="ui-card-heading">
@@ -113,10 +106,27 @@
                                 <span class="ui-metric-value ui-metric-value-accent">JF {{$dataUjian->jenjang_tujuan}}</span>
                             </div>
                         </div>
-        
-                        <a href="#">
+
+                        @php
+                            $status = $dataUjian->status;
+
+                            $wordingButton = match(strtolower($dataUjian->status)){
+                                'terjadwal'         => 'Kerjakan Ujian',
+                                'sedang berlangsung'=> 'Kerjakan Ujian',
+                                'selesai'           => 'Lihat Hasil Ujian',
+                                default             => 'Lihat Selengkapnya'
+                            };
+                        
+                            if ($status === 'selesai') {
+                                $targetUrl = route('ujian.result', $dataUjian->id); 
+                            } else {
+                                $targetUrl = route('ujian.start', $dataUjian->id); 
+                            }
+                        @endphp
+                        
+                        <a href="{{ $targetUrl }}" class="text-decoration-none">
                             <button class="ui-card-action" type="button">
-                                {{$wordingButton}}
+                                {{ $wordingButton }}
                                 <i class="bi bi-arrow-right" aria-hidden="true"></i>
                             </button>
                         </a>
