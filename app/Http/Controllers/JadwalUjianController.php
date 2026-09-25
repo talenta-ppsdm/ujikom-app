@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusJadwalUjianEnum;
 use App\Enums\TujuanUjianEnum;
 use App\Models\JadwalUjian;
 use App\Repositories\JadwalUjianRepository;
 use App\Repositories\PengujiRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JadwalUjianController extends Controller
 {
@@ -56,6 +58,13 @@ class JadwalUjianController extends Controller
             'keterangan' => 'nullable|string|max:255',
             'jenjang_tujuan' => 'nullable|string|max:255',
         ]);
+
+        $hasActiveUjian = $this->jadwalUjianRepository->hasActiveUjian($request->peserta_id);
+        if ($hasActiveUjian) {
+            if ($hasActiveUjian) {
+                return redirect()->back()->with('error', 'Gagal: Terdapat ujian yang sedang berlangsung/terjadwal.');
+            }
+        }
 
         // count the duration in minutes
         $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);

@@ -1,7 +1,8 @@
 <?php
     
 namespace App\Repositories;
-    
+
+use App\Enums\StatusJadwalUjianEnum;
 use Prettus\Repository\Eloquent\BaseRepository;
 use App\Models\{JadwalUjian};
     
@@ -38,5 +39,14 @@ class JadwalUjianRepository extends BaseRepository
     public function getByPeserta(int $pesertId)
     {
         return $this->model->where('peserta_id', "=", $pesertId)->get();
+    }
+
+    public function hasActiveUjian(int $pesertaId)
+    {
+        return $this->model->where('peserta_id', '=', $pesertaId)
+            ->whereIn('status', [
+                StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value,
+                StatusJadwalUjianEnum::TERJADWAL->value
+            ])->exists(); //Returns boolean true if it exists, false if it doesn’t
     }
 }

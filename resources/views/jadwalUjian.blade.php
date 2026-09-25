@@ -23,13 +23,13 @@
       @endif
   
       @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3">
+      <div class="col-12 alert-custom alert-custom-danger mt-3 show" role="alert">
           <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
           <div class="alert-custom-content">
-            {{ session('error') }}
+              {{ session('error') }}
           </div>
-        </div>
-      @endif
+      </div>
+  @endif
     </div>
 </div>
 @endsection
