@@ -4,9 +4,12 @@ namespace App\Models;
 
 use App\Enums\TujuanUjianEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JadwalUjian extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'jadwal_ujian';
     protected $fillable = [
         'peserta_id',
