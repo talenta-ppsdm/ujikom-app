@@ -75,4 +75,10 @@ class PengumumanController extends Controller
 
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
+
+    public function destroy(int $id){
+        $this->pengumumanRepository->delete($id);
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
+    }
 }

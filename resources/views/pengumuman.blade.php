@@ -66,7 +66,15 @@
           <td>{{ $p->tgl_berakhir }}</td>
           <td>
             <div class="d-flex justify-content-center gap-1">
+              <!-- Add btn -->
               <button class="table-btn-action" title="View Pengumuman" type="button" data-bs-toggle="modal" data-bs-target="#viewPengumumanModal-{{ $p->id }}"><i class="bi bi-eye"></i></button>
+
+              <!-- Delete btn -->
+              <form action="{{ route('pengumuman.destroy', $p->id) }}" method="POST" style="display: inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
+              </form>
             </div>
           </td>
         </tr>
