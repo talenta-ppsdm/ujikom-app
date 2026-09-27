@@ -38,6 +38,13 @@
               <span>Bank Soal</span>
             </a>
           </li>
+
+          <li class="sidebar-menu-item">
+            <a href="/pengumuman" class="sidebar-menu-link" id="menu-pengumuman" title="Pengumuman">
+              <i class="bi bi-megaphone-fill"></i>
+              <span>Pengumuman</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>

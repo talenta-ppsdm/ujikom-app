@@ -5,8 +5,10 @@ use App\Http\Controllers\BankSoalController;
 use App\Http\Controllers\DashboardPesertaController;
 use App\Http\Controllers\JadwalUjianController;
 use App\Http\Controllers\PengujiController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\UjianController;
+use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -50,3 +52,6 @@ Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.
 Route::post('/ujian/simpan', [UjianController::class, 'saveAnswer'])->name('ujian.saveAnswer');
 Route::post('/ujian/selesai', [UjianController::class, 'finish'])->name('ujian.finish');
 Route::get('/ujian/{id}/hasil', [UjianController::class, 'result'])->name('ujian.result');
+
+Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
+Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');

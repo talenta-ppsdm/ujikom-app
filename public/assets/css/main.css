@@ -4954,6 +4954,191 @@ span.flatpickr-weekday {
     color: #FFFFFF;
 }
 
+.recipient-target-label {
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.recipient-target-option {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 76px;
+    padding: 0.75rem 0.875rem;
+    border: 2px solid var(--border-light);
+    border-radius: 0.875rem;
+    background: #F8FAFC;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.recipient-target-option.is-selected {
+    border-color: var(--brand-lime);
+    background: rgba(47, 107, 255, 0.06);
+}
+
+.recipient-target-icon {
+    display: inline-flex;
+    flex: 0 0 36px;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 0.625rem;
+    background: #FFFFFF;
+    color: var(--brand-forest-medium);
+    font-size: 1rem;
+}
+
+.recipient-target-option.is-selected .recipient-target-icon {
+    background: var(--brand-lime);
+    color: #FFFFFF;
+}
+
+.recipient-target-option:focus-visible {
+    outline: 3px solid var(--brand-lime-translucent);
+    outline-offset: 2px;
+}
+
+.recipient-target-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.recipient-target-title {
+    color: var(--text-main);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.recipient-target-description {
+    color: var(--text-muted-green);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+}
+
+.recipient-picker {
+    margin-top: 1.25rem;
+}
+
+.recipient-picker[hidden] {
+    display: none;
+}
+
+.recipient-picker-panel {
+    padding: 0.875rem;
+    border: 1px solid var(--border-light);
+    border-radius: 0.875rem;
+    background: #F8FAFC;
+}
+
+.recipient-search {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.recipient-search .bi-search {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    color: #94A3B8;
+    transform: translateY(-50%);
+}
+
+.recipient-search input {
+    width: 100%;
+    min-height: 46px;
+    padding: 0.625rem 0.875rem 0.625rem 2.75rem;
+    border: 1px solid var(--border-light);
+    border-radius: 0.625rem;
+    background: #FFFFFF;
+    color: var(--text-main);
+}
+
+.recipient-search input:focus {
+    border-color: var(--brand-lime);
+    outline: 3px solid var(--brand-lime-translucent);
+}
+
+.recipient-picker-count {
+    margin: 0 0 0.5rem 0.25rem;
+    color: var(--text-muted-green);
+    font-size: 0.8125rem;
+}
+
+.recipient-list {
+    display: grid;
+    gap: 0.375rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.recipient-person {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    min-height: 62px;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.625rem;
+    background: #FFFFFF;
+    cursor: pointer;
+}
+
+.recipient-person input {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    margin: 0;
+    accent-color: var(--brand-lime);
+}
+
+.recipient-person-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.recipient-person-name {
+    color: var(--text-main);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.recipient-person-email {
+    overflow: hidden;
+    color: var(--text-muted-green);
+    font-size: 0.8125rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.recipient-list-empty {
+    margin: 0;
+    padding: 0.75rem;
+    color: var(--text-muted-green);
+    font-size: 0.875rem;
+}
+
+.recipient-validation-message {
+    margin-top: 0.5rem;
+    color: #DC2626;
+    font-size: 0.8125rem;
+}
+
+.recipient-validation-message[hidden] {
+    display: none;
+}
+
 .btn-custom-secondary {
     background-color: var(--brand-lime);
     border-color: var(--brand-lime);
@@ -5335,5 +5520,16 @@ span.flatpickr-weekday {
     color: var(--brand-lime) !important;
 }
 
-
-
+/* ---------------------------------------------------------------------
+   25. Style on Bank Soal Page
+--------------------------------------------------------------------- */
+.answer-option-key.active {
+        background-color: #3b9b72 !important;
+        color: #ffffff !important;
+        border-color: #3b9b72 !important;
+    }
+    
+    .answer-option-input.is-correct {
+        border-color: #a3e6cd !important;
+        background-color: #f6fbf8 !important;
+    }

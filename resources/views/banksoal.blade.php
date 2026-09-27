@@ -3,19 +3,6 @@
 @section('title', 'Bank Soal | Sistem Uji Kompetensi')
 
 @section('hero')
-<style>
-    .answer-option-key.active {
-        background-color: #3b9b72 !important;
-        color: #ffffff !important;
-        border-color: #3b9b72 !important;
-    }
-    
-    .answer-option-input.is-correct {
-        border-color: #a3e6cd !important;
-        background-color: #f6fbf8 !important;
-    }
-</style>
-
 <div class="page-header">
     <div>
       <h1 class="page-title">Bank Soal</h1>
