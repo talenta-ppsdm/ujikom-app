@@ -15,4 +15,9 @@ class Pengumuman extends Model
         'tgl_terbit',
         'tgl_berakhir',
     ];
+
+    public function penerima()
+    {
+        return $this->hasMany(PengumumanPeserta::class, 'pengumuman_id');
+    }
 }

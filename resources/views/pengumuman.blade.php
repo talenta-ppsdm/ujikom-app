@@ -66,7 +66,7 @@
           <td>{{ $p->tgl_berakhir }}</td>
           <td>
             <div class="d-flex justify-content-center gap-1">
-              <a href="#" class="table-btn-action" title="View details"><i class="bi bi-eye"></i></a>
+              <button class="table-btn-action" title="View Pengumuman" type="button" data-bs-toggle="modal" data-bs-target="#viewPengumumanModal-{{ $p->id }}"><i class="bi bi-eye"></i></button>
             </div>
           </td>
         </tr>
@@ -75,6 +75,64 @@
     </table>
   </div>
 </div>
+
+    @foreach($pengumuman as $p)
+      <div class="modal fade modal-standard" id="viewPengumumanModal-{{ $p->id }}" tabindex="-1" aria-labelledby="viewPengumumanModalLabel-{{ $p->id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered announcement-detail-dialog">
+          <div class="modal-content bg-white">
+            <div class="modal-header announcement-detail-header">
+              <div class="announcement-detail-heading">
+                <span class="announcement-detail-heading-icon"><i class="bi bi-megaphone"></i></span>
+                <h2 class="modal-title" id="viewPengumumanModalLabel-{{ $p->id }}">Detail Pengumuman</h2>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body announcement-detail-body">
+              <h3 class="announcement-detail-title">{{ ucwords($p->judul) }}</h3>
+              <div class="announcement-detail-badges">
+                <span class="announcement-detail-badge announcement-detail-status {{ strtolower($p->status) === 'aktif' ? 'is-active' : 'is-inactive' }}">{{ ucfirst($p->status) }}</span>
+                <span class="announcement-detail-badge announcement-detail-target">
+                  <i class="bi bi-people" aria-hidden="true"></i>
+                  {{ $p->tipe_target === 'semua' ? 'Semua Peserta' : 'Peserta Terpilih' }}
+                </span>
+              </div>
+
+              <div class="announcement-detail-meta">
+                <div class="announcement-detail-row">
+                  <span class="announcement-detail-row-icon"><i class="bi bi-calendar-event"></i></span>
+                  <div>
+                    <div class="announcement-detail-label">Tanggal Terbit</div>
+                    <div class="announcement-detail-value">{{ $p->tgl_terbit ? \Carbon\Carbon::parse($p->tgl_terbit)->format('Y-m-d') : '-' }}</div>
+                  </div>
+                </div>
+                <div class="announcement-detail-row">
+                  <span class="announcement-detail-row-icon"><i class="bi bi-calendar-check"></i></span>
+                  <div>
+                    <div class="announcement-detail-label">Tanggal Berakhir</div>
+                    <div class="announcement-detail-value">{{ $p->tgl_berakhir ? \Carbon\Carbon::parse($p->tgl_berakhir)->format('Y-m-d') : '-' }}</div>
+                  </div>
+                </div>
+                <div class="announcement-detail-row">
+                  <span class="announcement-detail-row-icon"><i class="bi bi-person"></i></span>
+                  <div>
+                    <div class="announcement-detail-label">Kepada</div>
+                    <div class="announcement-detail-value">{{ $p->penerima_count }} peserta{{ $p->tipe_target === 'semua' ? '' : ' terpilih' }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="announcement-detail-content">
+                <div class="announcement-detail-content-heading">
+                  <span class="announcement-detail-row-icon"><i class="bi bi-megaphone"></i></span>
+                  <div class="announcement-detail-label">Konten Pengumuman</div>
+                </div>
+                <div class="announcement-detail-message">{{ $p->konten }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    @endforeach
 @endsection
 
 <!-- Modal Tambah Pengumuman -->

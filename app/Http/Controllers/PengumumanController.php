@@ -29,6 +29,7 @@ class PengumumanController extends Controller
     public function index()
     {
         $pengumuman = $this->pengumumanRepository->all();
+        $pengumuman->loadCount('penerima');
         $peserta = $this->pesertaRepository->all();
         return view('pengumuman', compact('pengumuman', 'peserta'));
     }
