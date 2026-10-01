@@ -55,4 +55,5 @@ Route::get('/ujian/{id}/hasil', [UjianController::class, 'result'])->name('ujian
 
 Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
 Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');

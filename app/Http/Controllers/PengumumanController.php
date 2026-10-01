@@ -8,6 +8,7 @@ use App\Repositories\PengumumanPesertaRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PengumumanController extends Controller
 {
@@ -74,6 +75,40 @@ class PengumumanController extends Controller
         }
 
         return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan.');
+    }
+
+    public function update(Request $request, int $id)
+    {
+        $validatedData = $request->validate([
+            'judul' => 'required|string',
+            'konten' => 'required|string',
+            'tipe_target' => 'required|in:semua,peserta terpilih',
+            'tgl_terbit' => 'required|date',
+            'tgl_berakhir' => 'nullable|date|after_or_equal:tgl_terbit',
+            'peserta_ids' => 'required_if:tipe_target,peserta terpilih',
+            'peserta_ids.*' => 'integer|exists:peserta,id',
+        ]);
+
+        $recipientIds = $validatedData['peserta_ids'] ?? [];
+        unset($validatedData['peserta_ids']);
+
+        DB::transaction(function () use ($validatedData, $id, $recipientIds) {
+            $pengumuman = $this->pengumumanRepository->update($validatedData, $id);
+            $pengumuman->penerima()->delete();
+
+            if ($validatedData['tipe_target'] === TargetPengumumanEnum::SEMUA->value) {
+                $recipientIds = $this->pesertaRepository->all()->pluck('id')->all();
+            }
+
+            foreach ($recipientIds as $pesertaId) {
+                $this->pengumumanPesertaRepository->create([
+                    'pengumuman_id' => $pengumuman->id,
+                    'peserta_id' => $pesertaId,
+                ]);
+            }
+        });
+
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui.');
     }
 
     public function destroy(int $id){
