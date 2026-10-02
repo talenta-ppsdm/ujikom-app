@@ -26,4 +26,18 @@ class PengumumanRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getPesertaActivePengumuman($pesertaId)
+    {
+        return $this->model
+            ->where('status', 'aktif')
+            ->where(function ($query) use ($pesertaId) {
+                $query->where('tipe_target', 'semua')
+                    ->orWhereHas('penerima', function ($subQuery) use ($pesertaId) {
+                        $subQuery->where('peserta_id', $pesertaId);
+                    });
+            })
+            ->orderByDesc('tgl_terbit')
+            ->get();
+    }
 }

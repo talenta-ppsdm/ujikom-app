@@ -14,9 +14,9 @@
             <i class="bi bi-house-door" aria-hidden="true"></i>
             <span>Beranda</span>
         </a>
-        <a class="peserta-nav-link" href="">
+        <a class="peserta-nav-link" href="/riwayat-ujian">
             <i class="bi bi-journal-check" aria-hidden="true"></i>
-            <span>Ujian CBT</span>
+            <span>Riwayat Ujian</span>
         </a>
         <a class="peserta-nav-link peserta-nav-announcement" href="">
             <i class="bi bi-bell" aria-hidden="true"></i>

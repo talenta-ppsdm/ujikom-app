@@ -8,6 +8,7 @@ use App\Http\Controllers\PengujiController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\UjianController;
+use App\Http\Controllers\RiwayatUjianController;
 use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Route;
 
@@ -57,3 +58,6 @@ Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumu
 Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
 Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+
+Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])->name('riwayat-ujian.index');
+

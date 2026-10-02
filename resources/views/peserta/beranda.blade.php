@@ -274,25 +274,16 @@
                         <i class="bi bi-bell" aria-hidden="true"></i>
                         Pengumuman Terbaru
                     </h2>
-                    <span class="ui-broadcast-count">2 Baru</span>
                 </div>
 
                 <div class="ui-broadcast-list">
+                    @foreach($pengumuman as $dataPengumuman)
                     <article class="ui-broadcast-item">
-                        <h3>Pedoman Teknis dan Tata Tertib Uji Kompetensi...</h3>
-                        <p>Peserta diwajibkan mematuhi tata tertib pelaksanaan uji kompetensi: hadir/login 15 menit sebelum ujian, tidak...</p>
-                        <time datetime="2026-08-22">2026-08-22</time>
+                        <h3>{{ucwords(substr($dataPengumuman->judul, 0, 50))}}...</h3>
+                        <p>{{ucfirst(substr($dataPengumuman->konten, 0, 100))}}...</p>
+                        <time datetime="{{$dataPengumuman->tgl_terbit}}">{{$dataPengumuman->tgl_terbit}}</time>
                     </article>
-                    <article class="ui-broadcast-item">
-                        <h3>Pemberitahuan Pembagian Sesi Ujian Gelomba...</h3>
-                        <p>Peserta yang belum terjadwal pada Gelombang I diharapkan memeriksa notifikasi sistem secara berkala...</p>
-                        <time datetime="2026-08-28">2026-08-28</time>
-                    </article>
-                    <article class="ui-broadcast-item">
-                        <h3>Pengumuman Penerbitan Surat Rekomendasi...</h3>
-                        <p>Bagi peserta yang telah dinyatakan LULUS pada periode evaluasi Agustus 2026, e-Sertifikat dan Surat...</p>
-                        <time datetime="2026-08-30">2026-08-30</time>
-                    </article>
+                    @endforeach
                 </div>
             </section>
         </div>

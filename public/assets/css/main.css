@@ -441,6 +441,131 @@ body.sidebar-minimized .sidebar-profile {
     color: #253452;
 }
 
+.exam-history {
+    padding-bottom: 1.5rem;
+    color: #26364f;
+}
+
+.exam-history-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0 0 1.35rem;
+    color: #64748b;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.exam-history-back:hover {
+    color: #5444e8;
+}
+
+.exam-history-heading h1 {
+    margin: 0;
+    color: #101828;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.exam-history-heading p {
+    margin: 0.25rem 0 1.75rem;
+    color: #718096;
+    font-size: 0.98rem;
+}
+
+.exam-history-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.35rem;
+}
+
+.exam-history-year {
+    position: relative;
+    display: flex;
+    width: 12.5rem;
+    min-height: 2.9rem;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0 0.95rem;
+    border: 1px solid #e7eaf0;
+    border-radius: 0.8rem;
+    background: #ffffff;
+    box-shadow: 0 2px 5px rgba(20, 35, 60, 0.04);
+    color: #5945e8;
+}
+
+.exam-history-year select {
+    width: 100%;
+    appearance: none;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #172033;
+    font: inherit;
+    font-weight: 700;
+}
+
+.exam-history-year-chevron {
+    color: #8994a5;
+    font-size: 0.72rem;
+    pointer-events: none;
+}
+
+.exam-history-badge {
+    display: inline-flex;
+    min-width: 5.1rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.exam-history-badge.is-passed {
+    background: #edf8f0;
+    color: #4d9967;
+}
+
+.exam-history-badge.is-failed {
+    background: #fbefef;
+    color: #cf5b5b;
+}
+
+.exam-history-badge.is-scheduled {
+    background: #fff5df;
+    color: #a87527;
+}
+
+@media (max-width: 767.98px) {
+    .exam-history-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .exam-history-year {
+        width: 100%;
+        flex-basis: auto;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .exam-history-heading h1 {
+        font-size: 1.65rem;
+    }
+
+    .exam-history-heading p {
+        margin-bottom: 1.2rem;
+        font-size: 0.88rem;
+    }
+
+}
+
 .result-score-card {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto;

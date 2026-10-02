@@ -41,6 +41,23 @@ class JadwalUjianRepository extends BaseRepository
         return $this->model->where('peserta_id', "=", $pesertId)->get();
     }
 
+    public function getByPesertaAndYear(int $pesertId, int $year)
+    {
+        return $this->model->where('peserta_id', "=", $pesertId)
+            ->whereYear('tanggal_ujian', $year)
+            ->get();
+    }
+
+    public function getAvailableYearsByPeserta(int $pesertaId)
+    {
+        return $this->model->where('peserta_id', $pesertaId)
+            ->whereNotNull('tanggal_ujian')
+            ->selectRaw('DISTINCT strftime("%Y", tanggal_ujian) as year')
+            ->pluck('year')
+            ->filter()
+            ->sortDesc(); // Dari tahun terbaru ke lama
+    }
+
     public function hasActiveUjian(int $pesertaId)
     {
         return $this->model->where('peserta_id', '=', $pesertaId)
