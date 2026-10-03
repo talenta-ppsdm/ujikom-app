@@ -10,15 +10,15 @@
     </a>
     
     <nav class="peserta-nav" aria-label="Navigasi peserta">
-        <a class="peserta-nav-link active" href="/beranda">
+        <a class="peserta-nav-link {{ request()->routeIs('dashboard-peserta.index') ? 'active' : '' }}" href="{{ route('dashboard-peserta.index') }}">
             <i class="bi bi-house-door" aria-hidden="true"></i>
             <span>Beranda</span>
         </a>
-        <a class="peserta-nav-link" href="/riwayat-ujian">
+        <a class="peserta-nav-link {{ request()->routeIs('riwayat-ujian.index') ? 'active' : '' }}" href="{{ route('riwayat-ujian.index') }}">
             <i class="bi bi-journal-check" aria-hidden="true"></i>
             <span>Riwayat Ujian</span>
         </a>
-        <a class="peserta-nav-link peserta-nav-announcement" href="">
+        <a class="peserta-nav-link peserta-nav-announcement" >
             <i class="bi bi-bell" aria-hidden="true"></i>
             <span>Pengumuman</span>
             <b aria-label="2 pengumuman baru">2</b>

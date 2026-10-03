@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- Card List Jadwal Ujian -->
-                @foreach($ujian as $dataUjian)
+                @foreach($recentUjian as $dataUjian)
                     @php
                     $statusBadgeClass = match(strtolower($dataUjian->status)){
                         'terjadwal'          => 'ui-badge-warning',
@@ -135,16 +135,18 @@
                 <!-- END Card List Ujian -->
 
                 <div class="d-flex justify-content-center mt-3">
-                    <button type="button" class="ui-card-action ui-card-action-ghost">
-                        Selengkapnya
-                        <i class="bi bi-arrow-right" aria-hidden="true"></i>
-                    </button>
+                    <a href="/riwayat-ujian">
+                        <button type="button" class="ui-card-action ui-card-action-ghost">
+                            Selengkapnya
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </a>
                 </div>
             </section>
         </div>
     
         <!-- Card Ujikom question level -->
-         @if($ujianTerjadwal !== null)
+         @if($recentUjianTerjadwal !== null)
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">
                 <h2 class="ui-section-heading" id="level-title">
@@ -154,7 +156,7 @@
     
                 <div class="ui-level-grid">
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli pertama"])
+                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli pertama"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Pertama</span>
@@ -163,7 +165,7 @@
                         <p class="ui-level-description">Pemahaman dasar perumahan swadaya &amp; regulasi</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli muda"])
+                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli muda"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Muda</span>
@@ -172,7 +174,7 @@
                         <p class="ui-level-description">Pengawasan PSU, pengelolaan rusun &amp; koordinasi</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli madya"])
+                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli madya"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Madya</span>
@@ -181,7 +183,7 @@
                         <p class="ui-level-description">Evaluasi program, mitigasi bencana &amp; kebijakan</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($ujianTerjadwal->jenjang_tujuan) === "ahli utama"])
+                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli utama"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Utama</span>
@@ -228,7 +230,7 @@
                         </span>
                         <h2 class="ui-summary-heading" id="session-title">Rekapitulasi Ujian</h2>
                     </div>
-                    <span class="ui-summary-total">7 ujian</span>
+                    <span class="ui-summary-total">{{count($ujian)}} ujian</span>
                 </div>
 
                 <div class="ui-summary-list">
@@ -237,19 +239,9 @@
                             <span class="ui-summary-badge ui-badge-success">
                                 <i class="bi bi-check-lg" aria-hidden="true"></i>
                             </span>
-                            <span class="ui-summary-label">Ujian Lulus</span>
+                            <span class="ui-summary-label">Ujian Selesai</span>
                         </div>
-                        <span class="ui-summary-value ui-summary-value-success">4</span>
-                    </div>
-
-                    <div class="ui-summary-row ui-summary-row-danger">
-                        <div class="ui-summary-meta">
-                            <span class="ui-summary-badge ui-badge-danger">
-                                <i class="bi bi-x-lg" aria-hidden="true"></i>
-                            </span>
-                            <span class="ui-summary-label">Ujian Tidak Lulus</span>
-                        </div>
-                        <span class="ui-summary-value ui-summary-value-danger">1</span>
+                        <span class="ui-summary-value ui-summary-value-success">{{count($ujianSelesai)}}</span>
                     </div>
 
                     <div class="ui-summary-row ui-summary-row-warning">
@@ -259,7 +251,7 @@
                             </span>
                             <span class="ui-summary-label">Ujian Terjadwal</span>
                         </div>
-                        <span class="ui-summary-value ui-summary-value-warning">2</span>
+                        <span class="ui-summary-value ui-summary-value-warning">{{count($ujianTerjadwal)}}</span>
                     </div>
                 </div>
             </section>

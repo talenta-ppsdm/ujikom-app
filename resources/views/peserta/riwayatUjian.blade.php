@@ -2,9 +2,9 @@
 
 @section('content')
 <div class="col-12 exam-history">
-	<a class="exam-history-back" href="#">
+	<a class="exam-history-back" href="/beranda" aria-label="Kembali ke beranda">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
-		Kembali
+		Beranda
 	</a>
 
 	<header class="exam-history-heading">

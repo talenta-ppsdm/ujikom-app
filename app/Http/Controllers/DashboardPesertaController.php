@@ -30,13 +30,21 @@ class DashboardPesertaController extends Controller
     public function index()
     {
         $user = $this->userRepository->with('peserta')->find(Auth::id());
-        $ujian = $this->jadwalUjianRepository->getByPeserta($user->id)
-            ->sortByDesc('created_at')->take(2)->values();   
-            
-        $ujianTerjadwal = $ujian->first(function ($itemUjian){
-            $statusUjian = strtolower($itemUjian->status);
-            return $statusUjian === StatusJadwalUjianEnum::TERJADWAL->value || $statusUjian === StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value;
+        $ujian = $this->jadwalUjianRepository->getByPeserta($user->id);
+        $ujianTerjadwal = $ujian->filter(function ($item) {
+            $status = strtolower($item->status->value ?? $item->status);
+            return in_array($status, [
+                StatusJadwalUjianEnum::TERJADWAL->value,
+                StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value,
+            ]);
         });
+        $ujianSelesai = $ujian->filter(function ($item) {
+            $status = strtolower($item->status->value ?? $item->status);
+            return $status === StatusJadwalUjianEnum::SELESAI->value;
+        });
+               
+        $recentUjian = $ujian->take(2)->values();
+        $recentUjianTerjadwal = $ujianTerjadwal->first();
 
         $pengumuman = $this->pengumumanRepository->getPesertaActivePengumuman($user->id)
             ->sortByDesc('tgl_terbit')->take(4)->values();
@@ -45,6 +53,9 @@ class DashboardPesertaController extends Controller
             'user', 
             'ujian',
             'ujianTerjadwal',
+            'ujianSelesai',
+            'recentUjianTerjadwal',
+            'recentUjian',
             'pengumuman'
         ));
     }
