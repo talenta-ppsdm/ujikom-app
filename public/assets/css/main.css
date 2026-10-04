@@ -415,7 +415,7 @@ body.sidebar-minimized .sidebar-profile {
     padding: 1.25rem 2.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: grid !important;
-    grid-template-columns: 1fr 480px 1fr !important;
+    grid-template-columns: 1fr auto !important;
     align-items: center;
     margin-bottom: 2rem;
     gap: 1.5rem;
@@ -1488,6 +1488,7 @@ body.sidebar-minimized .sidebar-profile {
     align-items: center;
     justify-content: flex-end;
     gap: 0.75rem;
+    margin-left: auto;
 }
 
 .navbar-action-btn {

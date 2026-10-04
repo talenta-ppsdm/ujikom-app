@@ -12,35 +12,50 @@
         <div class="sidebar-menu-title">Menu Utama</div>
         <ul class="sidebar-menu-list">
           <li class="sidebar-menu-item">
-            <a href="/peserta" class="sidebar-menu-link active" id="menu-peserta" title="Peserta">
-              <i class="bi bi-grid-fill"></i>
+            <a href="/peserta" 
+              class="sidebar-menu-link {{ request()->routeIs('peserta.index') ? 'active' : '' }}" 
+              id="menu-peserta" 
+              title="Peserta">
+              <i class="bi bi-people-fill"></i>
               <span>Peserta</span>
             </a>
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/jadwal-ujian" class="sidebar-menu-link" id="menu-jadwal-ujian" title="Jadwal Ujian">
-              <i class="bi bi-grid-fill"></i>
+            <a href="/jadwal-ujian" 
+              class="sidebar-menu-link {{ request()->routeIs('jadwal-ujian.index') ? 'active' : '' }}" 
+              id="menu-jadwal-ujian" 
+              title="Jadwal Ujian">
+              <i class="bi bi-calendar-check-fill"></i>
               <span>Jadwal Ujian</span>
             </a>
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/penguji" class="sidebar-menu-link" id="menu-penguji" title="Penguji Teknis">
-              <i class="bi bi-grid-fill"></i>
+            <a href="/penguji" 
+              class="sidebar-menu-link {{ request()->routeIs('penguji.index') ? 'active' : '' }}" 
+              id="menu-penguji" 
+              title="Penguji Teknis">
+              <i class="bi bi-person-fill-gear"></i>
               <span>Penguji Teknis</span>
             </a>
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/bank-soal" class="sidebar-menu-link" id="menu-banksoal" title="Bank Soal">
-              <i class="bi bi-grid-fill"></i>
+            <a href="/bank-soal" 
+              class="sidebar-menu-link {{ request()->routeIs('bank-soal.index') ? 'active' : '' }}" 
+              id="menu-banksoal" 
+              title="Bank Soal">
+              <i class="bi bi-collection-fill"></i>
               <span>Bank Soal</span>
             </a>
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/pengumuman" class="sidebar-menu-link" id="menu-pengumuman" title="Pengumuman">
+            <a href="/pengumuman" 
+              class="sidebar-menu-link {{ request()->routeIs('pengumuman.index') ? 'active' : '' }}" 
+              id="menu-pengumuman" 
+              title="Pengumuman">
               <i class="bi bi-megaphone-fill"></i>
               <span>Pengumuman</span>
             </a>

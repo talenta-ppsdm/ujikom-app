@@ -58,7 +58,7 @@
             <td><strong>{{ $j->peserta->nama }}</strong><br><small>{{ $j->peserta->nip }}</small></td>
             <td>{{ ucfirst($j->tujuan_ujian?->value) }}</td>
             <td>
-              <strong>{{ \Carbon\Carbon::parse($j->tanggal_ujian)->format('d M Y') }}</strong>
+              <strong>{{ $j->tanggal_ujian->translatedFormat('d F Y') }}</strong>
               <br>
               <small class="text-muted">
                 {{ \Carbon\Carbon::parse($j->waktu_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($j->waktu_selesai)->format('H:i') }}

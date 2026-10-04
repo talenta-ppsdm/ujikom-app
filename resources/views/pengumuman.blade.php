@@ -62,7 +62,7 @@
           <td>
             <span class="badge-table {{ $statusBadgeClass }}">{{ ucfirst( $p->status) }}</span>
           </td>
-          <td>{{ $p->tgl_terbit }}</td>
+          <td>{{ $p->tgl_terbit->translatedFormat('d F Y') }}</td>
           <td>{{ $p->tgl_berakhir }}</td>
           <td>
             <div class="d-flex justify-content-center gap-1">

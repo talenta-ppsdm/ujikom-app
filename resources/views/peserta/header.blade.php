@@ -21,7 +21,7 @@
         <a class="peserta-nav-link peserta-nav-announcement {{ request()->routeIs('riwayat-pengumuman.index') ? 'active' : '' }}" href="{{ route('riwayat-pengumuman.index') }}" >
             <i class="bi bi-bell" aria-hidden="true"></i>
             <span>Pengumuman</span>
-            <b aria-label="2 pengumuman baru">2</b>
+            <!-- <b aria-label="2 pengumuman baru">2</b> -->
         </a>
         <a class="peserta-nav-link peserta-nav-profile" href="">
             <i class="bi bi-person" aria-hidden="true"></i>
