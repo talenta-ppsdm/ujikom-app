@@ -13,10 +13,15 @@ class Pengumuman extends Model
     protected $fillable = [
         'judul',
         'konten',
-        'tipe_target', //semua, peserta_terpilih
+        'tipe_target',
         'status',
         'tgl_terbit',
         'tgl_berakhir',
+    ];
+
+    protected $casts = [
+        'tgl_terbit' => 'datetime', 
+        'tgl_berakhir' => 'datetime',
     ];
 
     public function penerima()

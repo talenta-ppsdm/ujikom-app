@@ -18,7 +18,7 @@
             <i class="bi bi-journal-check" aria-hidden="true"></i>
             <span>Riwayat Ujian</span>
         </a>
-        <a class="peserta-nav-link peserta-nav-announcement" >
+        <a class="peserta-nav-link peserta-nav-announcement {{ request()->routeIs('riwayat-pengumuman.index') ? 'active' : '' }}" href="{{ route('riwayat-pengumuman.index') }}" >
             <i class="bi bi-bell" aria-hidden="true"></i>
             <span>Pengumuman</span>
             <b aria-label="2 pengumuman baru">2</b>

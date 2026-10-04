@@ -10,11 +10,12 @@ class PengumumanPeserta extends Model
     protected $fillable = [
         'pengumuman_id',
         'peserta_id',
+        'is_read',
     ];
 
     public function pengumuman()
     {
-        return $this->belongsTo(pengumuman::class, 'pengumuman_id');
+        return $this->belongsTo(Pengumuman::class, 'pengumuman_id');
     }
 
     public function peserta()

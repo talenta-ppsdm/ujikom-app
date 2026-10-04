@@ -51,6 +51,7 @@ class PengumumanController extends Controller
             'tgl_berakhir'  => $validateData['tgl_berakhir'],
             'tipe_target'   => $validateData['tipe_target'],
             'status'        => StatusPengumumanEnum::AKTIF->value,
+            'is_read'       => false,
         ];
         $pengumuman = $this->pengumumanRepository->create($pengumumanData);
 

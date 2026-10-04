@@ -26,4 +26,12 @@ class PengumumanPesertaRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getByPengumumanAndPeserta(int $pengumumanId, int $pesertaId)
+    {
+        return $this->model->where([
+            'pengumuman_id' => $pengumumanId,
+            'peserta_id' => $pesertaId
+        ])->first();
+    }
 }

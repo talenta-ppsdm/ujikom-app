@@ -7,6 +7,7 @@ use App\Http\Controllers\JadwalUjianController;
 use App\Http\Controllers\PengujiController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PesertaController;
+use App\Http\Controllers\RiwayatPengumumanController;
 use App\Http\Controllers\UjianController;
 use App\Http\Controllers\RiwayatUjianController;
 use App\Models\Pengumuman;
@@ -60,4 +61,5 @@ Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('p
 Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
 
 Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])->name('riwayat-ujian.index');
-
+Route::get('riwayat-pengumuman', [RiwayatPengumumanController::class, 'index'])->name('riwayat-pengumuman.index');
+Route::post('/riwayat-pengumuman/{id}/read', [RiwayatPengumumanController::class, 'markAsRead'])->name('pengumuman.markAsRead');
