@@ -1016,11 +1016,11 @@ body.sidebar-minimized .sidebar-profile {
 .peserta-header {
     min-height: 100px;
     display: grid;
-    grid-template-columns: minmax(340px, 1.25fr) auto minmax(260px, 0.75fr);
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     grid-template-areas: "brand nav account";
     align-items: center;
-    gap: 2rem;
-    padding: 1rem 2rem;
+    gap: 1.5rem;
+    padding: 1rem max(2rem, calc((100vw - 1640px) / 2));
     border-top: 3px solid var(--brand-forest-dark);
     border-bottom: 1px solid var(--border-light);
     background: #FFFFFF;
@@ -1066,6 +1066,11 @@ body.sidebar-minimized .sidebar-profile {
     line-height: 1.2;
 }
 
+.peserta-brand-compact-title,
+.peserta-brand-compact-subtitle {
+    display: block;
+}
+
 .peserta-brand-copy small,
 .peserta-account-copy small {
     color: var(--text-muted-green);
@@ -1083,6 +1088,10 @@ body.sidebar-minimized .sidebar-profile {
     background: #F4F7FB;
     justify-self: center;
     grid-area: nav;
+}
+
+.peserta-menu-toggle {
+    display: none;
 }
 
 .peserta-nav-link {
@@ -1126,10 +1135,15 @@ body.sidebar-minimized .sidebar-profile {
     font-size: 0.72rem;
 }
 
+.peserta-nav-logout {
+    display: none;
+}
+
 .peserta-account {
     display: flex;
     align-items: center;
     gap: 0.9rem;
+    min-width: 0;
     justify-self: end;
     grid-area: account;
 }
@@ -1192,17 +1206,179 @@ body.sidebar-minimized .sidebar-profile {
 
 @media (max-width: 1200px) {
     .peserta-header {
-        grid-template-columns: minmax(0, 1fr) auto;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) auto auto;
         grid-template-areas:
-            "brand account"
-            "nav nav";
-        row-gap: 1rem;
+            "brand account toggle"
+            "nav nav nav";
+        column-gap: 1rem;
+        row-gap: 0;
+        padding: 0;
+    }
+
+    .peserta-brand {
+        gap: 0.75rem;
+        padding: 0.9rem 0 0.9rem 2rem;
+    }
+
+    .peserta-brand-mark {
+        flex-basis: 42px;
+        width: 42px;
+        height: 42px;
+    }
+
+    .peserta-brand-copy {
+        gap: 0.08rem;
+    }
+
+    .peserta-brand-copy .peserta-brand-compact-title {
+        color: #303f88;
+        font-size: 1.15rem;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .peserta-brand-copy .peserta-brand-compact-subtitle {
+        color: #606a7c;
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.2;
+    }
+
+    .peserta-account {
+        gap: 0;
+    }
+
+    .peserta-account-copy {
+        display: none;
+    }
+
+    .peserta-account > form {
+        display: none !important;
+    }
+
+    .peserta-account-avatar {
+        width: 42px;
+        height: 42px;
+        border-color: #e4e7ef;
+        color: #303f88;
+        background: #e5e6f5;
+        box-shadow: none;
+        font-size: 0.85rem;
+    }
+
+    .peserta-menu-toggle {
+        display: grid;
+        width: 40px;
+        height: 40px;
+        place-items: center;
+        padding: 0;
+        border: 0;
+        border-radius: 8px;
+        color: #4d566a;
+        background: transparent;
+        font-size: 1.35rem;
+        cursor: pointer;
+        grid-area: toggle;
+        margin-right: 2rem;
+    }
+
+    .peserta-menu-toggle:hover,
+    .peserta-menu-toggle:focus-visible {
+        color: #303f88;
+        background: #f3f5fa;
+    }
+
+    .peserta-menu-toggle:focus-visible {
+        outline: 2px solid #303f88;
+        outline-offset: 2px;
+    }
+
+    .peserta-menu-icon-close {
+        display: none;
+    }
+
+    .peserta-menu-toggle[aria-expanded="true"] .peserta-menu-icon-open {
+        display: none;
+    }
+
+    .peserta-menu-toggle[aria-expanded="true"] .peserta-menu-icon-close {
+        display: inline-block;
     }
 
     .peserta-nav {
-        grid-column: auto;
+        display: none;
+        grid-area: nav;
+        grid-column: 1 / -1;
         width: 100%;
+        margin: 0;
+        padding: 0.75rem 2rem 1rem;
+        justify-self: stretch;
+        align-items: stretch;
+        border: 0;
+        border-top: 1px solid var(--border-light);
+        border-radius: 0;
+        background: #FFFFFF;
+    }
+
+    .peserta-nav.is-open {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+
+    .peserta-nav-link {
+        width: 100%;
+        min-width: 0;
+        justify-content: flex-start;
+        gap: 0.65rem;
+        padding: 0.75rem 0;
+        border-radius: 0;
+        color: #626b7d;
+        font-size: 0.95rem;
+        box-shadow: none;
+    }
+
+    .peserta-nav-link:hover,
+    .peserta-nav-link.active {
+        color: #303f88;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .peserta-nav-link i {
+        display: none;
+    }
+
+    .peserta-nav-logout {
+        display: block;
+        margin-top: 0.35rem;
+    }
+
+    .peserta-nav-logout button {
+        display: flex;
+        width: 100%;
+        min-height: 48px;
+        align-items: center;
         justify-content: center;
+        gap: 0.55rem;
+        border: 0;
+        border-radius: 10px;
+        color: #FFFFFF;
+        background: #303f88;
+        font-size: 0.95rem;
+        font-weight: 700;
+    }
+
+    .peserta-nav-logout button:hover,
+    .peserta-nav-logout button:focus-visible {
+        background: #263573;
+    }
+
+    .peserta-nav-logout button:focus-visible {
+        outline: 2px solid #303f88;
+        outline-offset: 2px;
     }
 }
 
@@ -1244,90 +1420,47 @@ body.sidebar-minimized .sidebar-profile {
     }
 
     .peserta-header {
-        grid-template-columns: minmax(0, 1fr) auto;
-        gap: 1rem;
-        padding: 1rem 1.5rem 0;
+        min-height: 0;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        column-gap: 0.65rem;
+        row-gap: 0;
     }
 
     .peserta-brand {
-        width: auto;
+        width: 100%;
         min-width: 0;
-        gap: 0.85rem;
+        gap: 0.65rem;
+        padding: 0.8rem 0 0.8rem 1rem;
     }
 
     .peserta-brand-mark {
-        flex-basis: 48px;
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
-        color: #FFFFFF;
-        background: #4561EE;
-        font-size: 1.1rem;
-        font-weight: 800;
-    }
-
-    .peserta-brand-mark::after {
-        content: 'PK';
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
     }
 
     .peserta-brand-mark img {
-        display: none;
+        display: block;
     }
 
-    .peserta-brand-copy strong {
-        overflow: hidden;
-        font-size: 1.05rem;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .peserta-brand-copy small {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .peserta-nav {
-        margin: 0 -1.5rem;
-        padding: 0.65rem 1rem 0.55rem;
-        gap: 0.1rem;
-        justify-content: stretch;
-        overflow: visible;
-        border: 0;
-        border-top: 1px solid var(--border-light);
-        border-radius: 0;
-        background: #FFFFFF;
-    }
-
-    .peserta-nav-link {
-        flex: 1 1 0;
-        flex-direction: column;
-        justify-content: center;
-        gap: 0.35rem;
-        padding: 0.35rem 0.2rem 0.55rem;
-        font-size: 0.78rem;
-    }
-
-    .peserta-nav-link span {
-        display: inline;
-    }
-
-    .peserta-account {
-        gap: 0.4rem;
-    }
-
-    .peserta-account-copy {
-        display: none;
+    .peserta-brand-copy .peserta-brand-compact-title {
+        font-size: 1rem;
     }
 
     .peserta-account-avatar {
-        width: 40px;
-        height: 40px;
+        width: 36px;
+        height: 36px;
     }
 
-    .peserta-account button {
-        width: 2rem;
-        height: 2rem;
+    .peserta-menu-toggle {
+        margin-right: 1rem;
+    }
+
+    .peserta-nav {
+        width: 100%;
+        margin: 0;
+        padding: 0.7rem 1.5rem 0.9rem;
     }
 }
 
@@ -5996,3 +6129,295 @@ span.flatpickr-weekday {
         border-color: #a3e6cd !important;
         background-color: #f6fbf8 !important;
     }
+
+/* ---------------------------------------------------------------------
+   Participant Profile Page
+--------------------------------------------------------------------- */
+.participant-profile {
+    max-width: 1640px;
+    margin: 0 auto;
+    padding-bottom: 1rem;
+    color: #172033;
+}
+
+.participant-profile-back {
+    margin-top: 0.75rem;
+}
+
+.participant-profile-heading {
+    margin-bottom: 1.65rem;
+}
+
+.participant-profile-heading h1 {
+    margin: 0 0 0.25rem;
+    color: #151b2b;
+    font-size: clamp(1.8rem, 3vw, 2.35rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+}
+
+.participant-profile-heading p {
+    margin: 0;
+    color: #778196;
+    font-size: 0.98rem;
+}
+
+.participant-profile-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+    min-height: 142px;
+    margin-bottom: 1.4rem;
+    padding: 1.5rem 1.8rem;
+    border-radius: 22px;
+    color: #FFFFFF;
+    background: linear-gradient(112deg, #423e7f 0%, #302b68 55%, #211d50 100%);
+    box-shadow: 0 14px 28px rgba(40, 35, 94, 0.14);
+}
+
+.participant-profile-avatar-wrap {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.participant-profile-avatar {
+    display: grid;
+    width: 88px;
+    height: 88px;
+    place-items: center;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.17);
+    font-size: 1.65rem;
+    font-weight: 800;
+}
+
+.participant-profile-upload {
+    position: absolute;
+    right: -3px;
+    bottom: -2px;
+    display: grid;
+    width: 36px;
+    height: 36px;
+    place-items: center;
+    border: 2px solid #302b68;
+    border-radius: 50%;
+    color: #FFFFFF;
+    background: #6256ee;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.participant-profile-upload:hover {
+    background: #5145e5;
+    transform: scale(1.06);
+}
+
+.participant-profile-upload i {
+    font-size: 0.95rem;
+}
+
+.participant-profile-file {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.participant-profile-file:focus-visible + .participant-profile-upload,
+.participant-profile-avatar-wrap:focus-within .participant-profile-upload {
+    outline: 3px solid rgba(255, 255, 255, 0.8);
+    outline-offset: 3px;
+}
+
+.participant-profile-identity {
+    min-width: 0;
+}
+
+.participant-profile-identity h2 {
+    margin: 0 0 0.4rem;
+    color: #FFFFFF;
+    font-size: clamp(1.3rem, 2.4vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    overflow-wrap: anywhere;
+}
+
+.participant-profile-identity p {
+    margin: 0.18rem 0 0;
+    color: #d4d2f1;
+    font-size: 0.94rem;
+    overflow-wrap: anywhere;
+}
+
+.participant-profile-identity p span {
+    margin: 0 0.25rem;
+    color: #a9a5d3;
+}
+
+.participant-profile-card {
+    padding: 1.6rem 1.8rem 1.3rem;
+    border: 1px solid #e7eaf1;
+    border-radius: 22px;
+    background: #FFFFFF;
+    box-shadow: 0 8px 24px rgba(31, 41, 65, 0.035);
+}
+
+.participant-profile-card-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.participant-profile-card-heading h2 {
+    margin: 0;
+    color: #171c2a;
+    font-size: 1.08rem;
+    font-weight: 800;
+}
+
+.participant-profile-edit {
+    display: inline-flex;
+    min-height: 42px;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    border: 0;
+    border-radius: 10px;
+    color: #FFFFFF;
+    background: #5546e8;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.participant-profile-edit:hover {
+    background: #4537d0;
+    box-shadow: 0 6px 14px rgba(85, 70, 232, 0.2);
+    transform: translateY(-1px);
+}
+
+.participant-profile-edit:focus-visible,
+.participant-profile-back:focus-visible,
+.participant-profile-upload:focus-visible {
+    outline: 3px solid rgba(85, 70, 232, 0.35);
+    outline-offset: 3px;
+}
+
+.participant-profile-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2.2rem;
+    margin: 0;
+}
+
+.participant-profile-detail {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid #edf0f5;
+}
+
+.participant-profile-detail-icon {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    border-radius: 10px;
+    color: #6454f2;
+    background: #f1f0ff;
+    font-size: 1.05rem;
+}
+
+.participant-profile-detail > div {
+    min-width: 0;
+}
+
+.participant-profile-detail dt {
+    margin-bottom: 0.12rem;
+    color: #778196;
+    font-size: 0.78rem;
+    font-weight: 500;
+}
+
+.participant-profile-detail dd {
+    margin: 0;
+    color: #1a2030;
+    font-size: 0.94rem;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+    .participant-profile-heading {
+        margin-bottom: 1.25rem;
+    }
+
+    .participant-profile-hero {
+        min-height: 120px;
+        gap: 1rem;
+        padding: 1.2rem;
+        border-radius: 18px;
+    }
+
+    .participant-profile-avatar {
+        width: 72px;
+        height: 72px;
+        font-size: 1.4rem;
+    }
+
+    .participant-profile-card {
+        padding: 1.2rem;
+        border-radius: 18px;
+    }
+
+    .participant-profile-details {
+        grid-template-columns: 1fr;
+    }
+
+    .participant-profile-detail {
+        padding: 0.85rem 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .participant-profile-hero {
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .participant-profile-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+
+    .participant-profile-upload {
+        width: 30px;
+        height: 30px;
+    }
+
+    .participant-profile-identity p {
+        font-size: 0.82rem;
+    }
+
+    .participant-profile-card {
+        padding: 1rem;
+    }
+
+    .participant-profile-edit {
+        min-height: 38px;
+        padding: 0.45rem 0.7rem;
+        font-size: 0.76rem;
+    }
+}

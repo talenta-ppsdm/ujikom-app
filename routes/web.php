@@ -10,6 +10,7 @@ use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\RiwayatPengumumanController;
 use App\Http\Controllers\UjianController;
 use App\Http\Controllers\RiwayatUjianController;
+use App\Http\Controllers\PesertaProfilController;
 use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Route;
 
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])->name('riwayat-ujian.index');
     Route::get('riwayat-pengumuman', [RiwayatPengumumanController::class, 'index'])->name('riwayat-pengumuman.index');
     Route::post('/riwayat-pengumuman/{id}/read', [RiwayatPengumumanController::class, 'markAsRead'])->name('pengumuman.markAsRead');
+    Route::get('/peserta/profil', [PesertaProfilController::class, 'index'])->name('peserta.profil');
 });
 
 
