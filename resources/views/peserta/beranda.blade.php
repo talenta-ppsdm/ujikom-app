@@ -7,19 +7,23 @@
         <div class="peserta-welcome-content">
             <div class="peserta-welcome-badges">
                 <span class="peserta-welcome-badge">Portal Peserta Uji Kompetensi</span>
+                @if($user->peserta->jabatan)
                 <span class="peserta-welcome-badge peserta-welcome-badge-accent">
                     <i class="bi bi-mortarboard-fill" aria-hidden="true"></i>
                     Jabatan: {{ ucfirst($user->peserta->jabatan) }}
                 </span>
+                @endif
             </div>
 
-            <h1 id="welcome-title">Selamat Datang, {{ $user->peserta->nama}}</h1>
+            <h1 id="welcome-title">Selamat Datang, {{ ucwords($user->peserta->nama)}}</h1>
             <p class="peserta-welcome-identity">
                 NIP: {{ $user->peserta->nip }}
             </p>
-            <p class="peserta-welcome-unit">
-                {{ ucwords($user->peserta->unit) }} | {{ ucwords($user->peserta->instansi) }}
-            </p>
+            @if($user->peserta->unit && $user->peserta->instansi)
+                <p class="peserta-welcome-unit">
+                    {{ ucwords($user->peserta->unit) }} | {{ ucwords($user->peserta->instansi) }}
+                </p>
+            @endif
         </div>
 
         <div class="peserta-welcome-art" aria-hidden="true">
@@ -34,6 +38,19 @@
 <div class="row g-4">
     <!-- Left Section -->
     <div class="col-xl-8 col-lg-8">
+        <!-- Alert Complete Personal Data -->
+        @if($isProfileIncomplete == true)
+        <div class="col-12 alert-custom alert-custom-danger mt-3">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+          <div class="alert-custom-content">
+            Lengkapi data diri anda terlebih dulu untuk lanjut ke tahapan berikutnya.
+          </div>
+        </div>
+        @endif
+        <!-- END Alert Complete Personal Data -->
+
+        <!-- Card Status Ujian -->
+        @if($recentUjian->isNotEmpty())
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="exam-status-title">
                 <div class="ui-card-heading">
@@ -144,6 +161,8 @@
                 </div>
             </section>
         </div>
+        @endif
+        <!-- END Card Status Ujian -->
     
         <!-- Card Ujikom question level -->
          @if($recentUjianTerjadwal !== null)

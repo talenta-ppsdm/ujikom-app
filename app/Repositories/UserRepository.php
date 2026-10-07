@@ -26,4 +26,12 @@ class UserRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getByNipAndName(string $nip, string $name)
+    {
+        return $this->model
+        ->where('nip', $nip)
+        ->whereRaw('LOWER(name) = ?', [strtolower($name)])
+        ->first();
+    }
 }

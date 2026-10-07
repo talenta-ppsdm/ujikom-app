@@ -17,10 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/login', function () {
-    return view('login');
-})->name('login');
+Route::get('/login', function () {return view('login');})->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/registrasi', function () {return view('register');})->name('registrasi');
+Route::post('/registrasi', [AuthController::class, 'register'])->name('registrasi.post');
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

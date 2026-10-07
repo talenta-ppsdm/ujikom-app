@@ -8,9 +8,6 @@
       <h1 class="page-title">Data Peserta</h1>
       <p class="page-subtitle">Kelola data peserta, jenjang yang dituju (Pertama/Muda/Madya/Utama), jadwal, dan evaluasi.</p>
     </div>
-    <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahPesertaModal">
-      <i class="bi bi-plus-lg me-1"></i>Tambah Peserta
-    </button>
 
     <div class="row">
       @if(session('success'))

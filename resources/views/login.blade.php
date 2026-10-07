@@ -51,8 +51,17 @@
           </div>
         </div>
 
+        <div class="login-forgot-wrap">
+          <span class="login-link">Lupa kata sandi?</span>
+        </div>
         <button class="login-submit" type="submit">Masuk</button>
       </form>
+
+      <div class="login-divider"><span>atau</span></div>
+      <button class="google-login" type="button">
+        <span class="google-login-mark" aria-hidden="true">G</span>
+        <span>Masuk dengan Google</span>
+      </button>
 
       <div class="demo-divider"><span>&mdash; Demo Akun &mdash;</span></div>
       <div class="demo-accounts">
@@ -65,6 +74,9 @@
           <span>puteri@pkp.go.id</span>
         </button>
       </div>
+      <p class="login-register-prompt">
+        Belum punya akun? <a href="{{ route('registrasi') }}"><span class="login-link">Daftar di sini</span></a>
+      </p>
     </section>
   </main>
 
