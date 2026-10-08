@@ -43,7 +43,7 @@
     
     <div class="peserta-account" id="profil">
         <div class="peserta-account-copy">
-            <strong>{{ Auth::user()->name }}</strong>
+            <strong>{{ ucwords(Auth::user()->name) }}</strong>
             <small>{{ Auth::user()->nip }}</small>
         </div>
         <span class="peserta-account-avatar" aria-hidden="true">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>

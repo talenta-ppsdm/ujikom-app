@@ -26,4 +26,9 @@ class PesertaRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function findByUserId($userId)
+    {
+        return $this->model->where('user_id', $userId)->first();
+    }
 }

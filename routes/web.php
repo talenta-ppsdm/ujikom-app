@@ -63,7 +63,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/riwayat-ujian', [RiwayatUjianController::class, 'index'])->name('riwayat-ujian.index');
     Route::get('riwayat-pengumuman', [RiwayatPengumumanController::class, 'index'])->name('riwayat-pengumuman.index');
     Route::post('/riwayat-pengumuman/{id}/read', [RiwayatPengumumanController::class, 'markAsRead'])->name('pengumuman.markAsRead');
+    
     Route::get('/peserta/profil', [PesertaProfilController::class, 'index'])->name('peserta.profil');
+    Route::put('/peserta/profil/{id}', [PesertaProfilController::class, 'update'])->name('peserta.profil.update');
 });
 
 
