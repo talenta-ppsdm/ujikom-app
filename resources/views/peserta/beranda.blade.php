@@ -35,6 +35,24 @@
 </div>
 <!-- END Hero Beranda -->
 
+@if($activePemberkasanSchedule)
+<div class="col-12 peserta-registration-promo">
+    <section class="ui-card peserta-registration-card" aria-labelledby="registration-promo-title">
+        <span class="peserta-registration-icon" aria-hidden="true">
+            <i class="bi bi-file-earmark-text"></i>
+        </span>
+        <div class="peserta-registration-copy">
+            <h2 id="registration-promo-title">Pendaftaran Uji Kompetensi</h2>
+            <p>Lengkapi profil &amp; unggah berkas pendaftaran Anda</p>
+        </div>
+        <a class="peserta-registration-link" href="{{ route('peserta.pemberkasan.index') }}">
+            Daftar
+            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+    </section>
+</div>
+@endif 
+
 <div class="row g-4">
     <!-- Left Section -->
     <div class="col-xl-8 col-lg-8">

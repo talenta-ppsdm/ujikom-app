@@ -899,6 +899,101 @@ body.sidebar-minimized .sidebar-profile {
     justify-content: flex-start;
 }
 
+.ui-card.peserta-registration-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: calc(100% - 1.5rem);
+    padding: 1.25rem 1.35rem;
+    border: 0;
+    border-radius: 18px;
+    color: #FFFFFF;
+    background: linear-gradient(105deg, #5141E8 0%, #303F91 100%);
+    box-shadow: 0 8px 20px rgba(48, 63, 145, 0.14);
+}
+
+.peserta-registration-promo {
+    margin-bottom: -0.75rem;
+}
+
+.peserta-registration-icon {
+    display: inline-flex;
+    flex: 0 0 3.1rem;
+    align-items: center;
+    justify-content: center;
+    width: 3.1rem;
+    height: 3.1rem;
+    border-radius: 14px;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 1.4rem;
+}
+
+.peserta-registration-copy {
+    min-width: 0;
+    flex: 1;
+}
+
+.peserta-registration-copy h2 {
+    margin: 0 0 0.25rem;
+    color: inherit;
+    font-size: 1.05rem;
+    font-weight: 800;
+}
+
+.peserta-registration-copy p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.85rem;
+}
+
+.peserta-registration-link {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 10px;
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.16);
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.peserta-registration-link:hover,
+.peserta-registration-link:focus-visible {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.peserta-registration-link:focus-visible {
+    outline: 2px solid #FFFFFF;
+    outline-offset: 3px;
+}
+
+@media (max-width: 575px) {
+    .peserta-registration-card {
+        flex-wrap: wrap;
+    }
+
+    .peserta-registration-copy {
+        flex-basis: calc(100% - 4rem);
+    }
+
+    .peserta-registration-link {
+        margin-left: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .ui-card.peserta-registration-card {
+        width: 100%;
+    }
+}
+
 .peserta-welcome {
     position: relative;
     isolation: isolate;

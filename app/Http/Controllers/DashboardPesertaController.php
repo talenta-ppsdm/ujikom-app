@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\StatusJadwalUjianEnum;
+use App\Repositories\JadwalPemberkasanRepository;
 use App\Repositories\JadwalUjianRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\UserRepository;
@@ -15,18 +16,21 @@ class DashboardPesertaController extends Controller
     protected JadwalUjianRepository $jadwalUjianRepository;
     protected PengumumanRepository $pengumumanRepository;
     protected PesertaRepository $pesertaRepository;
+    protected JadwalPemberkasanRepository $jadwalPemberkasanRepository;
 
     public function __construct(
         UserRepository $userRepository,
         JadwalUjianRepository $jadwalUjianRepository,
         PengumumanRepository $pengumumanRepository,
-        PesertaRepository $pesertaRepository
+        PesertaRepository $pesertaRepository,
+        JadwalPemberkasanRepository $jadwalPemberkasanRepository
     )
     {
-        $this->userRepository = $userRepository;
-        $this->jadwalUjianRepository = $jadwalUjianRepository;
-        $this->pengumumanRepository = $pengumumanRepository;
-        $this->pesertaRepository = $pesertaRepository;
+        $this->userRepository               = $userRepository;
+        $this->jadwalUjianRepository        = $jadwalUjianRepository;
+        $this->pengumumanRepository         = $pengumumanRepository;
+        $this->pesertaRepository            = $pesertaRepository;
+        $this->jadwalPemberkasanRepository  = $jadwalPemberkasanRepository;
     }
 
     public function index()
@@ -57,7 +61,10 @@ class DashboardPesertaController extends Controller
         if(!$peserta->nama || !$peserta->golongan || !$peserta->unit || !$peserta->instansi || !$peserta->telepon || !$peserta->email) {
             $isProfileIncomplete = true;
         }
-        
+
+        // Check jadwal pemberkasan
+        $activePemberkasanSchedule = $this->jadwalPemberkasanRepository->getActiveSchedule();
+    
         return view('peserta.beranda', compact(
             'user', 
             'ujian',
@@ -66,7 +73,8 @@ class DashboardPesertaController extends Controller
             'recentUjianTerjadwal',
             'recentUjian',
             'pengumuman',
-            'isProfileIncomplete'
+            'isProfileIncomplete',
+            'activePemberkasanSchedule'
         ));
     }
 }

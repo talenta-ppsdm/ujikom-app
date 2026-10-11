@@ -26,4 +26,12 @@ class JadwalPemberkasanRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getActiveSchedule()
+    {
+        return $this->model->where('status', 'aktif')
+            ->whereDate('periode_awal', '<=', now())
+            ->whereDate('periode_akhir', '>=', now())
+            ->first();
+    }
 }

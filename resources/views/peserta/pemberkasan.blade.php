@@ -11,7 +11,22 @@
 		<h1>Pendaftaran Uji Kompetensi</h1>
 		<p>Lengkapi data dan berkas pendukung untuk mengikuti uji kompetensi</p>
 	</header>
-	
+
+	@if ($isProfileIncomplete)
+		<section class="ui-card alert-custom-warning d-flex flex-column align-items-center text-center" aria-labelledby="profile-required-title">
+			<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning p-4 mb-3" aria-hidden="true">
+				<i class="bi bi-exclamation-triangle fs-3"></i>
+			</span>
+			<h2 class="h4 fw-bold text-dark mb-3" id="profile-required-title">Lengkapi Profil Terlebih Dahulu</h2>
+			<p class="text-secondary mb-3">
+				Sebelum mengisi formulir pendaftaran berkas, Anda wajib melengkapi data profil.
+			</p>
+			<a class="btn-custom btn-custom-primary" href="{{ route('peserta.profil') }}">
+				<i class="bi bi-person-gear me-2" aria-hidden="true"></i>
+				Lengkapi Profil
+			</a>
+		</section>
+	@else
 	<section class="registration-hero" aria-labelledby="registration-title">
 		<div class="registration-status">
 			<i class="bi bi-check-circle" aria-hidden="true"></i>
@@ -113,6 +128,7 @@
 		</form>
 	</section>
 	<!-- END Form Pemberkasan Awal -->
+	@endif
 </div>
 @endsection
 

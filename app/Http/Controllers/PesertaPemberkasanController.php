@@ -16,7 +16,29 @@ class PesertaPemberkasanController extends Controller
 
     public function index()
     {
-        return view('peserta.pemberkasan');
+        $peserta = Auth::user()->peserta;
+        $requiredProfileFields = [
+            'nama',
+            'nip',
+            'golongan',
+            'jabatan',
+            'unit',
+            'instansi',
+            'telepon',
+            'email',
+        ];
+        $isProfileIncomplete = !$peserta;
+
+        if ($peserta) {
+            foreach ($requiredProfileFields as $field) {
+                if (blank($peserta->{$field})) {
+                    $isProfileIncomplete = true;
+                    break;
+                }
+            }
+        }
+
+        return view('peserta.pemberkasan', compact('isProfileIncomplete'));
     }
 
     public function store(Request $request)
