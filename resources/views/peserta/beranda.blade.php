@@ -40,10 +40,10 @@
     <div class="col-xl-8 col-lg-8">
         <!-- Alert Complete Personal Data -->
         @if($isProfileIncomplete == true)
-        <div class="col-12 alert-custom alert-custom-danger mt-3">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
-            Lengkapi data diri anda terlebih dulu untuk lanjut ke tahapan berikutnya.
+            Lengkapi data diri anda terlebih dulu untuk lanjut ke tahapan berikutnya <a href="{{ route('peserta.profil') }}" >disini</a>.
           </div>
         </div>
         @endif

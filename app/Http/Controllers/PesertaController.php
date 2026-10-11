@@ -29,14 +29,14 @@ class PesertaController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama' => 'required|string|max:255',
-            'nip' => 'required|string|max:20|unique:peserta,nip',
-            'golongan' => 'required|string|max:10',
-            'jabatan' => 'required|string|max:100',
-            'unit' => 'required|string|max:100',
-            'instansi' => 'required|string|max:100',
-            'telepon' => 'nullable|string|max:15',
-            'email' => 'nullable|email|max:255',
+            'nama'      => 'required|string|max:255',
+            'nip'       => 'required|string|max:20|unique:peserta,nip',
+            'golongan'  => 'required|string|max:10',
+            'jabatan'   => 'required|string|max:100',
+            'unit'      => 'required|string|max:100',
+            'instansi'  => 'required|string|max:100',
+            'telepon'   => 'nullable|string|max:15',
+            'email'     => 'nullable|email|max:255',
         ]);
 
         // Create user data for the peserta

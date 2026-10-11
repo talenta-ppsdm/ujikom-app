@@ -4543,6 +4543,10 @@ span.flatpickr-weekday {
     width: 100%;
 }
 
+.table-card-custom.ui-card {
+    padding: 0;
+}
+
 .table-custom {
     width: 100%;
     margin-bottom: 0;
@@ -4550,7 +4554,7 @@ span.flatpickr-weekday {
     border-collapse: collapse;
 }
 
-#bankSoalTable .bank-soal-question-column {
+.bank-soal-table .bank-soal-question-column {
     width: 32% !important;
     max-width: 32%;
     white-space: normal;
@@ -5826,7 +5830,7 @@ span.flatpickr-weekday {
     border: 1px solid transparent;
     margin-bottom: 1rem;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 0.75rem;
     position: relative;
     font-size: 0.875rem;
@@ -5836,6 +5840,7 @@ span.flatpickr-weekday {
 .alert-custom-icon {
     font-size: 1.15rem;
     flex-shrink: 0;
+    margin-top: 0.1rem;
 }
 
 .alert-custom-content {
@@ -6420,5 +6425,223 @@ span.flatpickr-weekday {
         min-height: 38px;
         padding: 0.45rem 0.7rem;
         font-size: 0.76rem;
+    }
+}
+
+/* Participant registration page */
+.registration-page {
+    display: grid;
+    gap: 0.9rem;
+    padding-bottom: 1.5rem;
+}
+
+.registration-hero {
+    padding: 1.25rem 1.35rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    background: #252e60;
+    color: #ffffff;
+}
+
+.registration-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.55rem;
+    padding: 0.22rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(76, 151, 111, 0.38);
+    color: #e4f8eb;
+    font-size: 0.7rem;
+    font-weight: 700;
+}
+
+.registration-hero h1 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+.registration-batch {
+    margin: 0.15rem 0 0.9rem;
+    color: #c3cce9;
+    font-size: 0.82rem;
+}
+
+.registration-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin: 0;
+}
+
+.registration-meta-item {
+    min-width: 0;
+    padding: 0.6rem 0.7rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.65rem;
+    background: rgba(132, 151, 211, 0.22);
+}
+
+.registration-meta-item dt {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.15rem;
+    color: #c3cce9;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
+.registration-meta-item dd {
+    margin: 0;
+    color: #ffffff;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.ui-card.registration-form-card {
+    padding: 1.2rem;
+    border-radius: 1rem;
+    box-shadow: 0 5px 18px rgba(28, 51, 84, 0.035);
+}
+
+.registration-form-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
+}
+
+.registration-form-icon {
+    display: grid;
+    width: 2rem;
+    height: 2rem;
+    flex: 0 0 2rem;
+    place-items: center;
+    border-radius: 0.55rem;
+    background: #f0eeff;
+    color: #6956ed;
+}
+
+.registration-form-heading h2 {
+    margin: 0;
+    color: #172033;
+    font-size: 0.95rem;
+    font-weight: 750;
+}
+
+.registration-form-heading p {
+    margin: 0.1rem 0 0;
+    color: #718096;
+    font-size: 0.76rem;
+}
+
+.registration-notice {
+    margin-bottom: 0.8rem;
+}
+
+.registration-form .form-label {
+    margin-bottom: 0.25rem;
+    color: #596579;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.registration-form .form-label span {
+    color: #e05252;
+}
+
+.registration-form .form-control-custom,
+.registration-form .form-select-custom {
+    min-height: 2.55rem;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
+    border-color: #e2e7ef;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+}
+
+.registration-file-help {
+    margin: -0.1rem 0 0.45rem;
+    color: #8792a5;
+    font-size: 0.68rem;
+}
+
+.registration-file-field {
+    position: relative;
+}
+
+.registration-upload {
+    display: flex;
+    min-height: 4.5rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0;
+    border: 1px dashed #cfd7e5;
+    border-radius: 0.65rem;
+    background: #fafbfe;
+    color: #687793;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.registration-upload:hover {
+    border-color: #7363ed;
+    background: #f7f6ff;
+}
+
+.registration-upload i {
+    font-size: 1rem;
+}
+
+.registration-file-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+}
+
+.registration-file-input:focus-visible + .registration-upload {
+    outline: 3px solid rgba(105, 86, 237, 0.25);
+    outline-offset: 2px;
+}
+
+.registration-submit {
+    background: #5746e8;
+    border-color: #5746e8;
+}
+
+.registration-submit:hover {
+    background: #4536cf;
+    border-color: #4536cf;
+}
+
+@media (max-width: 575.98px) {
+    .registration-hero {
+        padding: 1rem;
+    }
+
+    .registration-hero h1 {
+        font-size: 1.2rem;
+    }
+
+    .registration-meta {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+
+    .registration-meta-item {
+        padding: 0.5rem 0.65rem;
+    }
+
+    .ui-card.registration-form-card {
+        padding: 1rem;
     }
 }

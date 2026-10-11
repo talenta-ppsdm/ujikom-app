@@ -1,7 +1,7 @@
 @extends('peserta.mainLayout')
 
 @section('content')
-<main class="col-12 participant-profile">
+<div class="col-12 participant-profile">
 	<a class="exam-history-back participant-profile-back" href="{{ route('dashboard-peserta.index') }}">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
 		Beranda
@@ -28,7 +28,7 @@
 		</div>
 	</section>
 
-	<section class="participant-profile-card" aria-labelledby="participant-profile-details-title">
+	<section class="ui-card participant-profile-card" aria-labelledby="participant-profile-details-title">
 		<div class="participant-profile-card-heading">
 			<h2 id="participant-profile-details-title">Data Diri</h2>
 			<button class="participant-profile-edit" type="button" data-bs-toggle="modal" data-bs-target="#editProfilModal">
@@ -38,22 +38,30 @@
 
 		<div class="row">
 			@if(session('success'))
-			  <div class="col-12 alert-custom alert-custom-success mt-3">
-				<i class="bi bi-check-circle-fill alert-custom-icon"></i>
+			  <div class="col-12 alert alert-custom alert-custom-success mt-3" role="alert">
+				<i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
 				<div class="alert-custom-content">
 				  {{ session('success') }}
 				</div>
+				<button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+					<i class="bi bi-x-lg" aria-hidden="true"></i>
+				</button>
 			  </div>
 			@endif
 		
 			@if ($errors->any())
-			  <div class="col-12 alert-custom alert-custom-danger mt-3">
-				<i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+			  <div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
+				<i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
 				<div class="alert-custom-content">
+					<ul class="mb-0 ps-3">
 					@foreach ($errors->all() as $error)
-						{{ $error }}
+						<li>{{ $error }}</li>
 					@endforeach
+					</ul>
 				</div>
+				<button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+					<i class="bi bi-x-lg" aria-hidden="true"></i>
+				</button>
 			  </div>
 			@endif
 		</div>
@@ -93,7 +101,7 @@
 			</div>
 		</dl>
 	</section>
-</main>
+</div>
 
 <!-- Modal Edit Profil -->
 <div class="modal fade modal-standard" id="editProfilModal" tabindex="-1" aria-labelledby="editProfilModalLabel" aria-hidden="true">

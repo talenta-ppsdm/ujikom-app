@@ -32,6 +32,16 @@
           </li>
 
           <li class="sidebar-menu-item">
+            <a href="/jadwal-pemberkasan" 
+              class="sidebar-menu-link {{ request()->routeIs('jadwal-pemberkasan.index') ? 'active' : '' }}" 
+              id="menu-jadwal-pemberkasan" 
+              title="Jadwal Pemberkasan">
+              <i class="bi bi-calendar-check-fill"></i>
+              <span>Jadwal Pemberkasan</span>
+            </a>
+          </li>
+
+          <li class="sidebar-menu-item">
             <a href="/penguji" 
               class="sidebar-menu-link {{ request()->routeIs('penguji.index') ? 'active' : '' }}" 
               id="menu-penguji" 

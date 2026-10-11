@@ -31,9 +31,9 @@
 	</form>
 
 	<!-- Tabel Riwayat Ujian -->
-	<div class="table-card-custom">
+	<div class="ui-card table-card-custom">
 		<div class="table-responsive">
-		  <table id="bankSoalTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
+		  <table id="dataTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
 			<thead>
 			  <tr>
 				<th>No</th>

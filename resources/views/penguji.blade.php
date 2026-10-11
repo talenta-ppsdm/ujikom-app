@@ -14,8 +14,8 @@
 
     <div class="row">
       @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3">
-          <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+          <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
             {{ session('success') }}
           </div>
@@ -23,8 +23,8 @@
       @endif
   
       @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
             {{ session('error') }}
           </div>
@@ -37,7 +37,7 @@
 @section('content')
 <div class="table-card-custom">
   <div class="table-responsive">
-    <table id="pesertaTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="5">
+    <table id="dataTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="5">
       <thead>
         <tr>
           <th>No</th>

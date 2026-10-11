@@ -14,8 +14,8 @@
 
     <div class="row">
       @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3">
-          <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+          <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
             {{ session('success') }}
           </div>
@@ -23,8 +23,8 @@
       @endif
   
       @if(session('error'))
-      <div class="col-12 alert-custom alert-custom-danger mt-3 show" role="alert">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+      <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
               {{ session('error') }}
           </div>
@@ -37,7 +37,7 @@
 @section('content')
 <div class="table-card-custom">
   <div class="table-responsive">
-    <table id="pesertaTable" class="table-custom w-100" data-datatable data-datatable-page-length="10">
+    <table id="dataTable" class="table-custom w-100" data-datatable data-datatable-page-length="10">
       <thead>
         <tr>
           <th>No</th>
@@ -104,7 +104,7 @@
             </td>
           </tr>
 
-          <!-- Modal Edit Penguji -->
+        <!-- Modal Edit Jadwal Ujian -->
         <div class="modal fade modal-standard" id="editJadwalUjianModal-{{ $j->id }}" tabindex="-1" aria-labelledby="editJadwalUjianModalLabel-{{ $j->id }}" aria-hidden="true">
           <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content bg-white">
@@ -233,19 +233,18 @@
               
                 <div class="modal-footer">
                   <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" class="btn-custom btn-custom-primary">Update Jadwal</button>
+                  <button type="submit" class="btn-custom btn-custom-primary">Ubah</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <!-- END Modal Edit Peserta -->
+        <!-- END Modal Edit Jadwal Ujian -->
         @endforeach
       </tbody>
     </table>
   </div>
 </div>
-@endsection
 
 <!-- Modal Tambah Jadwal Ujian -->
 <div class="modal fade modal-standard" id="tambahJadwalUjianModal" tabindex="-1" aria-labelledby="tambahJadwalUjianModalLabel" aria-hidden="true">
@@ -335,3 +334,6 @@
   </div>
 </div>
 <!-- END Modal Tambah Jadwal Ujian -->
+@endsection
+
+

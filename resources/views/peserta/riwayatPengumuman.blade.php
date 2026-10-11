@@ -1,7 +1,7 @@
 @extends('peserta.mainLayout')
 
 @section('content')
-<section class="col-12 announcement-history" aria-labelledby="announcement-history-title">
+<div class="col-12 announcement-history">
     <a class="exam-history-back" href="/beranda" aria-label="Kembali ke beranda">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
 		Beranda
@@ -18,7 +18,7 @@
 				$penerima = $pengumuman->penerima->firstWhere('peserta_id', auth()->id());
     			$isRead = $penerima?->is_read ?? 0;
 			@endphp
-            <article class="announcement-history-card {{ $isRead ? 'is-read' : 'is-unread' }}">
+            <article class="ui-card announcement-history-card {{ $isRead ? 'is-read' : 'is-unread' }}">
                 <div class="announcement-history-main">
                     <div class="announcement-history-icon" aria-hidden="true">
                         <i class="bi bi-megaphone"></i>
@@ -51,7 +51,7 @@
             </article>
         @endforeach
 	</div>
-</section>
+</div>
 @endsection
 
 @push('scripts')

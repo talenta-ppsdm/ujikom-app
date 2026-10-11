@@ -24,8 +24,8 @@
       </header>
 
       @if (session('error'))
-        <div class="alert-custom alert-custom-danger">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+        <div class="alert-custom alert-custom-danger" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">{{ session('error') }}</div>
         </div>
       @endif

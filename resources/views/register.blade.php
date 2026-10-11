@@ -25,12 +25,12 @@
       </header>
 
       @if ($errors->any())
-        <div class="alert-custom alert-custom-danger">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+        <div class="alert-custom alert-custom-danger" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
-            <ul class="mb-0">
+            <ul class="mb-0 ps-3">
               @foreach ($errors->all() as $error)
-                <div>{{ $error }}</div>
+                <li>{{ $error }}</li>
               @endforeach
             </ul>
           </div>

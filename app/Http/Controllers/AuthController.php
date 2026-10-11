@@ -35,9 +35,10 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            if ($user->role === RoleUserEnum::ADMIN->value) {
+          
+            if ($user->role == RoleUserEnum::ADMIN->value) {
                 return redirect()->intended('/jadwal-ujian');
-            }elseif ($user->role === RoleUserEnum::PESERTA->value) {
+            }elseif ($user->role == RoleUserEnum::PESERTA->value) {
                 return redirect()->intended('/beranda');
             }else {
                 return redirect()->intended('/dashboard-penguji');
@@ -101,7 +102,7 @@ class AuthController extends Controller
                 ]);
             }
             $user = User::create($validatedData);
-
+       
             // Handling data peserta
             $dataPeserta = [
                 'nama'      => $validatedData['name'],
@@ -110,7 +111,7 @@ class AuthController extends Controller
                 'user_id'   => $user->id
             ];
             $this->pesertaRepository->create($dataPeserta);
-    
+
             Auth::login($user);
     
             return redirect()->intended('/beranda');

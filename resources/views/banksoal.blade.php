@@ -27,8 +27,8 @@
 
     <div class="row">
       @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3">
-          <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+          <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
             {{ session('success') }}
           </div>
@@ -36,8 +36,8 @@
       @endif
   
       @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
           <div class="alert-custom-content">
             {{ session('error') }}
           </div>
@@ -50,7 +50,7 @@
 @section('content')
 <div class="table-card-custom">
   <div class="table-responsive">
-    <table id="bankSoalTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
+    <table id="dataTable" class="table-custom w-100 bank-soal-table" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
       <thead>
         <tr>
           <th>No</th>
@@ -141,7 +141,7 @@
                 </div>
 
                 <div class="alert-custom alert-custom-info mb-4">
-                  <i class="bi bi-lightbulb-fill alert-custom-icon"></i>
+                  <i class="bi bi-lightbulb-fill alert-custom-icon" aria-hidden="true"></i>
                   <div class="alert-custom-content">
                     <p class="mb-0">{{ ucfirst($bs->pembahasan) }}</p>
                   </div>
