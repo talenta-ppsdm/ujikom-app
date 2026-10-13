@@ -35,6 +35,14 @@ class JadwalPemberkasanController extends Controller
         ]);
 
         try {
+            // Cek apakah ada jadwal pemberkasan yang aktif
+            $activePemberkasan = $this->jadwalPemberkasanRepository->getActiveSchedule();
+            if ($activePemberkasan) {
+                return back()->withInput()->withErrors([
+                    'error' => 'Terdapat jadwal pemberkasan yang aktif'
+                ]);
+            }
+
             $this->jadwalPemberkasanRepository->create(array_merge($validateData,[
                 'status'    => 'aktif'
             ]));

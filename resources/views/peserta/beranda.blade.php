@@ -182,7 +182,7 @@
         @endif
         <!-- END Card Status Ujian -->
     
-        <!-- Card Ujikom question level -->
+        <!-- Card Ujikom Question level -->
          @if($recentUjianTerjadwal !== null)
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">

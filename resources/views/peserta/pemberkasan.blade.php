@@ -12,7 +12,62 @@
 		<p>Lengkapi data dan berkas pendukung untuk mengikuti uji kompetensi</p>
 	</header>
 
-	@if ($isProfileIncomplete)
+	@if (!$activePemberkasanSchedule)
+		<section class="ui-card schedule-empty-card" aria-labelledby="schedule-empty-title">
+			<div class="schedule-empty-hero">
+				<span class="schedule-empty-icon" aria-hidden="true">
+					<i class="bi bi-calendar-x"></i>
+				</span>
+				<h2 id="schedule-empty-title">Belum Ada Jadwal Uji Kompetensi yang Dibuka</h2>
+				<p>
+					Saat ini belum ada periode pendaftaran uji kompetensi.<br class="d-none d-md-block">
+					Pantau halaman ini atau kanal pengumuman untuk informasi pembukaan Uji Kompetensi JF Penata Kelola Perumahan.
+				</p>
+			</div>
+
+			<div class="schedule-empty-guidance">
+				<article class="schedule-empty-step">
+					<span class="schedule-empty-step-icon" aria-hidden="true">
+						<i class="bi bi-clock"></i>
+					</span>
+					<h3>Pantau Jadwal</h3>
+					<p>Periode pendaftaran dibuka sesuai jadwal yang ditetapkan admin.</p>
+				</article>
+				<article class="schedule-empty-step">
+					<span class="schedule-empty-step-icon" aria-hidden="true">
+						<i class="bi bi-file-earmark-text"></i>
+					</span>
+					<h3>Siapkan Berkas</h3>
+					<p>Lengkapi profil dan siapkan dokumen pendukung dari sekarang.</p>
+				</article>
+				<article class="schedule-empty-step">
+					<span class="schedule-empty-step-icon" aria-hidden="true">
+						<i class="bi bi-bell"></i>
+					</span>
+					<h3>Cek Pengumuman</h3>
+					<p>Info pembukaan pendaftaran juga diumumkan di kanal pengumuman.</p>
+				</article>
+			</div>
+
+			<footer class="schedule-empty-footer">
+				<p>Profil lengkap mempercepat proses pendaftaran saat jadwal dibuka.</p>
+				<a class="btn-custom btn-custom-primary" href="{{ route('peserta.profil') }}">
+					<i class="bi bi-link-45deg" aria-hidden="true"></i>
+					Cek Kelengkapan Profil
+				</a>
+			</footer>
+		</section>
+	@elseif ($verifyingPemberkasan)
+		<section class="ui-card alert-custom-warning d-flex flex-column align-items-center text-center" aria-labelledby="profile-required-title">
+				<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning p-4 mb-3" aria-hidden="true">
+					<i class="bi bi-exclamation-triangle fs-3"></i>
+				</span>
+				<h2 class="h4 fw-bold text-dark mb-3" id="profile-required-title">Anda Telah Mengirimkan Berkas Pendaftaran</h2>
+				<p class="text-secondary mb-3">
+					Berkas pendaftaran Anda telah berhasil disimpan dan sedang dalam antrean verifikasi. Mohon untuk memantau status pendaftaran secara berkala pada website untuk mengetahui pembaruan hasil verifikasi.
+				</p>
+			</section>
+	@elseif ($isProfileIncomplete)
 		<section class="ui-card alert-custom-warning d-flex flex-column align-items-center text-center" aria-labelledby="profile-required-title">
 			<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning p-4 mb-3" aria-hidden="true">
 				<i class="bi bi-exclamation-triangle fs-3"></i>
@@ -76,16 +131,22 @@
 		@endif
 
 		@if ($errors->any())
-			<div class="alert-custom alert-custom-danger" role="alert">
+			<div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
 				<i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
 				<div class="alert-custom-content">
-					<strong>Terjadi kesalahan saat mengunggah berkas:</strong>
-					<ul class="mb-0 ps-3">
+				@if ($errors->count() === 1)
+					{{ $errors->all()[0] }}
+				@else
+					<ul class="mb-0">
 						@foreach ($errors->all() as $error)
 							<li>{{ $error }}</li>
 						@endforeach
 					</ul>
+				@endif
 				</div>
+				<button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+				<i class="bi bi-x-lg" aria-hidden="true"></i>
+				</button>
 			</div>
 		@endif
 
