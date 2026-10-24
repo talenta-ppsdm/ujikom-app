@@ -78,10 +78,8 @@ class PesertaPemberkasanController extends Controller
         try {
             // Check if the document quota is full or not
             $activePemberkasan = $this->jadwalPemberkasanRepository->getActiveSchedule();
-            $lastPendaftar = $this->pemberkasanRepository->getLastPemberkasan($activePemberkasan->id);
-            $lastNomorUrut = $lastPendaftar ? $lastPendaftar->nomor_urut : 0;
-
-            if ($lastNomorUrut >= $activePemberkasan->kuota) {
+            $jumlahPendaftar = $this->pemberkasanRepository->getByScheduleandStatus($activePemberkasan->id, [StatusPemberkasanEnum::APPROVED->value, StatusPemberkasanEnum::VERIFYING->value])->count();
+            if ($jumlahPendaftar >= $activePemberkasan->kuota) {
                 return back()->withInput()->withErrors([
                     'error' => "Kouta pendaftaran telah terpenuhi"
                 ]);
@@ -115,7 +113,8 @@ class PesertaPemberkasanController extends Controller
                 'user_id'               => Auth::id(),
                 'status'                => StatusPemberkasanEnum::VERIFYING->value,
                 'jadwal_pemberkasan_id' => $activePemberkasan->id,
-                'nomor_urut'            => $lastNomorUrut + 1,
+                'tanggal_daftar'        => now(),
+                // 'nomor_urut'            => $lastNomorUrut + 1,
             ]);
             
             return redirect()->route('peserta.pemberkasan.index');

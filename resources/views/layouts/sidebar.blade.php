@@ -42,6 +42,16 @@
           </li>
 
           <li class="sidebar-menu-item">
+            <a href="/verifikasi-pemberkasan" 
+              class="sidebar-menu-link {{ request()->routeIs('verifikasi-pemberkasan.index') ? 'active' : '' }}" 
+              id="menu-verifikasi-pemberkasan" 
+              title="Verifikasi Pemberkasan">
+              <i class="bi bi-clipboard-check-fill"></i>
+              <span>Verifikasi Berkas</span>
+            </a>
+          </li>
+
+          <li class="sidebar-menu-item">
             <a href="/penguji" 
               class="sidebar-menu-link {{ request()->routeIs('penguji.index') ? 'active' : '' }}" 
               id="menu-penguji" 

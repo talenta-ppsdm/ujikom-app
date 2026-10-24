@@ -42,4 +42,10 @@ class PemberkasanRepository extends BaseRepository
             'status'                => $status
         ])->first();
     }
+
+    public function getByScheduleandStatus(int $idJadwalPemberkasan, array $arrStatus)
+    {
+        return $this->model->where('jadwal_pemberkasan_id', $idJadwalPemberkasan)
+            ->whereIn('status', $arrStatus);
+    }
 }

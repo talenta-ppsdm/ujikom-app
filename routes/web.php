@@ -13,6 +13,7 @@ use App\Http\Controllers\UjianController;
 use App\Http\Controllers\RiwayatUjianController;
 use App\Http\Controllers\PesertaProfilController;
 use App\Http\Controllers\PesertaPemberkasanController;
+use App\Http\Controllers\VerifikasiPemberkasanController;
 use App\Models\Pengumuman;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/jadwal-pemberkasan/{id}', [JadwalPemberkasanController::class, 'update'])->name('jadwal-pemberkasan.update');
     Route::delete('/jadwal-pemberkasan/{id}', [JadwalPemberkasanController::class, 'destroy'])->name('jadwal-pemberkasan.destroy');
 
+    Route::get('/verifikasi-pemberkasan', [VerifikasiPemberkasanController::class, 'index'])->name('verifikasi-pemberkasan.index');
+    Route::get('/verifikasi-pemberkasan/{id}', [VerifikasiPemberkasanController::class, 'edit'])->name('verifikasi-pemberkasan.edit');
+    Route::get('/verifikasi-pemberkasan/{id}/dokumen/{document}', [VerifikasiPemberkasanController::class, 'document'])->name('verifikasi-pemberkasan.document');
+    Route::put('/verifikasi-pemberkasan/{id}', [VerifikasiPemberkasanController::class, 'update'])->name('verifikasi-pemberkasan.update');
+
     Route::get('/beranda', [DashboardPesertaController::class, 'index'])->name('dashboard-peserta.index');
     
     Route::get('/ujian/{id}/mulai', [UjianController::class, 'start'])->name('ujian.start');
@@ -78,6 +84,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/peserta/pemberkasan', [PesertaPemberkasanController::class, 'index'])->name('peserta.pemberkasan.index');
     Route::post('/peserta/pemberkasan', [PesertaPemberkasanController::class, 'store'])->name('peserta.pemberkasan.store');
 });
-
 
 

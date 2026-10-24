@@ -4731,12 +4731,12 @@ span.flatpickr-weekday {
     color: var(--sys-green);
 }
 
-.badge-table.pending {
+.badge-table.warning {
     background-color: rgba(249, 115, 22, 0.1);
     color: var(--sys-orange);
 }
 
-.badge-table.failed {
+.badge-table.danger {
     background-color: rgba(239, 68, 68, 0.1);
     color: var(--sys-red);
 }

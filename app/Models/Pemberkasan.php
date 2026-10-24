@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StatusPemberkasanEnum;
 use Illuminate\Database\Eloquent\Model;
 
 class Pemberkasan extends Model
@@ -17,7 +18,14 @@ class Pemberkasan extends Model
         'catatan',
         'file_sk_golongan',
         'file_sk_jabatan',
-        'file_portofolio'
+        'file_portofolio',
+        'verified_by',
+        'verified_at',
+        'tanggal_daftar',
+    ];
+
+    protected $casts = [
+        'status' => StatusPemberkasanEnum::class,
     ];
 
     public function peserta()
@@ -38,5 +46,10 @@ class Pemberkasan extends Model
     public function jadwalPemberkasan()
     {
         return $this->belongsTo(JadwalPemberkasan::class, 'jadwal_pemberkasan_id');
+    }
+
+    public function verifiedBy()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
     }
 }

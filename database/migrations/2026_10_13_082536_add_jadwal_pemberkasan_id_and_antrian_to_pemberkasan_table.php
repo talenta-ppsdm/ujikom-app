@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained('jadwal_pemberkasan')
                 ->onDelete('cascade')
                 ->nullable(); 
-            $table->integer('nomor_urut')->after('jadwal_pemberkasan_id');
+            $table->integer('nomor_urut')->nullable()->after('jadwal_pemberkasan_id');
         });
     }
 
