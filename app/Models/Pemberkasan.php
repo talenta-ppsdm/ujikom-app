@@ -22,6 +22,7 @@ class Pemberkasan extends Model
         'verified_by',
         'verified_at',
         'tanggal_daftar',
+        'tujuan_ujian',
     ];
 
     protected $casts = [

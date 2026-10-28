@@ -52,10 +52,18 @@ class PesertaPemberkasanController extends Controller
         // Check jadwal pemberkasan
         $activePemberkasanSchedule = $this->jadwalPemberkasanRepository->getActiveSchedule();
 
-        // Check peserta already submit pemberkasan
+        // Check peserta already submit pemberkasan awal
         $verifyingPemberkasan = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus($idPserta, $activePemberkasanSchedule->id, StatusPemberkasanEnum::VERIFYING->value);
+
+        // Check peserta already submit pemberkasan portofolio
+        $verifyingPortofolio = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus($idPserta, $activePemberkasanSchedule->id, StatusPemberkasanEnum::SUMBIT_PORTOFOLIO->value);
  
-        return view('peserta.pemberkasan', compact('isProfileIncomplete', 'activePemberkasanSchedule', 'verifyingPemberkasan'));
+        return view('peserta.pemberkasan', compact(
+            'isProfileIncomplete', 
+            'activePemberkasanSchedule', 
+            'verifyingPemberkasan',
+            'verifyingPortofolio',
+        ));
     }
 
     public function store(Request $request)
@@ -63,6 +71,7 @@ class PesertaPemberkasanController extends Controller
         $validateData = $request->validate([
             'sk_golongan'   => 'required|file|mimes:pdf,jpg,jpeg,png|max:1024',
             'sk_jabatan'    => 'required|file|mimes:pdf|max:1024',
+            'tujuan_ujian'  => 'required|string'
         ],[
             'sk_golongan.required'  => 'SK Golongan wajib diunggah.',
             'sk_golongan.file'  => 'SK Golongan wajib berupa file.',
@@ -114,6 +123,7 @@ class PesertaPemberkasanController extends Controller
                 'status'                => StatusPemberkasanEnum::VERIFYING->value,
                 'jadwal_pemberkasan_id' => $activePemberkasan->id,
                 'tanggal_daftar'        => now(),
+                'tujuan_ujian'          => strtolower($validateData['tujuan_ujian']),
                 // 'nomor_urut'            => $lastNomorUrut + 1,
             ]);
             

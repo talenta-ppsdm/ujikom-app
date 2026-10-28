@@ -47,6 +47,7 @@ class JadwalUjianController extends Controller
 
     public function store(Request $request)
     {
+        //TODO : tujuan_ujian bisa di ambil dari pemberkasan. Tapi perlu di telusuri relasinya
         $validatedData = $request->validate([
             'peserta_id' => 'required|exists:peserta,id',
             'tujuan_ujian' => 'nullable|string|max:255',

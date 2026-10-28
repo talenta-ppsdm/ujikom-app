@@ -100,7 +100,7 @@
           <i class="bi bi-hash text-muted" aria-hidden="true"></i>
           <div>
             <div class="small text-muted">Jenis Uji Kompetensi</div>
-            <div class="fw-semibold">Uji Kompetensi JF Analis SDMA</div> <!-- TODO tambahin jenis uji kompetensi di awal pemberkasan -->
+            <div class="fw-semibold">{{ ucwords($pemberkasan->tujuan_ujian) }}</div> 
           </div>
         </div>
       </div>
