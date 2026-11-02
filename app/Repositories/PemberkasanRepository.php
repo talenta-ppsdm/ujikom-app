@@ -27,25 +27,33 @@ class PemberkasanRepository extends BaseRepository
         // Add your boot logic here
     }
 
-    public function getLastPemberkasan(int $idJadwalPemberkasan)
-    {
-        return $this->model->where('jadwal_pemberkasan_id', $idJadwalPemberkasan)
-            ->orderBy('nomor_urut', 'desc')
-            ->first();
-    }
+    // public function getLastPemberkasan(int $idJadwalPemberkasan)
+    // {
+    //     return $this->model->where('jadwal_pemberkasan_id', $idJadwalPemberkasan)
+    //         ->orderBy('nomor_urut', 'desc')
+    //         ->first();
+    // }
 
     public function getByPesertaAndScheduleWithStatus(int $idPeserta, int $idJadwalPemberkasan, string $status)
     {
         return $this->model->where([
             'peserta_id'            => $idPeserta,
-            'jadwal_pemberkasan_id' => $idJadwalPemberkasan,
+            'jadwal_ujian_id' => $idJadwalPemberkasan,
             'status'                => $status
         ])->first();
     }
 
     public function getByScheduleandStatus(int $idJadwalPemberkasan, array $arrStatus)
     {
-        return $this->model->where('jadwal_pemberkasan_id', $idJadwalPemberkasan)
+        return $this->model->where('jadwal_ujian_id', $idJadwalPemberkasan)
             ->whereIn('status', $arrStatus);
+    }
+
+    public function getByPesertaAndStatus(int $idPeserta, string $status)
+    {
+        return $this->model->where([
+            'peserta_id'    => $idPeserta,
+            'status'        => $status,
+        ])->first();
     }
 }

@@ -59,10 +59,10 @@
               </div>
             </div>
           </td>
-          <td class="table-product-name">{{ $p->jabatan }}</td>
+          <td class="table-product-name">{{ $p->jabatan ?? "Tidak ada data" }}</td>
           <td>
             <div class="table-unit-cell">
-              <div class="table-unker-name">{{ $p->unit }}</div>
+              <div class="table-unker-name">{{ $p->unit ?? "Tidak ada data" }}</div>
               <div class="table-unor-sub">{{ $p->instansi }}</div>
             </div>
           </td>

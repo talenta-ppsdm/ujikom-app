@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum StatusJadwalUjianEnum: string
+enum StatusJadwalCbtEnum: string
 {
 	case TERJADWAL = 'terjadwal';
 	case SEDANG_BERLANGSUNG = 'sedang berlangsung';

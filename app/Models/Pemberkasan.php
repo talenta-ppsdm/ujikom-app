@@ -10,23 +10,24 @@ class Pemberkasan extends Model
     protected $table = 'pemberkasan';
     protected $fillable = [
         'peserta_id',
-        'user_id',
         'jadwal_ujian_id',
-        'jadwal_pemberkasan_id',
-        'nomor_urut',
-        'status',
-        'catatan',
+        'tujuan_ujian', 
+        'tujuan_jenjang',
         'file_sk_golongan',
         'file_sk_jabatan',
         'file_portofolio',
+        'file_praasesmen',
+        'file_paparan',
+        'tanggal_daftar',
+        'status',
         'verified_by',
         'verified_at',
-        'tanggal_daftar',
-        'tujuan_ujian',
+        'catatan',
     ];
 
     protected $casts = [
         'status' => StatusPemberkasanEnum::class,
+        'tanggal_daftar' => 'datetime',
     ];
 
     public function peserta()
@@ -34,19 +35,9 @@ class Pemberkasan extends Model
         return $this->belongsTo(Peserta::class, 'peserta_id');
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
     public function jadwalUjian()
     {
         return $this->belongsTo(JadwalUjian::class, 'jadwal_ujian_id');
-    }
-
-    public function jadwalPemberkasan()
-    {
-        return $this->belongsTo(JadwalPemberkasan::class, 'jadwal_pemberkasan_id');
     }
 
     public function verifiedBy()

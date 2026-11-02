@@ -11,19 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal_ujian', function (Blueprint $table) {
+        Schema::create('cbt', function (Blueprint $table) {
             $table->id();
             $table->foreignId('peserta_id')->constrained('peserta')->onDelete('cascade');
-            $table->foreignId('penguji_id')->constrained('penguji')->onDelete('cascade');
+            $table->foreignId('jadwal_ujian_id')->constrained('jadwal_ujian')->onDelete('cascade');
             $table->date('tanggal_ujian');
             $table->time('waktu_mulai');
             $table->time('waktu_selesai');
-            $table->string('tujuan_ujian', 255);
-            $table->string('durasi', 50);
-            $table->string('lokasi', 100);
-            $table->string('keterangan', 255);
-            $table->string('status', 50);
+            $table->string('durasi', 100);
+            $table->text('keterangan')->nullable();
+            $table->string('status', 100);
+            $table->dateTime('realtime_mulai')->nullable();
+            $table->dateTime('realtime_selesai')->nullable();
+            $table->dateTime('target_selesai')->nullable();
+            $table->unsignedInteger('total_skor')->default(0)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal_ujian');
+        Schema::dropIfExists('cbt');
     }
 };

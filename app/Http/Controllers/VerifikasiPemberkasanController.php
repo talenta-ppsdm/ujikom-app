@@ -29,7 +29,7 @@ class VerifikasiPemberkasanController extends Controller
     public function edit(int $id)
     {
         $pemberkasan = $this->pemberkasanRepository->find($id);
-       
+    
         return view('admin.editVerifikasiPemberkasan', compact('pemberkasan'));
     }
 

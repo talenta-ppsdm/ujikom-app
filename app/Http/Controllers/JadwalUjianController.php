@@ -2,115 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\StatusJadwalUjianEnum;
-use App\Enums\TujuanUjianEnum;
-use App\Models\JadwalUjian;
 use App\Repositories\JadwalUjianRepository;
-use App\Repositories\PengujiRepository;
-use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class JadwalUjianController extends Controller
 {
     protected JadwalUjianRepository $jadwalUjianRepository;
-    protected PesertaRepository $pesertaRepository;
-    protected PengujiRepository $pengujiRepository;
 
-    public function  __construct(
-        JadwalUjianRepository $jadwalUjianRepository,
-        PesertaRepository $pesertaRepository,
-        PengujiRepository $pengujiRepository
-    )
+    public function __construct(JadwalUjianRepository $jadwalUjianRepository)
     {
         $this->jadwalUjianRepository = $jadwalUjianRepository;
-        $this->pesertaRepository = $pesertaRepository;
-        $this->pengujiRepository = $pengujiRepository;
     }
 
     public function index()
     {
         $jadwalUjian = $this->jadwalUjianRepository->all();
-        $peserta = $this->pesertaRepository->all();
-        $penguji = $this->pengujiRepository->all();
-        $tujuan = TujuanUjianEnum::options();
-        $listStatus = JadwalUjian::getStatusLabels();
-
-        return view('jadwalUjian', compact(
-            'jadwalUjian', 
-            'peserta', 
-            'penguji', 
-            'tujuan',
-            'listStatus'
-        ));
+        return view('/admin/jadwalUjian', compact('jadwalUjian'));
     }
 
     public function store(Request $request)
     {
-        //TODO : tujuan_ujian bisa di ambil dari pemberkasan. Tapi perlu di telusuri relasinya
-        $validatedData = $request->validate([
-            'peserta_id' => 'required|exists:peserta,id',
-            'tujuan_ujian' => 'nullable|string|max:255',
-            'penguji_id' => 'required|exists:penguji,id',
-            'tanggal_ujian' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
-            'lokasi' => 'required|string|max:255',
-            'keterangan' => 'nullable|string|max:255',
-            'jenjang_tujuan' => 'nullable|string|max:255',
+        $validateData = $request->validate([
+            'gelombang'     => 'required',
+            'tahun'         => 'required',
+            'kuota'         => 'required|integer|min:1',
+            'periode_awal'  => 'required|date',
+            'periode_akhir' => 'required|date|after_or_equal:periode_awal',
+            'periode_pemberkasan_awal'  => 'required|date',
+            'periode_pemberkasan_akhir' => 'required|date|after_or_equal:periode_pemberkasan_awal',
+            'periode_portofolio_awal'  => 'required|date',
+            'periode_portofolio_akhir' => 'required|date|after_or_equal:periode_portofolio_awal',
+        ],[
+            'kuota.min'                                 => 'Kuota minimal adalah 1 peserta.',
+            'periode_akhir.after_or_equal'              => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
+            'periode_pemberkasan_akhir.after_or_equal'  => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
+            'periode_portofolio_akhir.after_or_equal'   => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
         ]);
 
-        $hasActiveUjian = $this->jadwalUjianRepository->hasActiveUjian($request->peserta_id);
-        if ($hasActiveUjian) {
-            if ($hasActiveUjian) {
-                return redirect()->back()->with('error', 'Gagal: Terdapat ujian yang sedang berlangsung/terjadwal.');
+        try {
+            // Cek apakah ada jadwal pemberkasan yang aktif
+            $activeJadwalUjian = $this->jadwalUjianRepository->getActiveSchedule();
+            if ($activeJadwalUjian) {
+                return back()->withInput()->withErrors([
+                    'error' => 'Terdapat jadwal ujian yang aktif'
+                ]);
             }
+
+            $this->jadwalUjianRepository->create(array_merge($validateData,[
+                'status'    => 'aktif'
+            ]));
+
+        }catch (\Throwable $e) {
+            return back()->withInput()->withErrors([
+                'error' => $e->getMessage()
+            ]);
         }
-
-        // count the duration in minutes
-        $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);
-        $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
-        $durasi = $waktuMulai->diffInMinutes($waktuSelesai);
-
-        $status = array_key_first(JadwalUjian::getStatusLabels());
-
-        $jabatanTujuan = 'penata kelola perumahan';
-
-        $this->jadwalUjianRepository->create(array_merge($validatedData, [
-            'durasi' => $durasi, 
-            'status' => $status, 
-            'jabatan_tujuan' => $jabatanTujuan
-        ]));
 
         return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
     }
 
     public function update(Request $request, int $id)
     {
-        $validatedData = $request->validate([
-            'peserta_id' => 'required|exists:peserta,id',
-            'tujuan_ujian' => 'nullable|string|max:255',
-            'penguji_id' => 'required|exists:penguji,id',
-            'tanggal_ujian' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
-            'lokasi' => 'required|string|max:255',
-            'keterangan' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(JadwalUjian::getStatusLabels())),
-            'jabatan_tujuan' => 'nullable|string|max:255',
-            'jenjang_tujuan' => 'nullable|string|max:255',
+        $validateData = $request->validate([
+            'gelombang'                 => 'required',
+            'tahun'                     => 'required',
+            'kuota'                     => 'required|integer|min:1',
+            'periode_awal'              => 'required|date',
+            'periode_akhir'             => 'required|date|after_or_equal:periode_awal',
+            'periode_pemberkasan_awal'  => 'required|date',
+            'periode_pemberkasan_akhir' => 'required|date|after_or_equal:periode_pemberkasan_awal',
+            'periode_portofolio_awal'   => 'required|date',
+            'periode_portofolio_akhir'  => 'required|date|after_or_equal:periode_portofolio_awal',
+            'status'                    => 'required',
+        ],[
+            'kuota.min'                                 => 'Kuota minimal adalah 1 peserta.',
+            'periode_akhir.after_or_equal'              => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
+            'periode_pemberkasan_akhir.after_or_equal'  => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
+            'periode_portofolio_akhir.after_or_equal'   => 'Tanggal selesai tidak boleh lebih awal dari tanggal mulai.',
         ]);
 
-        // count the duration in minutes
-        $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);
-        $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
-        $durasi = $waktuMulai->diffInMinutes($waktuSelesai);
+        try {
+            // TODO: klo ada perubahan status ke aktif, cek apakah ada jadwal ujian yang aktif
+            $this->jadwalUjianRepository->update($validateData, $id);
 
-        $jabatanTujuan = 'penata kelola perumahan';
+        }catch (\Throwable $e) {
+            return back()->withInput()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
 
-        $this->jadwalUjianRepository->update(array_merge($validatedData, ['durasi' => $durasi, 'jabatan_tujuan' => $jabatanTujuan]), $id);
-
-        return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diperbarui.');
+        return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diubah.');
     }
 
     public function destroy(int $id)

@@ -2,69 +2,33 @@
 
 namespace App\Models;
 
-use App\Enums\TujuanUjianEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JadwalUjian extends Model
 {
     use SoftDeletes;
-    
+
     protected $table = 'jadwal_ujian';
     protected $fillable = [
-        'peserta_id',
-        'penguji_id',
-        'tanggal_ujian',
-        'waktu_mulai',
-        'waktu_selesai',
-        'durasi',
-        'lokasi',
-        'keterangan',
+        'gelombang',
+        'tahun',
         'status',
-        'tujuan_ujian',
-        'jabatan_tujuan',
-        'jenjang_tujuan',
-        'realtime_mulai',
-        'realtime_selesai',
-        'target_selesai',
-        'total_skor'
+        'kuota',
+        'periode_awal',
+        'periode_akhir',
+        'periode_pemberkasan_awal',
+        'periode_pemberkasan_akhir',
+        'periode_portofolio_awal',
+        'periode_portofolio_akhir',
     ];
 
     protected $casts = [
-        'tanggal_ujian' => 'date',
-        'tujuan_ujian' => TujuanUjianEnum::class,
-        'realtime_mulai' => 'datetime',
-        'realtime_selesai' => 'datetime',
-        'target_selesai' => 'datetime',
+        'periode_awal'              => 'date',
+        'periode_akhir'             => 'date',
+        'periode_pemberkasan_awal'  => 'date',
+        'periode_pemberkasan_akhir' => 'date',
+        'periode_portofolio_awal'   => 'date',
+        'periode_portofolio_akhir'  => 'date',
     ];
-
-    public static function getStatusLabels()
-    {
-        return [
-            'terjadwal' => 'Terjadwal',
-            'sedang berlangsung' => 'Sedang Berlangsung',
-            'menunggu hasil' => 'Menunggu Hasil',
-        ];
-    }
-
-    public function getStatusAttribute(string $value)
-    {
-        $statusLabels = self::getStatusLabels();
-        return $statusLabels[$value] ?? $value;
-    }
-
-    public function peserta()
-    {
-        return $this->belongsTo(Peserta::class, 'peserta_id');
-    }
-
-    public function penguji()
-    {
-        return $this->belongsTo(Penguji::class, 'penguji_id');
-    }
-
-    public function jawabanUjian()
-    {
-        return $this->hasMany(JadwalUjian::class, 'jadwal_ujian_id');
-    }
 }

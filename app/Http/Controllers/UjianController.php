@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\StatusJadwalUjianEnum;
+use App\Enums\StatusJadwalCbtEnum;
 use App\Repositories\BankSoalRepository;
-use App\Repositories\JadwalUjianRepository;
+use App\Repositories\CbtRepository;
+use App\Repositories\JadwalCbtRepository;
 use App\Repositories\JawabanUjianRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,24 +13,24 @@ use Illuminate\Support\Facades\DB;
 
 class UjianController extends Controller
 {
-    protected JadwalUjianRepository $jadwalUjianRepository;
+    protected CbtRepository $cbtRepository;
     protected BankSoalRepository $bankSoalRepository;
     protected JawabanUjianRepository $jawabanUjianRepository;
 
     public function __construct(
-        JadwalUjianRepository $jadwalUjianRepository,
+        CbtRepository $cbtRepository,
         BankSoalRepository $bankSoalRepository,
         JawabanUjianRepository $jawabanUjianRepository
     )
     {
-        $this->jadwalUjianRepository = $jadwalUjianRepository;
+        $this->cbtRepository = $cbtRepository;
         $this->bankSoalRepository = $bankSoalRepository;
         $this->jawabanUjianRepository = $jawabanUjianRepository;
     }
 
-    public function start(int $jadwalUjianId)
+    public function start(int $jadwalCbtId)
     {
-        $jadwalUjian = $this->jadwalUjianRepository->find($jadwalUjianId, 'id')->first();
+        $jadwalUjian = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
         $pesertaId = Auth::id();
 
         // HANDLING EXAM TIME
@@ -41,16 +42,16 @@ class UjianController extends Controller
             $jadwalUjian->update([
                 'realtime_mulai' => $waktuMulai,
                 'target_selesai'   => $waktuMulai->copy()->addMinutes($durasiMenit), //Carbon mutable (changing the original variable's value if not copied)
-                'status'           => StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value,
+                'status'           => StatusJadwalCbtEnum::SEDANG_BERLANGSUNG->value,
             ]);
         }
 
         // check if the exam time is over (for example, the user closes the tab and then opens it again when the time runs out)
         if ($jadwalUjian->target_selesai && now()->greaterThanOrEqualTo($jadwalUjian->target_selesai)) {
-            if ($jadwalUjian->getRawOriginal('status') !== StatusJadwalUjianEnum::MENUNGGU_HASIL->value) {
+            if ($jadwalUjian->getRawOriginal('status') !== StatusJadwalCbtEnum::MENUNGGU_HASIL->value) {
                 $jadwalUjian->update([
                     'realtime_selesai' => $jadwalUjian->target_selesai,
-                    'status'           => StatusJadwalUjianEnum::MENUNGGU_HASIL->value,
+                    'status'           => StatusJadwalCbtEnum::MENUNGGU_HASIL->value,
                 ]);
             }
             return redirect('/beranda')->with('error', 'Waktu ujian telah habis.');
@@ -60,7 +61,7 @@ class UjianController extends Controller
         $targetTimestamp = $jadwalUjian->target_selesai->timestamp;
 
         // HANDLING EXAM QUESTION AND EXISTING ANSWERS
-        $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalUjianId);
+        $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
      
         if ($jawabanTerpilih->isNotEmpty()) {
             $soalIds = $jawabanTerpilih->pluck('soal_id');
@@ -99,7 +100,7 @@ class UjianController extends Controller
 
             foreach ($soalUjian as $soal) {
                 $this->jawabanUjianRepository->create([
-                    'jadwal_ujian_id'   => $jadwalUjianId,
+                    'jadwal_ujian_id'   => $jadwalCbtId,
                     'peserta_id'        => $pesertaId,
                     'soal_id'           => $soal->id,
                     'jawaban_terpilih'  => null,
@@ -146,12 +147,12 @@ class UjianController extends Controller
         ]);
 
         $pesertaId = Auth::id();
-        $jadwalUjianId = $request->jadwal_ujian_id;
+        $jadwalCbtId = $request->jadwal_ujian_id;
 
         $skorFinal = 0;
 
         try{
-            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalUjianId);
+            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
             $jumlahJawaban = $jawabanPeserta->count();
             $skorSoal = 100/$jumlahJawaban;
             
@@ -168,11 +169,11 @@ class UjianController extends Controller
 
             }
 
-            $jadwalUjian = $this->jadwalUjianRepository->find($jadwalUjianId);
-            if ($jadwalUjian) {
-                $jadwalUjian->update([
+            $jadwalCbt = $this->cbtRepository->find($jadwalCbtId);
+            if ($jadwalCbt) {
+                $jadwalCbt->update([
                     'realtime_selesai'  => now(),
-                    'status'            => StatusJadwalUjianEnum::SELESAI->value,
+                    'status'            => StatusJadwalCbtEnum::SELESAI->value,
                     'total_skor'        => $skorFinal
                 ]);
             }
@@ -191,14 +192,14 @@ class UjianController extends Controller
         }
     }
 
-    public function result(int $jadwalUjianId)
+    public function result(int $jadwalCbtId)
     {
-        $jadwalUjian = $this->jadwalUjianRepository->find($jadwalUjianId, 'id')->first();
+        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
 
-        abort_unless($jadwalUjian && (int) $jadwalUjian->peserta_id === (int) Auth::id(), 404);
+        abort_unless($jadwalCbt && (int) $jadwalCbt->peserta_id === (int) Auth::id(), 404);
 
         $jawabanUjian = $this->jawabanUjianRepository
-            ->getByPesertaAndJadwal(Auth::id(), $jadwalUjianId)
+            ->getByPesertaAndJadwal(Auth::id(), $jadwalCbtId)
             ->load('soal');
 
         return view('peserta.hasilUjian', compact('jadwalUjian', 'jawabanUjian'));

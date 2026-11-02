@@ -10,8 +10,8 @@ enum TujuanUjianEnum: string
     public function label(): string
     {
         return match ($this) {
-            self::KENAIKAN_JENJANG => 'Ujian Kompetensi Kenaikan Jenjang Jabatan',
-            self::PERPINDAHAN_JABATAN => 'Ujian Kompetensi Perpindahan Jabatan',
+            self::KENAIKAN_JENJANG => 'Kenaikan Jenjang Jabatan',
+            self::PERPINDAHAN_JABATAN => 'Perpindahan Jabatan',
         };
     }
 

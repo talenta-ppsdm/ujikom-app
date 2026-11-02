@@ -14,17 +14,22 @@ return new class extends Migration
         Schema::create('pemberkasan', function (Blueprint $table) {
             $table->id();
             $table->foreignId('peserta_id')->constrained('peserta')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('jadwal_ujian_id')->constrained('jadwal_ujian')->onDelete('cascade')->nullable(); //TODO Simpan data jadwal ujian maka masukin id jadwal disini
-            $table->string('status',20);
-            $table->text('catatan',255)->nullable();
-
-            // Pemberkasan awal
+            $table->foreignId('jadwal_ujian_id')->constrained('jadwal_ujian')->onDelete('cascade');
+            $table->string('tujuan_ujian', 255);
             $table->string('file_sk_golongan')->nullable();
             $table->string('file_sk_jabatan')->nullable();
-
-            // Pemberkasan ujian
             $table->string('file_portofolio')->nullable();
+            $table->string('file_praasesmen')->nullable();
+            $table->string('file_paparan')->nullable();
+            $table->dateTime('tanggal_daftar');
+            
+            $table->string('status', 50);
+            $table->foreignId('verified_by')
+                ->nullable()
+                ->constrained('users')
+                ->onDelete('cascade');
+            $table->timestamp('verified_at')->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

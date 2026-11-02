@@ -71,6 +71,8 @@
   <!-- Local dashboard interactions controller -->
   <script src="{{ asset('assets/js/dashboard.js') }}"></script>
   <script src="{{ asset('assets/js/datatable.js') }}"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   @yield('scripts')
 </body>
 

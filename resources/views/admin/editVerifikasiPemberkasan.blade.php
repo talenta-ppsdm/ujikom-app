@@ -131,7 +131,7 @@
           <i class="bi bi-hash text-muted" aria-hidden="true"></i>
           <div>
             <div class="small text-muted">Nama Periode</div>
-            <div class="fw-semibold">Gelombang {{ $pemberkasan->jadwalPemberkasan->gelombang }} Tahun {{ $pemberkasan->jadwalPemberkasan->tahun }}</div>
+            <div class="fw-semibold">Gelombang {{ $pemberkasan->jadwalUjian->gelombang }} Tahun {{ $pemberkasan->jadwalUjian->tahun }}</div>
           </div>
         </div>
       </div>

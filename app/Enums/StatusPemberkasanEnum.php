@@ -7,7 +7,7 @@ enum StatusPemberkasanEnum: string
 	case VERIFYING = 'verifikasi';
 	case APPROVED = 'approved';
 	case REJECTED = 'rejected';
-    case SUMBIT_PORTOFOLIO = 'submit portofolio';
+    case SUBMIT_PORTOFOLIO = 'submit portofolio';
 
 	public function label(): string
     {
@@ -15,7 +15,7 @@ enum StatusPemberkasanEnum: string
             self::VERIFYING          => 'menunggu verifikasi',
             self::APPROVED           => 'lolos verifikasi',
             self::REJECTED           => 'tidak lolos verifikasi',
-            self::SUMBIT_PORTOFOLIO  => 'menunggu verifikasi',
+            self::SUBMIT_PORTOFOLIO  => 'menunggu verifikasi',
         };
     }
 }

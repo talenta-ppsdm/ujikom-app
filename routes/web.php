@@ -2,9 +2,10 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankSoalController;
+use App\Http\Controllers\CbtController;
 use App\Http\Controllers\DashboardPesertaController;
-use App\Http\Controllers\JadwalPemberkasanController;
 use App\Http\Controllers\JadwalUjianController;
+use App\Http\Controllers\JadwalCbtController;
 use App\Http\Controllers\PengujiController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\PesertaController;
@@ -46,15 +47,15 @@ Route::middleware('auth')->group(function () {
     Route::put('/bank-soal/{id}', [BankSoalController::class, 'update'])->name('banksoal.update');
     Route::delete('/bank-soal/{id}', [BankSoalController::class, 'destroy'])->name('banksoal.destroy');
     
+    Route::get('/jadwal-cbt', [JadwalCbtController::class, 'index'])->name('jadwal-cbt.index');
+    Route::post('/jadwal-cbt', [JadwalCbtController::class, 'store'])->name('jadwal-cbt.store');
+    Route::put('/jadwal-cbt/{id}', [JadwalCbtController::class, 'update'])->name('jadwal-cbt.update');
+    Route::delete('/jadwal-cbt/{id}', [JadwalCbtController::class, 'destroy'])->name('jadwal-cbt.destroy');
+    
     Route::get('/jadwal-ujian', [JadwalUjianController::class, 'index'])->name('jadwal-ujian.index');
     Route::post('/jadwal-ujian', [JadwalUjianController::class, 'store'])->name('jadwal-ujian.store');
     Route::put('/jadwal-ujian/{id}', [JadwalUjianController::class, 'update'])->name('jadwal-ujian.update');
     Route::delete('/jadwal-ujian/{id}', [JadwalUjianController::class, 'destroy'])->name('jadwal-ujian.destroy');
-    
-    Route::get('/jadwal-pemberkasan', [JadwalPemberkasanController::class, 'index'])->name('jadwal-pemberkasan.index');
-    Route::post('/jadwal-pemberkasan', [JadwalPemberkasanController::class, 'store'])->name('jadwal-pemberkasan.store');
-    Route::put('/jadwal-pemberkasan/{id}', [JadwalPemberkasanController::class, 'update'])->name('jadwal-pemberkasan.update');
-    Route::delete('/jadwal-pemberkasan/{id}', [JadwalPemberkasanController::class, 'destroy'])->name('jadwal-pemberkasan.destroy');
 
     Route::get('/verifikasi-pemberkasan', [VerifikasiPemberkasanController::class, 'index'])->name('verifikasi-pemberkasan.index');
     Route::get('/verifikasi-pemberkasan/{id}', [VerifikasiPemberkasanController::class, 'edit'])->name('verifikasi-pemberkasan.edit');
@@ -82,7 +83,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/peserta/profil/{id}', [PesertaProfilController::class, 'update'])->name('peserta.profil.update');
 
     Route::get('/peserta/pemberkasan', [PesertaPemberkasanController::class, 'index'])->name('peserta.pemberkasan.index');
-    Route::post('/peserta/pemberkasan', [PesertaPemberkasanController::class, 'store'])->name('peserta.pemberkasan.store');
+    Route::post('/peserta/pemberkasan-awal', [PesertaPemberkasanController::class, 'storeAwal'])->name('peserta.pemberkasan.storeAwal');
+    Route::post('/peserta/pemberkasan-portofolio', [PesertaPemberkasanController::class, 'storePortofolio'])->name('peserta.pemberkasan.storePortofolio');
 });
 
 

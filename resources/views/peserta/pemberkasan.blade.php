@@ -12,7 +12,7 @@
 		<p>Lengkapi data dan berkas pendukung untuk mengikuti uji kompetensi</p>
 	</header>
 
-	@if (!$activePemberkasanSchedule)
+	@if (!$activeUjianSchedule)
 	<!-- START exam schedule has been announced yet -->
 	<section class="ui-card schedule-empty-card" aria-labelledby="schedule-empty-title">
 		<div class="schedule-empty-hero">
@@ -73,7 +73,7 @@
 	</section>
 	<!-- END Participant has filled pemberkasan form -->
 
-	@elseif ($verifyingPortofolio)
+	@elseif ($approvedPemberkasan)
 	<!-- START Form Portofolio -->
 	<section class="registration-hero" aria-labelledby="registration-title">
 		<div class="registration-status">
@@ -81,20 +81,20 @@
 			Pendaftaran Dibuka
 		</div>
 		<h1 id="registration-title">Uji Kompetensi JF Penata Kelola Perumahan</h1>
-		<p class="registration-batch">Gelombang I 2026</p>
+		<p class="registration-batch">Gelombang {{ $activeUjianSchedule->gelombang }} Tahun {{ $activeUjianSchedule->tahun }}</p>
 
 		<dl class="registration-meta">
 			<div class="registration-meta-item">
-				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode</dt>
-				<dd>1 Okt 2026 - 31 Okt 2026</dd>
+				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode Ujian</dt>
+				<dd>{{ \Carbon\Carbon::parse($activeUjianSchedule->periode_awal)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($activeUjianSchedule->periode_akhir)->translatedFormat('d F Y') }}</dd>
 			</div>
 			<div class="registration-meta-item">
-				<dt><i class="bi bi-people" aria-hidden="true"></i> Metode</dt>
-				<dd>Tatap Muka</dd>
+				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode Pendaftaran Berkas</dt>
+				<dd>{{ \Carbon\Carbon::parse($activeUjianSchedule->periode_pemberkasan_awal)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($activeUjianSchedule->periode_pemberkasan_akhir)->translatedFormat('d F Y') }}</dd>
 			</div>
 			<div class="registration-meta-item">
 				<dt><i class="bi bi-person-lines-fill" aria-hidden="true"></i> Kuota</dt>
-				<dd>40 peserta</dd>
+				<dd>{{ $activeUjianSchedule->kuota }} peserta</dd>
 			</div>
 		</dl>
 	</section>
@@ -105,7 +105,7 @@
 				<i class="bi bi-file-earmark-text"></i>
 			</span>
 			<div>
-				<h2 id="registration-form-title">Formulir Pendaftaran Berkas</h2>
+				<h2 id="registration-form-title">Formulir Pendaftaran Berkas Portofolio</h2>
 				<p>Lengkapi data dan unggah berkas pendukung.</p>
 			</div>
 		</header>
@@ -142,39 +142,44 @@
 			</div>
 		@endif
 
-		<form class="registration-form" action="{{ route('peserta.pemberkasan.store') }}" method="POST" enctype="multipart/form-data">
+		<form class="registration-form" action="{{ route('peserta.pemberkasan.storePortofolio') }}" method="POST" enctype="multipart/form-data">
 			@csrf
 			<div class="row g-3">
 				<div class="col-12 registration-file-field">
-					<label class="form-label" for="tujuan_ujian">Tujuan Uji Kompetensi<span>*</span></label>
-					<select class="form-control form-select-custom" id="tujuan_ujian" name="tujuan_ujian" required>
-                        <option selected disabled>Pilih tujuan uji kompetensi</option>
-                        <option>Kenaikan Jabatan</option>
-                        <option>Perpindahan Jabatan</option>
-                      </select>
-				</div>
-				<div class="col-12 registration-file-field">
-					<label class="form-label" for="file_sk_golongan">SK Golongaan <span>*</span></label>
+					<label class="form-label" for="file_portofolio">Portofolio <span>*</span></label>
 					<p class="registration-file-help">Unggah berkas (PDF/JPG/PNG, maks. 5 MB).</p>
 					<input class="registration-file-input" 
-						id="file_sk_golongan" 
+						id="file_portofolio" 
 						type="file"  
-						aria-label="Pilih berkas pendaftaran"
-						name="sk_golongan">
-					<label class="registration-upload" for="file_sk_golongan">
+						aria-label="Pilih berkas portofolio"
+						name="portofolio">
+					<label class="registration-upload" for="file_portofolio">
 						<i class="bi bi-upload" aria-hidden="true"></i>
 						<span class="file-name-text">Klik untuk pilih berkas</span>
 					</label>
 				</div>
 				<div class="col-12 registration-file-field">
-					<label class="form-label" for="file_sk_jabatan">SK Jabatan <span>*</span></label>
+					<label class="form-label" for="file_praasesmen">Pra Asesmen <span>*</span></label>
 					<p class="registration-file-help">Unggah berkas (PDF/JPG/PNG, maks. 5 MB).</p>
 					<input class="registration-file-input" 
-						id="file_sk_jabatan" 
+						id="file_praasesmen" 
 						type="file"  
-						aria-label="Pilih berkas pendaftaran"
-						name="sk_jabatan">
-					<label class="registration-upload" for="file_sk_jabatan">
+						aria-label="Pilih berkas pra-asesmen"
+						name="praasesmen">
+					<label class="registration-upload" for="file_praasesmen">
+						<i class="bi bi-upload" aria-hidden="true"></i>
+						<span class="file-name-text">Klik untuk pilih berkas</span>
+					</label>
+				</div>
+				<div class="col-12 registration-file-field">
+					<label class="form-label" for="file_paparan">Bahan Paparan <span>*</span></label>
+					<p class="registration-file-help">Unggah berkas (PDF/JPG/PNG, maks. 5 MB).</p>
+					<input class="registration-file-input" 
+						id="file_paparan" 
+						type="file"  
+						aria-label="Pilih berkas paparan"
+						name="paparan">
+					<label class="registration-upload" for="file_paparan">
 						<i class="bi bi-upload" aria-hidden="true"></i>
 						<span class="file-name-text">Klik untuk pilih berkas</span>
 					</label>
@@ -189,7 +194,31 @@
 		</form>
 	</section>
 	<!-- END Form Portofolio -->
+
+	@elseif ($verifyingPortofolio)
+	<!-- START Participant has filled pemberkasan form -->
+	<section class="ui-card alert-custom-success d-flex flex-column align-items-center text-center" aria-labelledby="profile-required-title">
+		<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-success-subtle text-success p-4 mb-3" aria-hidden="true">
+			<i class="bi bi-check-circle fs-3"></i>
+		</span>
+		<h2 class="h4 fw-bold text-dark mb-3" id="profile-required-title">Anda Telah Mengirimkan Berkas Portofolio</h2>
+		<p class="text-secondary mb-3">
+			Berkas portofolio Anda telah berhasil disimpan.
+		</p>
+	</section>
+	<!-- END Participant has filled pemberkasan form -->
 	 
+	@elseif ($isQuotaFull)
+	<section class="ui-card alert-custom-warning d-flex flex-column align-items-center text-center" aria-labelledby="quota-full-title">
+		<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning p-4 mb-3" aria-hidden="true">
+			<i class="bi bi-people-fill fs-3"></i>
+		</span>
+		<h2 class="h4 fw-bold text-dark mb-3" id="quota-full-title">Kuota Pendaftaran Telah Penuh</h2>
+		<p class="text-secondary mb-0">
+			Kuota pendaftaran sebanyak {{ $activeUjianSchedule->kuota }} peserta telah terpenuhi. Formulir pemberkasan awal tidak dapat diisi untuk saat ini.
+		</p>
+	</section>
+
 	@elseif ($isProfileIncomplete)
 		<section class="ui-card alert-custom-warning d-flex flex-column align-items-center text-center" aria-labelledby="profile-required-title">
 			<span class="d-inline-flex align-items-center justify-content-center rounded-circle bg-warning-subtle text-warning p-4 mb-3" aria-hidden="true">
@@ -211,20 +240,20 @@
 			Pendaftaran Dibuka
 		</div>
 		<h1 id="registration-title">Uji Kompetensi JF Penata Kelola Perumahan</h1>
-		<p class="registration-batch">Gelombang I 2026</p>
+		<p class="registration-batch">Gelombang {{ $activeUjianSchedule->gelombang ?? '-' }} Tahun {{ $activeUjianSchedule->tahun ?? '-'}}</p>
 
 		<dl class="registration-meta">
 			<div class="registration-meta-item">
-				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode</dt>
-				<dd>1 Okt 2026 - 31 Okt 2026</dd>
+				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode Ujian</dt>
+				<dd>{{ \Carbon\Carbon::parse($activeUjianSchedule->periode_awal)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($activeUjianSchedule->periode_akhir)->translatedFormat('d F Y') }}</dd>
 			</div>
 			<div class="registration-meta-item">
-				<dt><i class="bi bi-people" aria-hidden="true"></i> Metode</dt>
-				<dd>Tatap Muka</dd>
+				<dt><i class="bi bi-calendar-event" aria-hidden="true"></i> Periode Pendaftaran Berkas</dt>
+				<dd>{{ \Carbon\Carbon::parse($activeUjianSchedule->periode_pemberkasan_awal)->translatedFormat('d F Y') }} - {{ \Carbon\Carbon::parse($activeUjianSchedule->periode_pemberkasan_akhir)->translatedFormat('d F Y') }}</dd>
 			</div>
 			<div class="registration-meta-item">
 				<dt><i class="bi bi-person-lines-fill" aria-hidden="true"></i> Kuota</dt>
-				<dd>40 peserta</dd>
+				<dd>{{ $activeUjianSchedule->kuota ?? '-' }} peserta</dd>
 			</div>
 		</dl>
 	</section>
@@ -273,16 +302,32 @@
 			</div>
 		@endif
 
-		<form class="registration-form" action="{{ route('peserta.pemberkasan.store') }}" method="POST" enctype="multipart/form-data">
+		<form class="registration-form" action="{{ route('peserta.pemberkasan.storeAwal') }}" method="POST" enctype="multipart/form-data">
 			@csrf
 			<div class="row g-3">
-				<div class="col-12 registration-file-field">
+				<div class="col-6 registration-file-field">
 					<label class="form-label" for="tujuan_ujian">Tujuan Uji Kompetensi<span>*</span></label>
-					<select class="form-control form-select-custom" id="tujuan_ujian" name="tujuan_ujian" required>
-                        <option selected disabled>Pilih tujuan uji kompetensi</option>
-                        <option>Kenaikan Jabatan</option>
-                        <option>Perpindahan Jabatan</option>
-                      </select>
+					<select class="form-control form-select-custom" id="tujuanUjian" name="tujuan_ujian" required>
+						<option value="" disabled selected>Pilih Tujuan Ujian...</option>
+						
+						@foreach(\App\Enums\TujuanUjianEnum::options() as $value => $label)
+							<option value="{{ $value }}" {{ old('tujuan_ujian') == $value ? 'selected' : '' }}>
+								{{ $label }}
+							</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-6 registration-file-field">
+					<label class="form-label" for="tujuan_jenjang">Jenjang Tujuan<span>*</span></label>
+					<select class="form-control form-select-custom" id="tujuanJenjang" name="tujuan_jenjang" required>
+						<option value="" disabled selected>Pilih Jenjang Tujuan...</option>
+						
+						@foreach(\App\Enums\JenjangJabatanEnum::options() as $value => $label)
+							<option value="{{ $value }}" {{ old('tujuan_jenjang') == $value ? 'selected' : '' }}>
+								{{ $label }}
+							</option>
+						@endforeach
+					</select>
 				</div>
 				<div class="col-12 registration-file-field">
 					<label class="form-label" for="file_sk_golongan">SK Golongaan <span>*</span></label>

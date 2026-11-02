@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\StatusJadwalUjianEnum;
-use App\Repositories\JadwalPemberkasanRepository;
+use App\Enums\StatusJadwalCbtEnum;
 use App\Repositories\JadwalUjianRepository;
+use App\Repositories\CbtRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\PesertaRepository;
@@ -13,40 +13,40 @@ use Illuminate\Support\Facades\Auth;
 class DashboardPesertaController extends Controller
 {
     protected UserRepository $userRepository;
-    protected JadwalUjianRepository $jadwalUjianRepository;
+    protected CbtRepository $cbtRepository;
     protected PengumumanRepository $pengumumanRepository;
     protected PesertaRepository $pesertaRepository;
-    protected JadwalPemberkasanRepository $jadwalPemberkasanRepository;
+    protected JadwalUjianRepository $jadwalUjianRepository;
 
     public function __construct(
         UserRepository $userRepository,
-        JadwalUjianRepository $jadwalUjianRepository,
+        CbtRepository $cbtRepository,
         PengumumanRepository $pengumumanRepository,
         PesertaRepository $pesertaRepository,
-        JadwalPemberkasanRepository $jadwalPemberkasanRepository
+        JadwalUjianRepository $jadwalUjianRepository
     )
     {
         $this->userRepository               = $userRepository;
-        $this->jadwalUjianRepository        = $jadwalUjianRepository;
+        $this->cbtRepository                = $cbtRepository;
         $this->pengumumanRepository         = $pengumumanRepository;
         $this->pesertaRepository            = $pesertaRepository;
-        $this->jadwalPemberkasanRepository  = $jadwalPemberkasanRepository;
+        $this->jadwalUjianRepository        = $jadwalUjianRepository;
     }
 
     public function index()
     {
         $user = $this->userRepository->with('peserta')->find(Auth::id());
-        $ujian = $this->jadwalUjianRepository->getByPeserta($user->id);
+        $ujian = $this->cbtRepository->getByPeserta($user->id);
         $ujianTerjadwal = $ujian->filter(function ($item) {
             $status = strtolower($item->status->value ?? $item->status);
             return in_array($status, [
-                StatusJadwalUjianEnum::TERJADWAL->value,
-                StatusJadwalUjianEnum::SEDANG_BERLANGSUNG->value,
+                StatusJadwalCbtEnum::TERJADWAL->value,
+                StatusJadwalCbtEnum::SEDANG_BERLANGSUNG->value,
             ]);
         });
         $ujianSelesai = $ujian->filter(function ($item) {
             $status = strtolower($item->status->value ?? $item->status);
-            return $status === StatusJadwalUjianEnum::SELESAI->value;
+            return $status === StatusJadwalCbtEnum::SELESAI->value;
         });
                
         $recentUjian = $ujian->take(2)->values();
@@ -63,7 +63,7 @@ class DashboardPesertaController extends Controller
         }
 
         // Check jadwal pemberkasan
-        $activePemberkasanSchedule = $this->jadwalPemberkasanRepository->getActiveSchedule();
+        $activePemberkasanSchedule = $this->jadwalUjianRepository->getActiveSchedule();
     
         return view('peserta.beranda', compact(
             'user', 

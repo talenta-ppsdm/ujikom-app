@@ -5,11 +5,11 @@
 @section('hero')
 <div class="page-header">
     <div>
-      <h1 class="page-title">Jadwal Pemberkasan</h1>
+      <h1 class="page-title">Jadwal Ujian</h1>
       <p class="page-subtitle">Pengelolaan periode pendaftaran, batas waktu unggah dokumen, pengaturan kuota utama, dan status gelombang uji kompetensi.</p>
     </div>
-    <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahJadwalPemberkasanModal">
-      <i class="bi bi-plus-lg me-1"></i>Tambah Jadwal
+    <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahJadwalUjianModal">
+      <i class="bi bi-plus-lg me-1"></i>Tambah Data
     </button>
 
     <div class="row">
@@ -64,15 +64,15 @@
       </thead>
       <tbody>
         <?php $no = 1; ?>
-        @foreach($jadwalPemberkasan as $jp)
+        @foreach($jadwalUjian as $ju)
         <tr>
           <td>{{$no++}}</td>
-          <td>Gelombang {{ $jp->gelombang }} Tahun {{ $jp->tahun }}</td>
-          <td>{{ $jp->kuota }}</td>
-          <td>{{ $jp->periode_awal->translatedFormat('d F Y') }} s/d {{ $jp->periode_akhir->translatedFormat('d F Y') }}</td>
+          <td>Gelombang {{ $ju->gelombang }} Tahun {{ $ju->tahun }}</td>
+          <td>{{ $ju->kuota }}</td>
+          <td>{{ $ju->periode_awal->translatedFormat('d F Y') }} s/d {{ $ju->periode_akhir->translatedFormat('d F Y') }}</td>
           <td>
             @php
-            $statusString = strtolower($jp->status);
+            $statusString = strtolower($ju->status);
 
             $statusClass = match ($statusString) {
               'aktif'     => 'success',
@@ -80,7 +80,7 @@
               default     => 'success',
             };
             @endphp
-            <span class="badge-table {{ $statusClass }}">{{ ucfirst($jp->status) }}</span>
+            <span class="badge-table {{ $statusClass }}">{{ ucfirst($ju->status) }}</span>
           </td>
           <td>
             <div class="d-flex justify-content-center gap-1">
@@ -88,28 +88,30 @@
                 title="Edit row" 
                 type="button" 
                 data-bs-toggle="modal" 
-                data-bs-target="#editJadwalPemberkasanModal-{{ $jp->id }}">
+                data-bs-target="#editJadwalUjianModal-{{ $ju->id }}">
                 <i class="bi bi-pencil"></i>
               </button>
              
-              <form action="{{ route('jadwal-pemberkasan.destroy', ['id' => $jp->id]) }}" method="POST" style="display: inline;">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
+              <form action="{{ route('jadwal-ujian.destroy', $ju->id) }}" method="POST" class="d-inline form-delete" style="display: inline;">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="table-btn-action delete btn-delete-custom" title="Hapus">
+                      <i class="bi bi-trash"></i>
+                  </button>
               </form>
             </div>
           </td>
         </tr>
 
-        <!-- Modal Edit Jadwal Pemberkasan -->
-        <div class="modal fade modal-standard" id="editJadwalPemberkasanModal-{{ $jp->id }}" tabindex="-1" aria-labelledby="editJadwalPemberkasanModalLabel-{{ $jp->id }}" aria-hidden="true">
+        <!-- Modal Edit Jadwal Ujian -->
+        <div class="modal fade modal-standard" id="editJadwalUjianModal-{{ $ju->id }}" tabindex="-1" aria-labelledby="editJadwalPemberkasanModalLabel-{{ $ju->id }}" aria-hidden="true">
           <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content bg-white">
               <div class="modal-header px-6 py-4 ">
-                <h2 class="modal-title fs-5" id="editJadwalPemberkasanModalLabel-{{ $jp->id }}">Edit Data Jadwal Pemberkasan</h2>
+                <h2 class="modal-title fs-5" id="editJadwalUjianModalLabel-{{ $ju->id }}">Edit Data Jadwal Pemberkasan</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('jadwal-pemberkasan.update', $jp->id) }}" method="POST">
+              <form action="{{ route('jadwal-ujian.update', $ju->id) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 
@@ -120,10 +122,10 @@
                       <label for="gelombang" class="form-label">Gelombang*</label>
                       <select class="form-select form-control-custom" id="gelombang" name="gelombang" required>
                         <option value="" disabled>Pilih gelombang...</option>
-                        <option value="1" {{ old('gelombang', $jp->gelombang ?? '') == '1' ? 'selected' : '' }}>Gelombang I</option>
-                        <option value="2" {{ old('gelombang', $jp->gelombang ?? '') == '2' ? 'selected' : '' }}>Gelombang II</option>
-                        <option value="3" {{ old('gelombang', $jp->gelombang ?? '') == '3' ? 'selected' : '' }}>Gelombang III</option>
-                        <option value="4" {{ old('gelombang', $jp->gelombang ?? '') == '4' ? 'selected' : '' }}>Gelombang III</option>
+                        <option value="1" {{ old('gelombang', $ju->gelombang ?? '') == '1' ? 'selected' : '' }}>Gelombang I</option>
+                        <option value="2" {{ old('gelombang', $ju->gelombang ?? '') == '2' ? 'selected' : '' }}>Gelombang II</option>
+                        <option value="3" {{ old('gelombang', $ju->gelombang ?? '') == '3' ? 'selected' : '' }}>Gelombang III</option>
+                        <option value="4" {{ old('gelombang', $ju->gelombang ?? '') == '4' ? 'selected' : '' }}>Gelombang III</option>
                       </select>
                     </div>
 
@@ -150,7 +152,7 @@
                     <div class="col-md-12">
                       <label for="kuota" class="form-label">Kuota*</label>
                       <input type="number" class="form-control" id="kuota" name="kuota" 
-                             value="{{ old('kuota', $jp->kuota) }}" required>
+                             value="{{ old('kuota', $ju->kuota) }}" required>
                     </div>
 
                     <!-- Periode Awal -->
@@ -158,7 +160,7 @@
                       <label for="periode_awal" class="form-label">Periode Awal*</label>
                       <input type="date" class="form-control" id="periode_awal"           
                           name="periode_awal" 
-                          value="{{ old('periode_awal', $jp->periode_awal ? $jp->periode_awal->format('Y-m-d') : '') }}" 
+                          value="{{ old('periode_awal', $ju->periode_awal ? $ju->periode_awal->format('Y-m-d') : '') }}" 
                           required>
                     </div>
 
@@ -167,7 +169,43 @@
                       <label for="periode_akhir" class="form-label">Periode Akhir*</label>
                       <input type="date" class="form-control" id="periode_akhir"           
                           name="periode_akhir" 
-                          value="{{ old('periode_akhir', $jp->periode_akhir ? $jp->periode_akhir->format('Y-m-d') : '') }}" 
+                          value="{{ old('periode_akhir', $ju->periode_akhir ? $ju->periode_akhir->format('Y-m-d') : '') }}" 
+                          required>
+                    </div>
+
+                    <!-- Periode Pemberkasan Awal -->
+                    <div class="col-md-6">
+                      <label for="periode_pemberkasan_awal" class="form-label">Periode Pemberkasan Awal*</label>
+                      <input type="date" class="form-control" id="periode_pemberkasan_awal"           
+                          name="periode_pemberkasan_awal" 
+                          value="{{ old('periode_pemberkasan_awal', $ju->periode_pemberkasan_awal ? $ju->periode_pemberkasan_awal->format('Y-m-d') : '') }}" 
+                          required>
+                    </div>
+
+                    <!-- Periode Pemberkasan Akhir -->
+                    <div class="col-md-6">
+                      <label for="periode_pemberkasan_akhir" class="form-label">Periode Pemberkasan Akhir*</label>
+                      <input type="date" class="form-control" id="periode_pemberkasan_akhir"           
+                          name="periode_pemberkasan_akhir" 
+                          value="{{ old('periode_pemberkasan_akhir', $ju->periode_pemberkasan_akhir ? $ju->periode_pemberkasan_akhir->format('Y-m-d') : '') }}" 
+                          required>
+                    </div>
+
+                    <!-- Periode Portofolio Awal -->
+                    <div class="col-md-6">
+                      <label for="periode_portofolio_awal" class="form-label">Periode Portofolio Awal*</label>
+                      <input type="date" class="form-control" id="periode_portofolio_awal"           
+                          name="periode_portofolio_awal" 
+                          value="{{ old('periode_portofolio_awal', $ju->periode_portofolio_awal ? $ju->periode_portofolio_awal->format('Y-m-d') : '') }}" 
+                          required>
+                    </div>
+
+                    <!-- Periode Portofolio Akhir -->
+                    <div class="col-md-6">
+                      <label for="periode_portofolio_akhir" class="form-label">Periode Portofolio Akhir*</label>
+                      <input type="date" class="form-control" id="periode_portofolio_akhir"           
+                          name="periode_portofolio_akhir" 
+                          value="{{ old('periode_portofolio_akhir', $ju->periode_portofolio_akhir ? $ju->periode_portofolio_akhir->format('Y-m-d') : '') }}" 
                           required>
                     </div>
 
@@ -176,8 +214,8 @@
                       <label for="status" class="form-label">Status*</label>
                       <select class="form-select form-control-custom" id="status" name="status" required>
                         <option value="" disabled>Pilih status...</option>
-                        <option value="aktif" {{ old('status', $jp->status ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="nonaktif" {{ old('status', $jp->status ?? '') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
+                        <option value="aktif" {{ old('status', $ju->status ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                        <option value="nonaktif" {{ old('status', $ju->status ?? '') == 'nonaktif' ? 'selected' : '' }}>Nonaktif</option>
                       </select>
                     </div>
                   </div>
@@ -191,22 +229,22 @@
             </div>
           </div>
         </div>
-        <!-- END Modal Edit Jadwal Pemberkasan -->
+        <!-- END Modal Edit Jadwal Ujian -->
         @endforeach
       </tbody>
     </table>
   </div>
 </div>
 
-<!-- Modal Tambah Jadwal Pemberkasan -->
-<div class="modal fade modal-standard" id="tambahJadwalPemberkasanModal" tabindex="-1" aria-labelledby="tambahJadwalPemberkasanModalLabel" aria-hidden="true">
+<!-- Modal Tambah Jadwal Ujian -->
+<div class="modal fade modal-standard" id="tambahJadwalUjianModal" tabindex="-1" aria-labelledby="tambahJadwalPemberkasanModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content bg-white">
       <div class="modal-header px-6 py-4 ">
-        <h2 class="modal-title fs-5" id="tambahJadwalPemberkasanModalLabel">Tambah Jadwal Pemberkasan</h2>
+        <h2 class="modal-title fs-5" id="tambahJadwalUjianModalLabel">Tambah Jadwal Ujian</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <form action="{{ route('jadwal-pemberkasan.store') }}" method="POST">
+      <form action="{{ route('jadwal-ujian.store') }}" method="POST">
         @csrf 
         <div class="modal-body">
           <div class="row g-3">
@@ -240,14 +278,65 @@
               <input type="number" class="form-control form-control-custom" id="kuota" name="kuota" placeholder="Masukkan kouta tersedia..." required>
             </div>
 
+            <!-- Periode Awal -->
             <div class="col-md-6">
               <label for="periode_awal" class="form-label">Periode Awal*</label>
               <input type="date" class="form-control form-control-custom" id="periode_awal" name="periode_awal" min="{{ date('Y-m-d') }}" required>
             </div>
 
+            <!-- Periode Akhir -->
             <div class="col-md-6">
               <label for="periode_akhir" class="form-label">Periode Akhir*</label>
-              <input type="date" class="form-control form-control-custom" id="periode_akhir" name="periode_akhir" min="{{ date('Y-m-d') }}" required>
+              <input type="date" 
+                class="form-control form-control-custom" 
+                id="periode_akhir" 
+                name="periode_akhir" 
+                min="{{ date('Y-m-d') }}" 
+                required>
+            </div>
+
+            <!-- Periode Pemberkasan Awal -->
+            <div class="col-md-6">
+              <label for="periode_pemberkasan_awal" class="form-label">Periode Pemberkasan Awal*</label>
+              <input type="date" 
+                class="form-control form-control-custom" 
+                id="periode_pemberkasan_awal" 
+                name="periode_pemberkasan_awal" 
+                min="{{ date('Y-m-d') }}" 
+                required>
+            </div>
+
+            <!-- Periode Pemberkasan Akhir -->
+            <div class="col-md-6">
+              <label for="periode_pemberkasan_akhir" class="form-label">Periode Pemberkasan Akhir*</label>
+              <input type="date" 
+                class="form-control form-control-custom" 
+                id="periode_pemberkasan_akhir" 
+                name="periode_pemberkasan_akhir" 
+                min="{{ date('Y-m-d') }}" 
+                required>
+            </div>
+
+            <!-- Periode Portofolio Awal -->
+            <div class="col-md-6">
+              <label for="periode_portofolio_awal" class="form-label">Periode Portofolio Awal*</label>
+              <input type="date" 
+                class="form-control form-control-custom" 
+                id="periode_portofolio_awal" 
+                name="periode_portofolio_awal" 
+                min="{{ date('Y-m-d') }}" 
+                required>
+            </div>
+
+            <!-- Periode Portofolio Akhir -->
+            <div class="col-md-6">
+              <label for="periode_portofolio_akhir" class="form-label">Periode Portofolio Akhir*</label>
+              <input type="date" 
+                class="form-control form-control-custom" 
+                id="periode_portofolio_akhir" 
+                name="periode_portofolio_akhir" 
+                min="{{ date('Y-m-d') }}" 
+                required>
             </div>
           </div>
         </div>
@@ -259,5 +348,34 @@
     </div>
   </div>
 </div>
-<!-- END Modal Tambah Jadwal Pemberkasan -->
+<!-- END Modal Tambah Jadwal Ujian -->
+@endsection
+
+@section('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteForms = document.querySelectorAll('.form-delete');
+        
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); 
+                
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang telah dihapusntidak dapat dipulihkan",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33', 
+                    cancelButtonColor: '#6c757d', 
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit(); 
+                    }
+                });
+            });
+        });
+    });
+</script>
 @endsection

@@ -69,7 +69,7 @@
           <strong>ADMIN</strong>
           <span>admin@pkp.go.id</span>
         </button>
-        <button class="demo-account demo-participant" type="button" data-demo-email="puteri@pkp.go.id" data-demo-password="peserta2026">
+        <button class="demo-account demo-participant" type="button" data-demo-email="puteri@pkp.go.id" data-demo-password="Peserta2026">
           <strong>PESERTA</strong>
           <span>puteri@pkp.go.id</span>
         </button>

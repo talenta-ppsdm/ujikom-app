@@ -11,14 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jadwal_pemberkasan', function (Blueprint $table) {
+        Schema::create('jadwal_ujian', function (Blueprint $table) {
             $table->id();
-            $table->string('gelombang',20);
-            $table->year('tahun');
-            $table->string('status',50);
+            $table->string('gelombang', 255);
+            $table->string('tahun', 10);
             $table->integer('kuota');
+            $table->string('status');
             $table->date('periode_awal');
             $table->date('periode_akhir');
+            $table->date('periode_pemberkasan_awal')->nullable();
+            $table->date('periode_pemberkasan_akhir')->nullable();
+            $table->date('periode_portofolio_awal')->nullable();
+            $table->date('periode_portofolio_akhir')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -28,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jadwal_pemberkasan');
+        Schema::dropIfExists('jadwal_ujian');
     }
 };
