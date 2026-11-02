@@ -49,7 +49,7 @@ class JadwalUjianController extends Controller
             }
 
             $this->jadwalUjianRepository->create(array_merge($validateData,[
-                'status'    => 'aktif'
+                'status'    => 'aktif',
             ]));
 
         }catch (\Throwable $e) {
@@ -82,7 +82,15 @@ class JadwalUjianController extends Controller
         ]);
 
         try {
-            // TODO: klo ada perubahan status ke aktif, cek apakah ada jadwal ujian yang aktif
+            if ($validateData['status'] === 'aktif') {
+                $activeJadwalUjian = $this->jadwalUjianRepository->getActiveSchedule();
+                if ($activeJadwalUjian && $activeJadwalUjian->id !== $id) {
+                    return back()->withInput()->withErrors([
+                        'error' => 'Terdapat jadwal ujian yang aktif'
+                    ]);
+                }
+            }
+
             $this->jadwalUjianRepository->update($validateData, $id);
 
         }catch (\Throwable $e) {
