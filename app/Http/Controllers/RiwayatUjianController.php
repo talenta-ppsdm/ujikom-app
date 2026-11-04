@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\JadwalCbtRepository;
+use App\Repositories\CbtRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 class RiwayatUjianController extends Controller
 {
-    protected JadwalCbtRepository $jadwalCbtRepository;
+    protected CbtRepository $cbtRepository;
 
-    public function __construct(JadwalCbtRepository $jadwalCbtRepository)
+    public function __construct(CbtRepository $cbtRepository)
     {
-        $this->jadwalCbtRepository = $jadwalCbtRepository;
+        $this->cbtRepository = $cbtRepository;
     }
 
     public function index(Request $request)
     {
-        $pesertaId = Auth::id();
-        $availableYears = $this->jadwalCbtRepository->getAvailableYearsByPeserta($pesertaId);
+        $pesertaId = Auth::user()->peserta->id;
+        $availableYears = $this->cbtRepository->getAvailableYearsByPeserta($pesertaId);
         $selectedYear = $request->tahun;
 
         if($request->filled('tahun') && $request->tahun !== 'semua'){
-            $ujian = $this->jadwalCbtRepository->getByPesertaAndYear($pesertaId, $selectedYear);
+            $ujian = $this->cbtRepository->getByPesertaAndYear($pesertaId, $selectedYear);
         }else{
-            $ujian = $this->jadwalCbtRepository->getByPeserta($pesertaId);
+            $ujian = $this->cbtRepository->getByPeserta($pesertaId);
         }
 
         $countUjian = $ujian->count();

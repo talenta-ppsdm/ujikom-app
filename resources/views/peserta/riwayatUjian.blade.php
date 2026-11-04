@@ -38,8 +38,7 @@
 			  <tr>
 				<th>No</th>
 				<th>Tanggal Pelaksanaan</th>
-				<th>Tujuan Ujian</th>
-				<th>Jenjang Tujuan</th>
+				<th>Durasi</th>
 				<th>Status</th>
 				<th>Nilai</th>
 			  </tr>
@@ -64,8 +63,7 @@
 			  <tr>
 				<td class="table-order-id">{{ $no++ }}</td>
 				<td>{{ $dataUjian->tanggal_ujian->translatedFormat('d F Y') }}</td>
-				<td>{{ ucwords($dataUjian->tujuan_ujian->value) }}</td>
-				<td>{{ ucwords($dataUjian->jenjang_tujuan) }}</td>
+				<td>{{ $dataUjian->durasi }} menit</td>
 				<td>
 					<span class="badge-table {{ $statusBadgeClass }}">{{ $dataUjian->status }}</span>
 				</td>

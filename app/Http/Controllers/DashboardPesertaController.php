@@ -36,7 +36,7 @@ class DashboardPesertaController extends Controller
     public function index()
     {
         $user = $this->userRepository->with('peserta')->find(Auth::id());
-        $ujian = $this->cbtRepository->getByPeserta($user->id);
+        $ujian = $this->cbtRepository->getByPeserta($user->peserta->id);
         $ujianTerjadwal = $ujian->filter(function ($item) {
             $status = strtolower($item->status->value ?? $item->status);
             return in_array($status, [

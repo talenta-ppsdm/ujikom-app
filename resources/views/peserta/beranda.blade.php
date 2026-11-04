@@ -80,24 +80,16 @@
 
                 <!-- Card List Jadwal Ujian -->
                 @foreach($recentUjian as $dataUjian)
-                    @php
-                    $statusBadgeClass = match(strtolower($dataUjian->status)){
-                        'terjadwal'          => 'ui-badge-warning',
-                        'sedang berlangsung' => 'ui-badge-info',
-                        'selesai'            => 'ui-badge-success',
-                        default              => 'ui-badge-secondary',
-                    };
-
-                    $levelUjian = match(strtolower($dataUjian->jenjang_tujuan)){
-                        'ahli pertama'  => 'level 1', 
-                        'ahli muda'  => 'level 2 & 3', 
-                        'ahli madya'  => 'level 4', 
-                        'ahli utama'  => 'level 5', 
+                @php
+                    $statusBadgeClass = match(strtolower($dataujian->status ?? '')) {
+                        'terjadwal'          => 'badge-warning',
+                        'sedang berlangsung' => 'badge-info',
+                        'selesai'            => 'badge-success',
+                        default              => 'badge-secondary', 
                     };
                     @endphp
                     <div class="ui-card mb-3">
                         <div class="ui-card-heading">
-                            <h2 class="ui-card-title" id="exam-status-title">{{ ucwords($dataUjian->tujuan_ujian->value) }}</h2>
                             <span class="ui-status-badge {{ $statusBadgeClass }}">{{ ucwords($dataUjian->status) }}</span>
                         </div>
 
@@ -125,20 +117,20 @@
         
                         <div class="ui-metric-grid">
                             <div>
+                                <span class="ui-metric-label">Gelombang Ujian</span>
+                                <span class="ui-metric-value">Gelombang {{$dataUjian->jadwalUjian->gelombang}} Tahun {{$dataUjian->jadwalUjian->tahun}}</span>
+                            </div>
+                            <div>
+                                <span class="ui-metric-label">Tanggal</span>
+                                <span class="ui-metric-value">{{ \Carbon\Carbon::parse($dataUjian->tanggal_ujian)->translatedFormat('d F Y') }}</span>
+                            </div>
+                            <div>
                                 <span class="ui-metric-label">Jumlah Soal</span>
                                 <span class="ui-metric-value">30 Butir</span>
                             </div>
                             <div>
                                 <span class="ui-metric-label">Durasi Ujian</span>
                                 <span class="ui-metric-value">{{$dataUjian->durasi}} Menit</span>
-                            </div>
-                            <div>
-                                <span class="ui-metric-label">Level</span>
-                                <span class="ui-metric-value">{{ucfirst($levelUjian)}}</span>
-                            </div>
-                            <div>
-                                <span class="ui-metric-label">Jenjang Dituju</span>
-                                <span class="ui-metric-value ui-metric-value-accent">JF {{$dataUjian->jenjang_tujuan}}</span>
                             </div>
                         </div>
 
