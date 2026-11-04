@@ -8,6 +8,7 @@ use App\Repositories\CbtRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\PesertaRepository;
+use App\Repositories\PemberkasanRepository;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardPesertaController extends Controller
@@ -17,13 +18,15 @@ class DashboardPesertaController extends Controller
     protected PengumumanRepository $pengumumanRepository;
     protected PesertaRepository $pesertaRepository;
     protected JadwalUjianRepository $jadwalUjianRepository;
+    protected PemberkasanRepository $pemberkasanRepository;
 
     public function __construct(
         UserRepository $userRepository,
         CbtRepository $cbtRepository,
         PengumumanRepository $pengumumanRepository,
         PesertaRepository $pesertaRepository,
-        JadwalUjianRepository $jadwalUjianRepository
+        JadwalUjianRepository $jadwalUjianRepository,
+        PemberkasanRepository $pemberkasanRepository
     )
     {
         $this->userRepository               = $userRepository;
@@ -31,6 +34,7 @@ class DashboardPesertaController extends Controller
         $this->pengumumanRepository         = $pengumumanRepository;
         $this->pesertaRepository            = $pesertaRepository;
         $this->jadwalUjianRepository        = $jadwalUjianRepository;
+        $this->pemberkasanRepository        = $pemberkasanRepository;
     }
 
     public function index()
@@ -49,8 +53,29 @@ class DashboardPesertaController extends Controller
             return $status === StatusJadwalCbtEnum::SELESAI->value;
         });
                
-        $recentUjian = $ujian->take(2)->values();
+        $recentUjian = $ujian->take(2)->values()->map(function ($item) {
+            $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule(
+                $item->peserta_id, 
+                $item->jadwal_ujian_id
+            )->first();
+
+            $pemberkasanObj = $pemberkasan instanceof \Illuminate\Support\Collection ? $pemberkasan->first() : $pemberkasan;
+
+            $item->tujuan_jenjang = $pemberkasanObj?->tujuan_jenjang;
+
+            return $item;
+        });
+        
+        
         $recentUjianTerjadwal = $ujianTerjadwal->first();
+        if ($recentUjianTerjadwal) {
+            $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule(
+                $recentUjianTerjadwal->peserta_id, 
+                $recentUjianTerjadwal->jadwal_ujian_id
+            )->first();
+
+            $jenjangTujuan = $pemberkasan?->tujuan_jenjang;
+        }
 
         $pengumuman = $this->pengumumanRepository->getPesertaActivePengumuman($user->id)
             ->sortByDesc('tgl_terbit')->take(4)->values();
@@ -68,10 +93,10 @@ class DashboardPesertaController extends Controller
         return view('peserta.beranda', compact(
             'user', 
             'ujian',
-            'ujianTerjadwal',
-            'ujianSelesai',
-            'recentUjianTerjadwal',
-            'recentUjian',
+            'ujianTerjadwal', // untuk rekap ujian
+            'ujianSelesai', // untuk rekap ujian
+            'recentUjian', // untuk ujian terbaru
+            'jenjangTujuan',
             'pengumuman',
             'isProfileIncomplete',
             'activePemberkasanSchedule'

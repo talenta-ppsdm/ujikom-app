@@ -56,4 +56,12 @@ class PemberkasanRepository extends BaseRepository
             'status'        => $status,
         ])->first();
     }
+
+    public function getByPesertaAndSchedule(int $idPeserta, int $idJadwalPemberkasan)
+    {
+        return $this->model->where([
+            'peserta_id'            => $idPeserta,
+            'jadwal_ujian_id' => $idJadwalPemberkasan,
+        ]);
+    }
 }

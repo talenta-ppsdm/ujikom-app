@@ -110,7 +110,7 @@
                             <i class="bi bi-clock-history" aria-hidden="true"></i>
                             <div>
                                 <p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
-                                <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang Ahli Muda</p>
+                                <p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <b>{{ucwords($dataUjian->tujuan_jenjang)}}</b></p>
                             </div>
                         </div>
                         @endif
@@ -175,7 +175,7 @@
         <!-- END Card Status Ujian -->
     
         <!-- Card Ujikom Question level -->
-         @if($recentUjianTerjadwal !== null)
+         @if($jenjangTujuan !== null)
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">
                 <h2 class="ui-section-heading" id="level-title">
@@ -185,7 +185,7 @@
     
                 <div class="ui-level-grid">
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli pertama"])
+                        "is-selected" => strtolower($jenjangTujuan) === "ahli pertama"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Pertama</span>
@@ -194,7 +194,7 @@
                         <p class="ui-level-description">Pemahaman dasar perumahan swadaya &amp; regulasi</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli muda"])
+                        "is-selected" => strtolower($jenjangTujuan) === "ahli muda"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Muda</span>
@@ -203,7 +203,7 @@
                         <p class="ui-level-description">Pengawasan PSU, pengelolaan rusun &amp; koordinasi</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli madya"])
+                        "is-selected" => strtolower($jenjangTujuan) === "ahli madya"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Madya</span>
@@ -212,7 +212,7 @@
                         <p class="ui-level-description">Evaluasi program, mitigasi bencana &amp; kebijakan</p>
                     </article>
                     <article @class(["ui-level-option", 
-                        "is-selected" => strtolower($recentUjianTerjadwal->jenjang_tujuan) === "ahli utama"])
+                        "is-selected" => strtolower($jenjangTujuan) === "ahli utama"])
                     >
                         <div class="ui-level-topline">
                             <span class="ui-level-name">JF Ahli Utama</span>
@@ -227,7 +227,7 @@
         <!-- END Card Ujikom question level -->
     
         <!-- Card Ujikom Rules -->
-        <div class="col-12">
+        <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">
                 <h2 class="ui-section-heading" id="level-title">
                     <i class="bi bi-shield-check" aria-hidden="true"></i>
