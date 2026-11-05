@@ -52,7 +52,8 @@ class DashboardPesertaController extends Controller
             $status = strtolower($item->status->value ?? $item->status);
             return $status === StatusJadwalCbtEnum::SELESAI->value;
         });
-               
+        
+        $jenjangTujuan = null;
         $recentUjian = $ujian->take(2)->values()->map(function ($item) {
             $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule(
                 $item->peserta_id, 

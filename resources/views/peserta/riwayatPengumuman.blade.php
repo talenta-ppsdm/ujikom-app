@@ -15,7 +15,7 @@
 	<div class="announcement-history-list">
         @foreach ($activePengumuman as $pengumuman)
 			@php
-				$penerima = $pengumuman->penerima->firstWhere('peserta_id', auth()->id());
+				$penerima = $pengumuman->penerima->first();
     			$isRead = $penerima?->is_read ?? 0;
 			@endphp
             <article class="ui-card announcement-history-card {{ $isRead ? 'is-read' : 'is-unread' }}">

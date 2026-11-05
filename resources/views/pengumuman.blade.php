@@ -11,25 +11,25 @@
       <i class="bi bi-plus-lg me-1"></i>Tambah Pengumuman
     </button>
 
-    <div class="row">
-      @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+    @if(session('success'))
+        <div class="alert alert-custom alert-custom-success mt-3 w-100" role="alert">
           <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('success') }}
-          </div>
+          <div class="alert-custom-content">{{ session('success') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
+    @endif
   
-      @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+    @if(session('error'))
+        <div class="alert alert-custom alert-custom-danger mt-3 w-100" role="alert">
           <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('error') }}
-          </div>
+          <div class="alert-custom-content">{{ session('error') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
-    </div>
+    @endif
 </div>
 @endsection
 
@@ -99,10 +99,10 @@
                   <span class="announcement-detail-badge announcement-detail-status {{ strtolower($p->status) === 'aktif' ? 'is-active' : 'is-inactive' }}">{{ ucfirst($p->status) }}</span>
                   <span class="announcement-detail-badge announcement-detail-target">
                     <i class="bi bi-people" aria-hidden="true"></i>
-                    {{ $p->tipe_target === 'semua' ? 'Semua Peserta' : 'Peserta Terpilih' }}
+                    Penerima Pengumuman
                   </span>
                 </div>
-  
+
                 <div class="announcement-detail-meta">
                   <div class="announcement-detail-row">
                     <span class="announcement-detail-row-icon"><i class="bi bi-calendar-event"></i></span>
@@ -122,7 +122,7 @@
                     <span class="announcement-detail-row-icon"><i class="bi bi-person"></i></span>
                     <div>
                       <div class="announcement-detail-label">Kepada</div>
-                      <div class="announcement-detail-value">{{ $p->penerima_count }} peserta{{ $p->tipe_target === 'semua' ? '' : ' terpilih' }}</div>
+                      <div class="announcement-detail-value">{{ $p->penerima_count }} peserta</div>
                     </div>
                   </div>
                 </div>
@@ -158,12 +158,12 @@
                     <div class="row g-3">
                       <div class="col-md-6">
                         <label for="tgl_terbit" class="form-label">Tanggal Terbit*</label>
-                        <input type="date" class="form-control" id="tgl_terbit" name="tgl_terbit" value="{{ $p->tgl_terbit }}" required>
+                        <input type="date" class="form-control" id="tgl_terbit" name="tgl_terbit" value="{{ $p->tgl_terbit?->format('Y-m-d') }}" required>
                       </div>
 
                       <div class="col-md-6">
                         <label for="tgl_berakhir" class="form-label">Tanggal Berakhir*</label>
-                        <input type="date" class="form-control" id="tgl_berakhir" name="tgl_berakhir" value="{{ $p->berakhir }}">
+                        <input type="date" class="form-control" id="tgl_berakhir" name="tgl_berakhir" value="{{ $p->tgl_berakhir?->format('Y-m-d') }}">
                       </div>
 
                       <div class="col-md-12">
@@ -176,71 +176,35 @@
                         <textarea class="form-control-custom" id="konten" name="konten" rows="5" required>{{$p->konten}}</textarea>
                       </div>
 
-                      <!-- Target Penerima -->
+                      <!-- Penerima Pengumuman -->
                       <div class="col-md-12">
                         <div class="recipient-target">
-                          <input type="hidden" name="tipe_target" value="{{ $p->tipe_target }}">
-                          <div class="recipient-target-label">Target Penerima</div>
-                          <div class="row g-3" role="group" aria-label="Pilih target penerima">
-                            
-                            <!-- Opsi Semua Peserta -->
-                            @php
-                              $isAll = $p->tipe_target === \App\Enums\TargetPengumumanEnum::SEMUA->value;
-                            @endphp
-                            <div class="col-md-6">
-                              <button type="button" 
-                                      class="recipient-target-option {{ $isAll ? 'is-selected' : '' }}" 
-                                      data-recipient-target="all" 
-                                      data-target-value="semua" 
-                                      aria-pressed="{{ $isAll ? 'true' : 'false' }}">
-                                <span class="recipient-target-icon"><i class="bi bi-people"></i></span>
-                                <span class="recipient-target-copy">
-                                  <span class="recipient-target-title">Semua Peserta</span>
-                                  <span class="recipient-target-description">Kirim ke seluruh peserta</span>
-                                </span>
-                              </button>
-                            </div>
-                      
-                            <!-- Opsi Peserta Terpilih -->
-                            <div class="col-md-6">
-                              <button type="button" 
-                                      class="recipient-target-option {{ !$isAll ? 'is-selected' : '' }}" 
-                                      data-recipient-target="selected" 
-                                       data-target-value="peserta terpilih" 
-                                      aria-pressed="{{ !$isAll ? 'true' : 'false' }}">
-                                <span class="recipient-target-icon"><i class="bi bi-person-check"></i></span>
-                                <span class="recipient-target-copy">
-                                  <span class="recipient-target-title">Peserta Terpilih</span>
-                                  <span class="recipient-target-description">Pilih peserta tertentu</span>
-                                </span>
-                              </button>
-                            </div>
-                          </div>
-                      
-                          <!-- Panel Picker Peserta -->
-                          <div class="recipient-picker" id="recipientPicker" {{ !$isAll ? '' : 'hidden' }}>
-                            <label class="recipient-target-label" for="pesertaSearch">Pilih Peserta</label>
+                          <div class="recipient-target-label">Penerima Pengumuman</div>
+                          <div class="recipient-picker">
                             <div class="recipient-picker-panel">
                               <div class="recipient-search">
                                 <i class="bi bi-search" aria-hidden="true"></i>
-                                <input type="search" id="pesertaSearch" placeholder="Cari nama atau email peserta..." autocomplete="off">
+                                <input type="search" placeholder="Cari nama, NIP, atau email peserta..." autocomplete="off">
                               </div>
 
-                              <div class="recipient-picker-count" aria-live="polite">
-                                <span id="selectedPesertaCount">0</span> dari <span id="totalPesertaCount">{{ $peserta->count() }}</span> peserta dipilih
+                              <div class="recipient-picker-toolbar">
+                                <span class="recipient-picker-count" aria-live="polite">
+                                  <span>0</span> peserta dipilih
+                                </span>
+                                <button type="button" class="recipient-select-all select-all-btn">Pilih Semua</button>
                               </div>
 
-                              <div class="recipient-list" id="recipientList">
-                                @forelse($peserta as $itemPeserta)
+                              <div class="recipient-list">
+                                @forelse($allPeserta as $itemPeserta)
                                 @php
                                   $selectedPesertaIds = $p->penerima->pluck('peserta_id')->toArray();
                                   $isPesertaChecked = in_array($itemPeserta->id, $selectedPesertaIds);
                                 @endphp
-                                  <label class="recipient-person" data-search="{{ strtolower($itemPeserta->nama . ' ' . $itemPeserta->email) }}">
+                                  <label class="recipient-person" data-search="{{ strtolower($itemPeserta->nama . ' ' . $itemPeserta->nip . ' ' . $itemPeserta->email) }}">
                                     <input type="checkbox" name="peserta_ids[]" value="{{ $itemPeserta->id }}" {{ $isPesertaChecked ? 'checked' : '' }}>
                                     <span class="recipient-person-copy">
                                       <span class="recipient-person-name">{{ $itemPeserta->nama }}</span>
-                                      <span class="recipient-person-email">{{ $itemPeserta->email }}</span>
+                                      <span class="recipient-person-email">NIP. {{ $itemPeserta->nip }} · {{ $itemPeserta->email }}</span>
                                     </span>
                                   </label>
                                 @empty
@@ -256,7 +220,7 @@
                  <div class="modal-footer">
                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
                    <button type="submit" class="btn-custom btn-custom-primary">
-                     <i class="bi bi-check-lg me-1"></i>Ubah Pengumuman
+                     <i class="bi bi-check-lg me-1"></i>Ubah
                    </button>
                  </div>
                </form>
@@ -284,121 +248,77 @@
       <!-- Content Modal -->
       <form action="{{ route('pengumuman.store') }}" method="POST">
         @csrf 
-        <input type="hidden" name="tipe_target" id="tipeTargetInput" value="semua">
         <div class="modal-body">
           <div class="row g-3">
+            <!-- Tanggal Terbit -->
             <div class="col-md-6">
               <label for="tgl_terbit" class="form-label">Tanggal Terbit*</label>
               <input type="date" name="tgl_terbit" id="tgl_terbit" class="form-control" required>
             </div>
 
+            <!-- Tanggal Berakhir -->
             <div class="col-md-6">
               <label for="tgl_berakhir" class="form-label">Tanggal Berakhir</label>
-                       <input type="date" class="form-control" id="tgl_berakhir" name="tgl_berakhir" value="{{ $p->tgl_berakhir }}">
+              <input type="date" class="form-control" id="tgl_berakhir" name="tgl_berakhir">
             </div>
 
+            <!-- Judul -->
             <div class="col-md-12">
               <label for="judul" class="form-label">Judul*</label>
               <input type="text" class="form-control" id="judul" name="judul" placeholder="Masukkan judul pengumuman" required>
             </div>
 
+            <!-- Konten -->
             <div class="col-md-12">
               <label for="konten" class="form-label">Konten*</label>
               <textarea class="form-control-custom" id="konten" name="konten" rows="5" required></textarea>
             </div>
-            
-            <input type="hidden" name="tipe_target" id="tipeTargetInput" value="{{ $p->tipe_target->value ?? $p->tipe_target }}">
-            
-            <!-- Target Penerima -->
+
+            <!-- Penerima Pengumuman -->
             <div class="col-md-12">
-              <div class="recipient-target">
-                <div class="recipient-target-label">Target Penerima</div>
-                <div class="row g-3" role="group" aria-label="Pilih target penerima">
-                  
-                  @php
-                    $isAll = ($p->tipe_target->value ?? $p->tipe_target) === \App\Enums\TargetPengumumanEnum::SEMUA->value;
-                  @endphp
-            
-                  <!-- Opsi Semua Peserta -->
-                  <div class="col-md-6">
-                    <button type="button" 
-                            class="recipient-target-option {{ $isAll ? 'is-selected' : '' }}" 
-                            data-recipient-target="all" 
-                            data-target-value="semua" 
-                            aria-pressed="{{ $isAll ? 'true' : 'false' }}">
-                      <span class="recipient-target-icon"><i class="bi bi-people"></i></span>
-                      <span class="recipient-target-copy">
-                        <span class="recipient-target-title">Semua Peserta</span>
-                        <span class="recipient-target-description">Kirim ke seluruh peserta</span>
-                      </span>
-                    </button>
-                  </div>
-            
-                  <!-- Opsi Peserta Terpilih -->
-                  <div class="col-md-6">
-                    <button type="button" 
-                            class="recipient-target-option {{ !$isAll ? 'is-selected' : '' }}" 
-                            data-recipient-target="selected" 
-                            data-target-value="peserta_terpilih" 
-                            aria-pressed="{{ !$isAll ? 'true' : 'false' }}">
-                      <span class="recipient-target-icon"><i class="bi bi-person-check"></i></span>
-                      <span class="recipient-target-copy">
-                        <span class="recipient-target-title">Peserta Terpilih</span>
-                        <span class="recipient-target-description">Pilih peserta tertentu</span>
-                      </span>
-                    </button>
-                  </div>
+                <div class="recipient-target">
+                    <div class="recipient-target-label">Penerima Pengumuman</div>
+                    <div class="recipient-picker">
+                        <div class="recipient-picker-panel">
+                            <div class="recipient-search">
+                                <i class="bi bi-search" aria-hidden="true"></i>
+                                <input type="search" placeholder="Cari nama, NIP, atau email peserta..." autocomplete="off">
+                            </div>
+
+                            <div class="recipient-picker-toolbar">
+                                <span class="recipient-picker-count" aria-live="polite">
+                                    <span>0</span> peserta dipilih
+                                </span>
+                                <button type="button" class="recipient-select-all select-all-btn">
+                                    Pilih Semua
+                                </button>
+                            </div>
+
+                            <div class="recipient-list">
+                                @forelse($allPeserta as $peserta)
+                                    <label class="recipient-person" data-search="{{ strtolower($peserta->nama . ' ' . $peserta->nip . ' ' . $peserta->email) }}">
+                                        <input type="checkbox" name="peserta_ids[]" value="{{ $peserta->id }}">
+                                        <span class="recipient-person-copy">
+                                            <span class="recipient-person-name">{{ $peserta->nama }}</span>
+                                            <span class="recipient-person-email">NIP. {{ $peserta->nip }} · {{ $peserta->email }}</span>
+                                        </span>
+                                    </label>
+                                @empty
+                                    <p class="recipient-list-empty">Belum ada data peserta.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-            
-                <!-- Panel Picker Peserta -->
-                <div class="recipient-picker" id="recipientPicker" {{ !$isAll ? '' : 'hidden' }}>
-                  <label class="recipient-target-label" for="pesertaSearch">Pilih Peserta</label>
-                  <div class="recipient-picker-panel">
-                    <div class="recipient-search">
-                      <i class="bi bi-search" aria-hidden="true"></i>
-                      <input type="search" id="pesertaSearch" placeholder="Cari nama atau email peserta..." autocomplete="off">
-                    </div>
-            
-                    <div class="recipient-picker-count" aria-live="polite">
-                      <span id="selectedPesertaCount">0</span> dari <span id="totalPesertaCount">{{ $peserta->count() }}</span> peserta dipilih
-                    </div>
-            
-                    <div class="recipient-list" id="recipientList">
-                      @php
-                        $selectedPesertaIds = $p->penerima->pluck('peserta_id')->toArray();
-                      @endphp
-            
-                      @forelse($peserta as $itemPeserta)
-                        @php
-                          $isPesertaChecked = in_array($itemPeserta->id, $selectedPesertaIds);
-                        @endphp
-                        <label class="recipient-person" data-search="{{ strtolower($itemPeserta->nama . ' ' . $itemPeserta->email) }}">
-                          <input type="checkbox" name="peserta_ids[]" value="{{ $itemPeserta->id }}" {{ $isPesertaChecked ? 'checked' : '' }}>
-                          <span class="recipient-person-copy">
-                            <span class="recipient-person-name">{{ $itemPeserta->nama }}</span>
-                            <span class="recipient-person-email">{{ $itemPeserta->email }}</span>
-                          </span>
-                        </label>
-                      @empty
-                        <p class="recipient-list-empty">Belum ada data peserta.</p>
-                      @endforelse
-                    </div>
-                  </div>
-                  <div class="recipient-validation-message" id="recipientValidationMessage" role="status" hidden>Pilih minimal satu peserta.</div>
-                </div>
-              </div>
             </div>      
 
           </div>      
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn-custom btn-custom-primary">Simpan</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
           <button type="submit" class="btn-custom btn-custom-primary">
-            <i class="bi bi-check-lg me-1"></i>Simpan pengumuman
+            <i class="bi bi-check-lg me-1"></i>Simpan
           </button>
         </div>
       </form>
@@ -409,56 +329,47 @@
 
 @section('scripts')
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.recipient-target').forEach((targetGroup) => {
-      const targetButtons = targetGroup.querySelectorAll('[data-recipient-target]');
-      const recipientPicker = targetGroup.querySelector('.recipient-picker');
-      const tipeTargetInput = targetGroup.querySelector('[name="tipe_target"]');
-      const pesertaSearch = targetGroup.querySelector('input[type="search"]');
-      const recipientPeople = targetGroup.querySelectorAll('.recipient-person');
-      const selectedPesertaCount = targetGroup.querySelector('.recipient-picker-count span');
-      const recipientValidationMessage = targetGroup.querySelector('.recipient-validation-message');
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.recipient-target').forEach((targetGroup) => {
+    const pesertaSearch = targetGroup.querySelector('input[type="search"]');
+    const recipientPeople = targetGroup.querySelectorAll('.recipient-person');
+    const selectedPesertaCount = targetGroup.querySelector('.recipient-picker-count span');
+    const selectAllBtn = targetGroup.querySelector('.select-all-btn');
 
-      const updateSelection = () => {
-        const selectedCount = targetGroup.querySelectorAll('.recipient-person input:checked').length;
-        if (selectedPesertaCount) selectedPesertaCount.textContent = selectedCount;
+    const updateSelection = () => {
+      const selectedCount = targetGroup.querySelectorAll('.recipient-person input:checked').length;
+      if (selectedPesertaCount) selectedPesertaCount.textContent = selectedCount;
+    };
 
-        if (recipientValidationMessage) {
-          const isSelectedTargetMode = recipientPicker && !recipientPicker.hidden;
-          recipientValidationMessage.hidden = !isSelectedTargetMode || selectedCount > 0;
-        }
-      };
+    pesertaSearch?.addEventListener('input', () => {
+      const searchTerm = pesertaSearch.value.trim().toLowerCase();
 
-      targetButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-          const isSelectedTarget = button.dataset.recipientTarget === 'selected';
-          if (tipeTargetInput) tipeTargetInput.value = button.dataset.targetValue;
-
-          targetButtons.forEach((targetButton) => {
-            const isActive = targetButton === button;
-            targetButton.classList.toggle('is-selected', isActive);
-            targetButton.setAttribute('aria-pressed', String(isActive));
-          });
-
-          if (recipientPicker) recipientPicker.hidden = !isSelectedTarget;
-          updateSelection();
-        });
+      recipientPeople.forEach((person) => {
+        const searchData = person.dataset.search || '';
+        person.hidden = !searchData.includes(searchTerm);
       });
-
-      pesertaSearch?.addEventListener('input', () => {
-        const searchTerm = pesertaSearch.value.trim().toLocaleLowerCase();
-
-        recipientPeople.forEach((person) => {
-          person.hidden = !person.dataset.search.includes(searchTerm);
-        });
-      });
-
-      targetGroup.querySelectorAll('.recipient-person input').forEach((checkbox) => {
-        checkbox.addEventListener('change', updateSelection);
-      });
-
-      updateSelection();
     });
+
+    targetGroup.querySelectorAll('.recipient-person input').forEach((checkbox) => {
+      checkbox.addEventListener('change', updateSelection);
+    });
+
+    if (selectAllBtn) {
+      selectAllBtn.addEventListener('click', () => {
+        const visibleCheckboxes = Array.from(targetGroup.querySelectorAll('.recipient-person:not([hidden]) input'));
+        const allChecked = visibleCheckboxes.every(cb => cb.checked);
+
+        visibleCheckboxes.forEach(cb => {
+          cb.checked = !allChecked;
+        });
+
+        selectAllBtn.textContent = allChecked ? 'Pilih Semua' : 'Batalkan Semua';
+        updateSelection();
+      });
+    }
+
+    updateSelection();
   });
+});
 </script>
 @endsection

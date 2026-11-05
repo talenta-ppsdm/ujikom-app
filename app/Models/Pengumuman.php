@@ -13,7 +13,6 @@ class Pengumuman extends Model
     protected $fillable = [
         'judul',
         'konten',
-        'tipe_target',
         'status',
         'tgl_terbit',
         'tgl_berakhir',

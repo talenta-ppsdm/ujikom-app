@@ -3,12 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\StatusPengumumanEnum;
-use App\Enums\TargetPengumumanEnum;
 use App\Repositories\PengumumanPesertaRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class PengumumanController extends Controller
 {
@@ -31,51 +29,42 @@ class PengumumanController extends Controller
     {
         $pengumuman = $this->pengumumanRepository->all();
         $pengumuman->loadCount('penerima');
-        $peserta = $this->pesertaRepository->all();
-        return view('pengumuman', compact('pengumuman', 'peserta'));
+        $allPeserta = $this->pesertaRepository->all();
+        return view('pengumuman', compact('pengumuman', 'allPeserta'));
     }
 
     public function store(Request $request){
-        $validateData = $request->validate([
-            'judul' => 'required|string',
-            'konten' => 'required|string',
-            'tipe_target' => 'required|in:semua,peserta terpilih',
-            'tgl_terbit' => 'required|date',
-            'tgl_berakhir' => 'nullable|date|after_or_equal:tgl_terbit',
+        $validatedData = $request->validate([
+            'judul'         => 'required|string',
+            'konten'        => 'required|string',
+            'tgl_terbit'    => 'required|date',
+            'tgl_berakhir'  => 'nullable|date|after_or_equal:tgl_terbit',
+            'peserta_ids'   => 'required|array|min:1',
+            'peserta_ids.*' => 'integer|exists:peserta,id',
         ]);
 
-        $pengumumanData = [
-            'judul'         => strtolower($validateData['judul']),
-            'konten'        => $validateData['konten'],
-            'tgl_terbit'    => $validateData['tgl_terbit'],
-            'tgl_berakhir'  => $validateData['tgl_berakhir'],
-            'tipe_target'   => $validateData['tipe_target'],
-            'status'        => StatusPengumumanEnum::AKTIF->value,
-            'is_read'       => false,
-        ];
-        $pengumuman = $this->pengumumanRepository->create($pengumumanData);
+        try {
+            $recipientIds = $validatedData['peserta_ids'] ?? [];
+            unset($validatedData['peserta_ids']);
+            
+            $validatedData['judul'] = strtolower($validatedData['judul']);
+            $validatedData['status'] = StatusPengumumanEnum::AKTIF->value;
 
-        // Create pengumuman peserta
-        if ($validateData['tipe_target'] === TargetPengumumanEnum::SEMUA->value) {
-            $peserta = $this->pesertaRepository->all();
-            foreach ($peserta as $dataPeserta) {
-                $this->pengumumanPesertaRepository->create([
-                    'pengumuman_id' => $pengumuman->id,
-                    'peserta_id'    => $dataPeserta->id,
-                ]);
-            }
-        }elseif ($validateData['tipe_target'] === TargetPengumumanEnum::PESERTA_TERPILIH->value) {
-            foreach ($request['peserta_ids'] as $idPeserta) {
-                $this->pengumumanPesertaRepository->create([
-                    'pengumuman_id' => $pengumuman->id,
-                    'peserta_id'    => $idPeserta,
-                ]);
-            }
-        }else {
-            return redirect()->route('pengumuman.index')->with('error', 'Pengumuman gagal ditambahkan.');
+            $pengumuman = $this->pengumumanRepository->create($validatedData);
+
+            if (!empty($recipientIds)) {
+                foreach ($recipientIds as $pesertaId) {
+                    $this->pengumumanPesertaRepository->create([
+                        'pengumuman_id' => $pengumuman->id,
+                        'peserta_id'    => $pesertaId,
+                        'is_read'       => false,
+                    ]);
+                }
+            }   
+            return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan');
+        } catch (\Exception $e) {
+            return redirect()->route('pengumuman.index')->with('error', 'Pengumuman gagal ditambahkan');
         }
-
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan.');
     }
 
     public function update(Request $request, int $id)
@@ -83,38 +72,40 @@ class PengumumanController extends Controller
         $validatedData = $request->validate([
             'judul' => 'required|string',
             'konten' => 'required|string',
-            'tipe_target' => 'required|in:semua,peserta terpilih',
             'tgl_terbit' => 'required|date',
             'tgl_berakhir' => 'nullable|date|after_or_equal:tgl_terbit',
-            'peserta_ids' => 'required_if:tipe_target,peserta terpilih',
+            'peserta_ids' => 'required|array|min:1',
             'peserta_ids.*' => 'integer|exists:peserta,id',
         ]);
 
-        $recipientIds = $validatedData['peserta_ids'] ?? [];
-        unset($validatedData['peserta_ids']);
+        try {
+            $recipientIds = $validatedData['peserta_ids'] ?? [];
+            unset($validatedData['peserta_ids']);
+            
+            $validatedData['judul'] = strtolower($validatedData['judul']);
 
-        DB::transaction(function () use ($validatedData, $id, $recipientIds) {
             $pengumuman = $this->pengumumanRepository->update($validatedData, $id);
-            $pengumuman->penerima()->delete();
 
-            if ($validatedData['tipe_target'] === TargetPengumumanEnum::SEMUA->value) {
-                $recipientIds = $this->pesertaRepository->all()->pluck('id')->all();
-            }
+            if (!empty($recipientIds)) {
+                $pengumuman->penerima()->delete();
 
-            foreach ($recipientIds as $pesertaId) {
-                $this->pengumumanPesertaRepository->create([
-                    'pengumuman_id' => $pengumuman->id,
-                    'peserta_id' => $pesertaId,
-                ]);
-            }
-        });
-
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diperbarui.');
+                foreach ($recipientIds as $pesertaId) {
+                    $this->pengumumanPesertaRepository->create([
+                        'pengumuman_id' => $pengumuman->id,
+                        'peserta_id'    => $pesertaId,
+                        'is_read'       => false,
+                    ]);
+                }
+            }   
+            return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diubah');
+        } catch (\Exception $e) {
+            return redirect()->route('pengumuman.index')->with('error', 'Pengumuman gagal diubah');
+        }
     }
 
     public function destroy(int $id){
         $this->pengumumanRepository->delete($id);
 
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus.');
+        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus');
     }
 }

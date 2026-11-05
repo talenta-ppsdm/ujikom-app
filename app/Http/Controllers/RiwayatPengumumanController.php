@@ -24,13 +24,14 @@ class RiwayatPengumumanController extends Controller
 
     public function index()
     {
-        $activePengumuman = $this->pengumumanRepository->getPesertaActivePengumuman(Auth::id());
+        $pesertaId = Auth::user()->peserta->id;
+        $activePengumuman = $this->pengumumanRepository->getPesertaActivePengumuman($pesertaId);
         
         return view('peserta.riwayatPengumuman', compact('activePengumuman'));
     }
 
     public function markAsRead(int $pengumumanId){
-        $pesertaId = Auth::id();
+        $pesertaId = Auth::user()->peserta->id;
 
         $pengumumanPeserta = $this->pengumumanPesertaRepository->getByPengumumanAndPeserta($pengumumanId, $pesertaId);
         $this->pengumumanPesertaRepository->update(['is_read' => true], $pengumumanPeserta->id);

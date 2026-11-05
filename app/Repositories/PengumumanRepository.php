@@ -31,11 +31,8 @@ class PengumumanRepository extends BaseRepository
     {
         return $this->model
             ->where('status', 'aktif')
-            ->where(function ($query) use ($pesertaId) {
-                $query->where('tipe_target', 'semua')
-                    ->orWhereHas('penerima', function ($subQuery) use ($pesertaId) {
-                        $subQuery->where('peserta_id', $pesertaId);
-                    });
+            ->whereHas('penerima', function ($query) use ($pesertaId) {
+                $query->where('peserta_id', $pesertaId);
             })
             ->with(['penerima' => function ($query) use ($pesertaId) {
                 $query->where('peserta_id', $pesertaId);

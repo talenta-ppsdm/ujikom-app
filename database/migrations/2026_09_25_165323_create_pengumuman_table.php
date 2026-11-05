@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->text('konten');
-            $table->string('tipe_target');
             $table->string('status', 50);
             $table->timestamp('tgl_terbit')->nullable();
             $table->timestamp('tgl_berakhir')->nullable();
