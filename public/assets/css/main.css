@@ -916,6 +916,10 @@ body.sidebar-minimized .sidebar-profile {
     margin-bottom: -0.75rem;
 }
 
+.peserta-session-alert-row {
+    margin-bottom: -1.25rem;
+}
+
 .peserta-registration-icon {
     display: inline-flex;
     flex: 0 0 3.1rem;
@@ -3027,6 +3031,12 @@ body.ui-confirm-open {
 
 .ui-exam-heading {
     align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.ui-exam-heading .ui-exam-meta {
+    flex: 1;
 }
 
 .ui-exam-meta {

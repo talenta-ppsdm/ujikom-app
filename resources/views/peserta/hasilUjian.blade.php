@@ -5,7 +5,7 @@
 	$jumlahSoal = $jawabanUjian->count();
 	$jumlahBenar = $jawabanUjian->where('is_benar', true)->count();
 	$jumlahSalah = max($jumlahSoal - $jumlahBenar, 0);
-	$nilaiAkhir = number_format((float) ($jadwalUjian->total_skor ?? 0), 0);
+	$nilaiAkhir = number_format((float) ($jadwalCbt->total_skor ?? 0), 0);
 	$pilihan = ['a', 'b', 'c', 'd', 'e'];
 @endphp
 
@@ -31,19 +31,19 @@
 	<div class="result-metrics">
 		<div>
 			<span class="result-metric-label"><i class="bi bi-calendar3" aria-hidden="true"></i> Tanggal</span>
-			<span class="result-metric-value">{{ $jadwalUjian->tanggal_ujian?->format('Y-m-d') ?? '-' }}</span>
+			<span class="result-metric-value">{{ \Carbon\Carbon::parse($jadwalCbt->tanggal_ujian)->translatedFormat('d F Y') }}</span>
 		</div>
 		<div>
 			<span class="result-metric-label"><i class="bi bi-clock" aria-hidden="true"></i> Durasi</span>
-			<span class="result-metric-value">{{ $jadwalUjian->durasi }} Menit</span>
+			<span class="result-metric-value">{{ $jadwalCbt->durasi }} Menit</span>
 		</div>
 		<div>
 			<span class="result-metric-label"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Jumlah Soal</span>
 			<span class="result-metric-value">{{ $jumlahSoal }} Butir</span>
 		</div>
 		<div>
-			<span class="result-metric-label"><i class="bi bi-mortarboard" aria-hidden="true"></i> Jenjang</span>
-			<span class="result-metric-value">JF {{ $jadwalUjian->jenjang_tujuan }}</span>
+			<span class="result-metric-label"><i class="bi bi-mortarboard" aria-hidden="true"></i> Jenjang Tujuan</span>
+			<span class="result-metric-value">{{ ucwords($tujuanJenjang) }}</span>
 		</div>
 	</div>
 

@@ -90,24 +90,27 @@ class JadwalCbtController extends Controller
     public function update(Request $request, int $id)
     {
         $validatedData = $request->validate([
-            'peserta_id' => 'required|exists:peserta,id',
-            'keterangan' => 'nullable|string|max:255',
-            'status' => 'required|in:' . implode(',', array_keys(Cbt::getStatusLabels())),
-            'tanggal_ujian' => 'required|date',
-            'waktu_mulai' => 'required|date_format:H:i',
-            'waktu_selesai' => 'required|date_format:H:i|after:waktu_mulai',
-            'jadwal_ujian_id' => 'required|exists:jadwal_ujian,id',
+            'peserta_id'        => 'required|exists:peserta,id',
+            'jadwal_ujian_id'   => 'required|exists:jadwal_ujian,id',
+            'status'            => 'required',
+            'tanggal_ujian'     => 'required|date',
+            'waktu_mulai'       => 'required|date_format:H:i',
+            'waktu_selesai'     => 'required|date_format:H:i|after:waktu_mulai',
+            'keterangan'        => 'nullable|string|max:255',
         ]);
 
-        // count the duration in minutes
-        $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);
-        $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
-        $durasi = $waktuMulai->diffInMinutes($waktuSelesai);
+        try {
+            // count the duration in minutes
+            $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);
+            $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
+            $durasi = $waktuMulai->diffInMinutes($waktuSelesai);
 
+            $this->cbtRepository->update(array_merge($validatedData, ['durasi' => $durasi]), $id);
 
-        $this->cbtRepository->update(array_merge($validatedData, ['durasi' => $durasi]), $id);
-
-        return redirect()->route('jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil diperbarui.');
+            return redirect()->route('jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil diperbarui');
+        } catch (\Exception $e) {
+            return redirect()->route('jadwal-cbt.index')->with('error', 'Jadwal ujian gagal diperbarui');
+        }
     }
 
     public function destroy(int $id)

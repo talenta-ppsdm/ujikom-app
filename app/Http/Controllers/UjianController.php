@@ -5,113 +5,152 @@ namespace App\Http\Controllers;
 use App\Enums\StatusJadwalCbtEnum;
 use App\Repositories\BankSoalRepository;
 use App\Repositories\CbtRepository;
-use App\Repositories\JadwalCbtRepository;
+use App\Repositories\PemberkasanRepository;
 use App\Repositories\JawabanUjianRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UjianController extends Controller
 {
     protected CbtRepository $cbtRepository;
     protected BankSoalRepository $bankSoalRepository;
     protected JawabanUjianRepository $jawabanUjianRepository;
+    protected PemberkasanRepository $pemberkasanRepository;
 
     public function __construct(
         CbtRepository $cbtRepository,
         BankSoalRepository $bankSoalRepository,
-        JawabanUjianRepository $jawabanUjianRepository
+        JawabanUjianRepository $jawabanUjianRepository,
+        PemberkasanRepository $pemberkasanRepository
     )
     {
         $this->cbtRepository = $cbtRepository;
         $this->bankSoalRepository = $bankSoalRepository;
         $this->jawabanUjianRepository = $jawabanUjianRepository;
+        $this->pemberkasanRepository = $pemberkasanRepository;
     }
 
     public function start(int $jadwalCbtId)
     {
-        $jadwalUjian = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
-        $pesertaId = Auth::id();
+        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
+        $pesertaId = Auth::user()->peserta->id;
 
         // HANDLING EXAM TIME
-        // Check first time participant trigger button start
-        if (!$jadwalUjian->realtime_mulai) {
-            $waktuMulai = now();
-            $durasiMenit = (int) $jadwalUjian->durasi;
+        $waktuMulaiUjian = Carbon::parse($jadwalCbt->tanggal_ujian->format('Y-m-d') . ' ' . $jadwalCbt->waktu_mulai);
+        $waktuSelesaiUjian = Carbon::parse($jadwalCbt->tanggal_ujian->format('Y-m-d') . ' ' . $jadwalCbt->waktu_selesai);
+        $now = Carbon::now();
 
-            $jadwalUjian->update([
-                'realtime_mulai' => $waktuMulai,
-                'target_selesai'   => $waktuMulai->copy()->addMinutes($durasiMenit), //Carbon mutable (changing the original variable's value if not copied)
-                'status'           => StatusJadwalCbtEnum::SEDANG_BERLANGSUNG->value,
-            ]);
-        }
-
-        // check if the exam time is over (for example, the user closes the tab and then opens it again when the time runs out)
-        if ($jadwalUjian->target_selesai && now()->greaterThanOrEqualTo($jadwalUjian->target_selesai)) {
-            if ($jadwalUjian->getRawOriginal('status') !== StatusJadwalCbtEnum::MENUNGGU_HASIL->value) {
-                $jadwalUjian->update([
-                    'realtime_selesai' => $jadwalUjian->target_selesai,
-                    'status'           => StatusJadwalCbtEnum::MENUNGGU_HASIL->value,
-                ]);
-            }
+        if ($now->lt($waktuMulaiUjian)) {
+            return redirect('/beranda')->with('error', 'Ujian belum dimulai.');
+        } 
+        elseif ($now->gt($waktuSelesaiUjian)) {
             return redirect('/beranda')->with('error', 'Waktu ujian telah habis.');
-        }
+        } else {
+            if (!$jadwalCbt->realtime_mulai) {
+                $waktuMulai = now();
+                $durasiMenit = (int) $jadwalCbt->durasi;
+            
+                $jadwalCbt->update([
+                    'realtime_mulai' => $waktuMulai,
+                    'target_selesai' => $waktuMulai->copy()->addMinutes($durasiMenit),
+                    'status'         => StatusJadwalCbtEnum::SEDANG_BERLANGSUNG->value,
+                ]);
 
-        // Change target_selesai to unix format
-        $targetTimestamp = $jadwalUjian->target_selesai->timestamp;
+                $jadwalCbt->refresh();
+            }
 
-        // HANDLING EXAM QUESTION AND EXISTING ANSWERS
-        $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
-     
-        if ($jawabanTerpilih->isNotEmpty()) {
-            $soalIds = $jawabanTerpilih->pluck('soal_id');
-            $soalUjian = $this->bankSoalRepository->getByIds($soalIds);
-            $keyJawabanTerpilih = $jawabanTerpilih->keyBy('soal_id'); // changing index in array to the question id
-        }else{
-            $totalSoal = 30;
-            $levelQuest = [
-                'ahli pertama'  => [1],
-                'ahli muda'     => [2,3],
-                'ahli madya'    => [4],
-                'ahli utama'    => [5],
-            ];
-            $levelPeserta = $levelQuest[strtolower($jadwalUjian->jenjang_tujuan)] ?? [];
-    
-            $listKategoriSoal = $this->bankSoalRepository->getCategoryByLevel($levelPeserta);
-            $jumlahKategori = $listKategoriSoal->count();
-    
+            if ($jadwalCbt->target_selesai && now()->greaterThanOrEqualTo($jadwalCbt->target_selesai)) {
+                if ($jadwalCbt->getRawOriginal('status') !== StatusJadwalCbtEnum::MENUNGGU_HASIL->value) {
+                    $jadwalCbt->update([
+                        'realtime_selesai' => $jadwalCbt->target_selesai,
+                        'status'           => StatusJadwalCbtEnum::MENUNGGU_HASIL->value,
+                    ]);
+                }
+                return redirect('/beranda')->with('error', 'Waktu ujian telah habis.');
+            }
+
+            $targetTimestamp = $jadwalCbt->target_selesai ? $jadwalCbt->target_selesai->timestamp : 0;
+
+            $jawabanTerpilih = collect();
+            $keyJawabanTerpilih = collect();
             $soalUjian = collect();
-            if ($jumlahKategori > 0) {
-                $limitPerKategori = (int) floor($totalSoal / $jumlahKategori);
-                $sisaSoal = $totalSoal % $jumlahKategori;
+            
+            $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
+            
+            if ($jawabanTerpilih->isNotEmpty()) {
+                $soalIds = $jawabanTerpilih->pluck('soal_id');
+                $soalUjian = $this->bankSoalRepository->getByIds($soalIds);
+                
+                // Urutkan kembali sesuai urutan awal saat di-shuffle pertama kali
+                $soalUjian = $soalUjian->sortBy(function($model) use ($soalIds) {
+                    return $soalIds->search($model->id);
+                })->values();
     
-                foreach ($listKategoriSoal as $index => $kategori) {
-                    // If there's a remainder (for example 30/7 = 4 remainder 2), the first 2 categories can get 1 extra question
-                    $limit = $limitPerKategori + ($index < $sisaSoal ? 1 : 0);
+                $keyJawabanTerpilih = $jawabanTerpilih->keyBy('soal_id'); 
+            } else {
+                $existingJawaban = $this->jawabanUjianRepository->findWhere([
+                    'jadwal_ujian_id' => $jadwalCbt->jadwal_ujian_id,
+                    'peserta_id'      => $pesertaId,
+                ]);
+                
+                if ($existingJawaban->isNotEmpty()) {
+                    $soalIds = $existingJawaban->pluck('soal_id');
+                    $soalUjian = $this->bankSoalRepository->getByIds($soalIds);
+                    
+                    // Urutkan kembali agar posisinya stabil
+                    $soalUjian = $soalUjian->sortBy(function($model) use ($soalIds) {
+                        return $soalIds->search($model->id);
+                    })->values();
     
-                    $soal = $this->bankSoalRepository->getByLevalAndCategory($levelPeserta, $kategori, $limit);
-    
-                    $soalUjian = $soalUjian->merge($soal);
+                    $keyJawabanTerpilih = $existingJawaban->keyBy('soal_id');
+                } else {
+                    $totalSoal = 30;
+                    $levelQuest = [
+                        'ahli pertama'  => [1],
+                        'ahli muda'     => [2,3],
+                        'ahli madya'    => [4],
+                        'ahli utama'    => [5],
+                    ];
+                
+                    $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule($pesertaId, $jadwalCbt->jadwal_ujian_id)->first();
+                    $levelPeserta = $levelQuest[strtolower($pemberkasan->tujuan_jenjang)] ?? [];
+                
+                    $listKategoriSoal = $this->bankSoalRepository->getCategoryByLevel($levelPeserta);
+                    $jumlahKategori = $listKategoriSoal->count();
+                
+                    if ($jumlahKategori > 0) {
+                        $limitPerKategori = (int) floor($totalSoal / $jumlahKategori);
+                        $sisaSoal = $totalSoal % $jumlahKategori;
+                
+                        foreach ($listKategoriSoal as $index => $kategori) {
+                            $limit = $limitPerKategori + ($index < $sisaSoal ? 1 : 0);
+                            $soal = $this->bankSoalRepository->getByLevalAndCategory($levelPeserta, $kategori, $limit);
+                            $soalUjian = $soalUjian->merge($soal);
+                        }
+                    }
+                
+                    // Shuffle question
+                    $soalUjian = $soalUjian->shuffle();
+                
+                    foreach ($soalUjian as $soal) {
+                        $createdJawaban = $this->jawabanUjianRepository->create([
+                            'jadwal_ujian_id'   => $jadwalCbt->jadwal_ujian_id,
+                            'peserta_id'        => $pesertaId,
+                            'soal_id'           => $soal->id,
+                            'jawaban_terpilih'  => null,
+                            'is_ragu'           => false,
+                            'cbt_id'            => $jadwalCbtId,
+                        ]);
+                        
+                        $keyJawabanTerpilih[$soal->id] = $createdJawaban;
+                    }
                 }
             }
-        
-            // Shuffle question
-            $soalUjian = $soalUjian->shuffle();
-
-            foreach ($soalUjian as $soal) {
-                $this->jawabanUjianRepository->create([
-                    'jadwal_ujian_id'   => $jadwalCbtId,
-                    'peserta_id'        => $pesertaId,
-                    'soal_id'           => $soal->id,
-                    'jawaban_terpilih'  => null,
-                    'is_ragu'           =>false,
-                ]);
-            }
-
-            $keyJawabanTerpilih = collect();
+             
+            return view('peserta.ujian', compact('jadwalCbt', 'targetTimestamp', 'soalUjian', 'keyJawabanTerpilih'));
         }
- 
-        return view('peserta.ujian', compact('jadwalUjian', 'targetTimestamp', 'soalUjian', 'keyJawabanTerpilih'));
     }
 
     public function saveAnswer(Request $request)
@@ -125,7 +164,7 @@ class UjianController extends Controller
 
         $jawaban = $this->jawabanUjianRepository->updateOrCreate([
             'jadwal_ujian_id'   => $request->jadwal_ujian_id,
-            'peserta_id'        => Auth::id(),
+            'peserta_id'        => Auth::user()->peserta->id,
             'soal_id'           => $request->soal_id
         ],
         [
@@ -146,13 +185,14 @@ class UjianController extends Controller
             'jadwal_ujian_id' => 'required|integer',
         ]);
 
-        $pesertaId = Auth::id();
-        $jadwalCbtId = $request->jadwal_ujian_id;
+        $pesertaId = Auth::user()->peserta->id;
+        $jadwalUjianId = $request->jadwal_ujian_id;
 
         $skorFinal = 0;
 
         try{
-            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
+            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwalUjian($pesertaId, $jadwalUjianId);
+           
             $jumlahJawaban = $jawabanPeserta->count();
             $skorSoal = 100/$jumlahJawaban;
             
@@ -169,7 +209,7 @@ class UjianController extends Controller
 
             }
 
-            $jadwalCbt = $this->cbtRepository->find($jadwalCbtId);
+            $jadwalCbt = $this->cbtRepository->find($jawabanPeserta->first()->cbt_id, 'id')->first();
             if ($jadwalCbt) {
                 $jadwalCbt->update([
                     'realtime_selesai'  => now(),
@@ -193,15 +233,19 @@ class UjianController extends Controller
     }
 
     public function result(int $jadwalCbtId)
-    {
+    {   
+        $pesertaId = Auth::user()->peserta->id;
         $jadwalCbt = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
 
-        abort_unless($jadwalCbt && (int) $jadwalCbt->peserta_id === (int) Auth::id(), 404);
+        abort_unless($jadwalCbt && (int) $jadwalCbt->peserta_id === (int) $pesertaId, 404);
 
+        $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule($pesertaId, $jadwalCbt->jadwal_ujian_id)->first();
+        $tujuanJenjang = $pemberkasan?->tujuan_jenjang;
+    
         $jawabanUjian = $this->jawabanUjianRepository
-            ->getByPesertaAndJadwal(Auth::id(), $jadwalCbtId)
+            ->getByPesertaAndJadwalCbt($pesertaId, $jadwalCbtId)
             ->load('soal');
-
-        return view('peserta.hasilUjian', compact('jadwalUjian', 'jawabanUjian'));
+     
+        return view('peserta.hasilUjian', compact('jadwalCbt', 'jawabanUjian', 'tujuanJenjang'));
     }
 }

@@ -4,20 +4,17 @@
 <div class="col-12 peserta-exam-page">
 	<div class="row g-4" 
 		id="exam-container" 
-		data-jadwal-id="{{$jadwalUjian->id}}">
+		data-jadwal-id="{{$jadwalCbt->jadwal_ujian_id}}">
 		
 		<div class="col-xl-9 col-lg-8">
 			<section class="ui-card ui-exam-question-card" aria-labelledby="question-title">
 				<div class="ui-card-heading ui-exam-heading">
 					<div class="ui-exam-meta">
-						<span class="ui-level-badge" data-meta-level>
-							{{ $soalUjian->first()?->level_name ?? 'Level -' }}
+						<span class="badge-table ui-badge-info" data-meta-level>
+							Level - {{ $soalUjian->first()?->level ?? '-' }}
 						</span>
-						<span class="ui-exam-category" data-meta-category>
-							{{ $soalUjian->first()?->category_nama ?? 'Kategori -' }}
-						</span>
-						<span class="ui-exam-points" data-meta-points>
-							{{ $soalUjian->first()?->poin ?? 0 }} Poin
+						<span class="badge-table ui-badge-info" data-meta-category>
+							Kategori : {{ $soalUjian->first()?->kategori ?? '-' }}
 						</span>
 					</div>
 					<div class="ui-exam-timer" data-target="{{ $targetTimestamp }}" aria-live="polite">
@@ -26,20 +23,22 @@
 					</div>
 				</div>
 
-				<div class="ui-exam-progress" aria-label="Progress soal">
-					<span></span>
-				</div>
-
 				@forelse ($soalUjian as $index => $soal)
 				@php
-					$saved = $keyJawabanTerpilih->get($soal->id);
-					$jawabanPeserta = $keyJawabanTerpilih->where('soal_id', $soal->id)->first();
-					$jawabanTerpilih = $jawabanPeserta?->jawaban_terpilih;
+					$jawabanPeserta = $keyJawabanTerpilih->get($soal->id);
+					$jawabanTerpilih = $jawabanPeserta ? strtolower($jawabanPeserta->jawaban_terpilih) : null;
+					$sudahDijawab = !empty($jawabanTerpilih);
 				@endphp
 				<article class="ui-exam-question {{ $index === 0 ? 'is-current' : 'd-none' }}" 
 					data-question="{{ $index }}" 
-					data-question-id="{{ $soal->id }}">
-			
+					data-question-id="{{ $soal->id }}"
+					data-level="Level - {{ $soal->level ?? '-' }}"
+					data-category="Kategori : {{ $soal->kategori ?? '-' }}">
+
+					<div class="ui-exam-progress" aria-label="Progress soal">
+						<span></span>
+					</div>
+
 					<p class="ui-eyebrow">{{ $index + 1 }} / {{ $soalUjian->count() }} Soal</p>
 					<h1 class="ui-exam-question-title">{{ $soal->soal }}</h1>
 			
@@ -207,7 +206,6 @@
 			const activeQuestion = questions[current];
 			document.querySelector('[data-meta-level]').textContent = activeQuestion.dataset.level;
 			document.querySelector('[data-meta-category]').textContent = activeQuestion.dataset.category;
-			document.querySelector('[data-meta-points]').textContent = `${activeQuestion.dataset.points} Poin`;
 			document.querySelector('[data-previous]').disabled = current === 0;
 			document.querySelector('[data-next]').innerHTML = current === questions.length - 1
 				? 'Kembali ke Soal Pertama <i class="bi bi-arrow-repeat" aria-hidden="true"></i>'
@@ -335,8 +333,8 @@
 				}
 			})
 			.catch(err => {
-				// console.error("Gagal mengumpulkan jawaban:", err);
-				alert("Terjadi kesalahan saat mengumpulkan jawaban. Silakan coba lagi.");
+				console.error("Gagal mengumpulkan jawaban:", err);
+				// alert("Terjadi kesalahan saat mengumpulkan jawaban. Silakan coba lagi.");
 				if (btnAccept) btnAccept.disabled = false;
 			});
 		}
@@ -367,6 +365,5 @@
 		// Handling save choosed answer
 		const csrfToken = document.querySelector('meta[name=csrf-token')?.getAttribute('content');
 	});
-	
 </script>
 @endpush

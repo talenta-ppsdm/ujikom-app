@@ -53,6 +53,20 @@
 </div>
 @endif 
 
+@if(session('error'))
+<div class="row peserta-session-alert-row">
+    <div class="col-12">
+        <div class="alert alert-custom alert-custom-danger mt-4 mb-0 w-100" role="alert">
+        <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
+        <div class="alert-custom-content">{{ session('error') }}</div>
+        <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+        </div>
+    </div>
+</div>
+@endif
+
 <div class="row g-4">
     <!-- Left Section -->
     <div class="col-xl-8 col-lg-8">

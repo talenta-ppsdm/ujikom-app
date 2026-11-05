@@ -22,14 +22,25 @@
         </div>
       @endif
   
-      @if(session('error'))
-      <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-              {{ session('error') }}
+      @if ($errors->any())
+          <div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
+              <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
+              <div class="alert-custom-content">
+                @if ($errors->count() === 1)
+                    {{ $errors->all()[0] }}
+                @else
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+              </div>
+              <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+                <i class="bi bi-x-lg" aria-hidden="true"></i>
+              </button>
           </div>
-      </div>
-  @endif
+      @endif
     </div>
 </div>
 @endsection
@@ -142,7 +153,7 @@
         
                       <input type="hidden" 
                         name="jadwal_ujian_id" 
-                        value="{{ $j->id }}">
+                        value="{{ $j->jadwal_ujian_id }}">
                     </div>
 
                      <!-- Status Ujian -->

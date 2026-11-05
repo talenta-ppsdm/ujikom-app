@@ -13,7 +13,8 @@ class JawabanUjian extends Model
         'soal_id',
         'jawaban_terpilih',
         'is_ragu',
-        'is_benar'
+        'is_benar',
+        'cbt_id',
     ];
 
     public function jadwalUjian()
@@ -29,5 +30,10 @@ class JawabanUjian extends Model
     public function soal()
     {
         return $this->belongsTo(BankSoal::class, 'soal_id');
+    }
+
+    public function cbt()
+    {
+        return $this->belongsTo(Cbt::class, 'cbt_id');
     }
 }

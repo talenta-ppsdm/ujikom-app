@@ -66,4 +66,12 @@ class CbtRepository extends BaseRepository
                 StatusJadwalCbtEnum::TERJADWAL->value
             ])->exists(); //Returns boolean true if it exists, false if it doesn’t
     }
+
+        public function getByPesertaAndJadwalUjian(int $pesertaId, int $jadwalUjianId)
+        {
+            return $this->model->where([
+                'peserta_id' => $pesertaId,
+                'jadwal_ujian_id' => $jadwalUjianId
+            ])->first();
+        }
 }

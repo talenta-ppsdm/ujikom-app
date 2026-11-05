@@ -12,6 +12,91 @@
 		<p>Rekapitulasi seluruh ujian yang pernah Anda ikuti</p>
 	</header>
 
+	<!-- Card Ujian Terjadwal -->
+	@if($recentUjianTerjadwal)
+	<div class="col-12 mb-3">
+		@php
+		$statusBadgeClass = match(strtolower($recentUjianTerjadwal->status ?? '')) {
+			'terjadwal'          => 'badge-warning',
+			'sedang berlangsung' => 'badge-info',
+			'selesai'            => 'badge-success',
+			default              => 'badge-secondary', 
+		};
+		@endphp
+		<div class="ui-card mb-3">
+			<div class="ui-card-heading">
+				<span class="ui-status-badge {{ $statusBadgeClass }}">{{ ucwords($recentUjianTerjadwal->status) }}</span>
+			</div>
+
+			@if($recentUjianTerjadwal->status == 'selesai')
+			<div class="ui-info-panel ui-info-panel-success">
+				<i class="bi bi-check-circle" aria-hidden="true"></i>
+				<div>
+					<p class="ui-info-title">Ujian Telah Diselesaikan</p>
+					<p class="ui-info-text">Hasil ujian telah tersedia. Tinjau ringkasan dan pembahasan jawaban Anda.</p>
+				</div>
+				<div class="ui-info-panel-score">
+					<span class="ui-info-panel-score-label">Nilai Akhir</span>
+					<span class="ui-info-panel-score-value">{{ number_format($dataUjian->total_skor ?? 0, 0) }}<small>/100</small></span>
+				</div>
+			</div>
+			@else
+			<div class="ui-info-panel">
+				<i class="bi bi-clock-history" aria-hidden="true"></i>
+				<div>
+					<p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
+					<p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <b>{{ucwords($recentUjianTerjadwal->tujuan_jenjang)}}</b></p>
+				</div>
+			</div>
+			@endif
+
+			<div class="ui-metric-grid">
+				<div>
+					<span class="ui-metric-label">Gelombang Ujian</span>
+					<span class="ui-metric-value">Gelombang {{$recentUjianTerjadwal->jadwalUjian->gelombang}} Tahun {{$recentUjianTerjadwal->jadwalUjian->tahun}}</span>
+				</div>
+				<div>
+					<span class="ui-metric-label">Tanggal</span>
+					<span class="ui-metric-value">{{ \Carbon\Carbon::parse($recentUjianTerjadwal->tanggal_ujian)->translatedFormat('d F Y') }}</span>
+				</div>
+				<div>
+					<span class="ui-metric-label">Jumlah Soal</span>
+					<span class="ui-metric-value">30 Butir</span>
+				</div>
+				<div>
+					<span class="ui-metric-label">Durasi Ujian</span>
+					<span class="ui-metric-value">{{$recentUjianTerjadwal->durasi}} Menit</span>
+				</div>
+			</div>
+
+			@php
+				$status = $recentUjianTerjadwal->status;
+
+				$wordingButton = match(strtolower($recentUjianTerjadwal->status)){
+					'terjadwal'         => 'Kerjakan Ujian',
+					'sedang berlangsung'=> 'Kerjakan Ujian',
+					'selesai'           => 'Lihat Hasil Ujian',
+					default             => 'Lihat Selengkapnya'
+				};
+			
+				if ($status === 'selesai') {
+					$targetUrl = route('ujian.result', $recentUjianTerjadwal->id); 
+				} else {
+					$targetUrl = route('ujian.start', $recentUjianTerjadwal->id); 
+				}
+			@endphp
+			
+			<a href="{{ $targetUrl }}" class="text-decoration-none">
+				<button class="ui-card-action" type="button">
+					{{ $wordingButton }}
+					<i class="bi bi-arrow-right" aria-hidden="true"></i>
+				</button>
+			</a>
+		</div>
+	</div>
+	@endif
+	<!-- END Card Ujian Terjadwal -->
+
 	<form action="{{ route('riwayat-ujian.index') }}" method="GET" id="filterYearForm">
 		<div class="exam-history-toolbar">
 			<label class="exam-history-year">
