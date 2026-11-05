@@ -12,25 +12,25 @@
       <i class="bi bi-plus-lg me-1"></i>Tambah Penguji
     </button>
 
-    <div class="row">
-      @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
-          <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('success') }}
-          </div>
-        </div>
-      @endif
-  
-      @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
-          <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('error') }}
-          </div>
-        </div>
-      @endif
-    </div>
+    @if(session('success'))
+      <div class="alert alert-custom alert-custom-success mt-3 w-100" role="alert">
+        <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
+        <div class="alert-custom-content">{{ session('success') }}</div>
+        <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    @endif
+
+    @if(session('error'))
+      <div class="alert alert-custom alert-custom-danger mt-3 w-100" role="alert">
+        <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
+        <div class="alert-custom-content">{{ session('error') }}</div>
+        <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    @endif
 </div>
 @endsection
 

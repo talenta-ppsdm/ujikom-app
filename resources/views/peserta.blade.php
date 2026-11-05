@@ -9,25 +9,25 @@
       <p class="page-subtitle">Kelola data peserta, jenjang yang dituju (Pertama/Muda/Madya/Utama), jadwal, dan evaluasi.</p>
     </div>
 
-    <div class="row">
-      @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+    @if(session('success'))
+        <div class="alert alert-custom alert-custom-success mt-3 w-100" role="alert">
           <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('success') }}
-          </div>
+          <div class="alert-custom-content">{{ session('success') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
+    @endif
   
-      @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+    @if(session('error'))
+        <div class="alert alert-custom alert-custom-danger mt-3 w-100" role="alert">
           <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('error') }}
-          </div>
+          <div class="alert-custom-content">{{ session('error') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
-    </div>
+    @endif
 </div>
 @endsection
 

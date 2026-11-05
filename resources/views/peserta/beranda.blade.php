@@ -306,6 +306,15 @@
                     </article>
                     @endforeach
                 </div>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <a href="/riwayat-pengumuman">
+                        <button type="button" class="ui-card-action ui-card-action-ghost">
+                            Selengkapnya
+                            <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </a>
+                </div>
             </section>
         </div>
         <!-- END Broadcast -->

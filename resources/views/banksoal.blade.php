@@ -25,25 +25,25 @@
       </button>
     </div>
 
-    <div class="row">
-      @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+    @if(session('success'))
+        <div class="alert alert-custom alert-custom-success mt-3 w-100" role="alert">
           <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('success') }}
-          </div>
+          <div class="alert-custom-content">{{ session('success') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
-  
-      @if(session('error'))
-        <div class="col-12 alert-custom alert-custom-danger mt-3" role="alert">
+    @endif
+
+    @if(session('error'))
+        <div class="alert alert-custom alert-custom-danger mt-3 w-100" role="alert">
           <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('error') }}
-          </div>
+          <div class="alert-custom-content">{{ session('error') }}</div>
+          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+            <i class="bi bi-x-lg" aria-hidden="true"></i>
+          </button>
         </div>
-      @endif
-    </div>
+    @endif
 </div>
 @endsection
 
@@ -53,10 +53,10 @@
     <table id="dataTable" class="table-custom w-100 bank-soal-table" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
       <thead>
         <tr>
-          <th>No</th>
-          <th class="bank-soal-question-column">Pertanyaan</th>
-          <th>Kategori</th>
-          <th>Level & Target Jenjang</th>
+          <th class="text-center">No</th>
+          <th class="bank-soal-question-column text-center">Pertanyaan</th>
+          <th class="text-center">Kategori</th>
+          <th class="text-center">Level & Target Jenjang</th>
           <th class="text-center">Aksi</th>
         </tr>
       </thead>
@@ -64,12 +64,12 @@
         <?php $no = 1; ?>
         @foreach($bankSoal as $bs)
         <tr>
-          <td class="table-order-id">{{ $no++ }}</td>
+          <td class="table-order-id text-center">{{ $no++ }}</td>
           <td class="bank-soal-question-column">
             <div class="table-user-cell">
               <div>
                   <span class="badge-table primary">{{ $bs->kode }}</span>
-                <div><b>{{ ucfirst($bs->soal) }}</b></div>
+                <div>{{ ucfirst($bs->soal) }}</div>
               </div>
             </div>
           </td>

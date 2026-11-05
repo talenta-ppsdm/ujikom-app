@@ -7,6 +7,7 @@
     <div>
       <h1 class="page-title">Data Pengumuman</h1>
     </div>
+    
     <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahPengumumanModal">
       <i class="bi bi-plus-lg me-1"></i>Tambah Pengumuman
     </button>
@@ -97,10 +98,6 @@
                 <h3 class="announcement-detail-title">{{ ucwords($p->judul) }}</h3>
                 <div class="announcement-detail-badges">
                   <span class="announcement-detail-badge announcement-detail-status {{ strtolower($p->status) === 'aktif' ? 'is-active' : 'is-inactive' }}">{{ ucfirst($p->status) }}</span>
-                  <span class="announcement-detail-badge announcement-detail-target">
-                    <i class="bi bi-people" aria-hidden="true"></i>
-                    Penerima Pengumuman
-                  </span>
                 </div>
 
                 <div class="announcement-detail-meta">
