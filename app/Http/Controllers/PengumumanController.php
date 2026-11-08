@@ -61,9 +61,9 @@ class PengumumanController extends Controller
                     ]);
                 }
             }   
-            return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan');
+            return redirect()->route('admin.pengumuman.index')->with('success', 'Pengumuman berhasil ditambahkan');
         } catch (\Exception $e) {
-            return redirect()->route('pengumuman.index')->with('error', 'Pengumuman gagal ditambahkan');
+            return redirect()->route('admin.pengumuman.index')->with('error', 'Pengumuman gagal ditambahkan');
         }
     }
 
@@ -97,15 +97,15 @@ class PengumumanController extends Controller
                     ]);
                 }
             }   
-            return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil diubah');
+            return redirect()->route('admin.pengumuman.index')->with('success', 'Pengumuman berhasil diubah');
         } catch (\Exception $e) {
-            return redirect()->route('pengumuman.index')->with('error', 'Pengumuman gagal diubah');
+            return redirect()->route('admin.pengumuman.index')->with('error', 'Pengumuman gagal diubah');
         }
     }
 
     public function destroy(int $id){
         $this->pengumumanRepository->delete($id);
 
-        return redirect()->route('pengumuman.index')->with('success', 'Pengumuman berhasil dihapus');
+        return redirect()->route('admin.pengumuman.index')->with('success', 'Pengumuman berhasil dihapus');
     }
 }

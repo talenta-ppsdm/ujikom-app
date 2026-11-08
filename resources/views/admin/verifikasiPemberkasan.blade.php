@@ -87,7 +87,7 @@
           </td>
           <td>
             <div class="d-flex justify-content-center gap-1">
-              <a href="{{ route('verifikasi-pemberkasan.edit', $data->id) }}" class="table-btn-action" title="Verifikasi Berkas"><i class="bi bi-eye"></i></a>
+              <a href="{{ route('admin.verifikasi-pemberkasan.edit', $data->id) }}" class="table-btn-action" title="Verifikasi Berkas"><i class="bi bi-eye"></i></a>
             </div>
           </td>
         </tr>

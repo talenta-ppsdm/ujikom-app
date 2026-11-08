@@ -5,7 +5,7 @@
 @section('hero')
 <div class="page-header">
   <div>
-    <a href="{{ route('verifikasi-pemberkasan.index') }}" >
+    <a href="{{ route('admin.verifikasi-pemberkasan.index') }}" >
       <i class="bi bi-arrow-left" aria-hidden="true"></i> Kembali
     </a>
     <h1 class="page-title mt-3">Detail Berkas Pendaftaran</h1>
@@ -165,7 +165,7 @@
           </div>
           @if (filled($document['path']))
             <a
-              href="{{ route('verifikasi-pemberkasan.document', ['id' => $pemberkasan->id, 'document' => $document['key']]) }}"
+              href="{{ route('admin.verifikasi-pemberkasan.document', ['id' => $pemberkasan->id, 'document' => $document['key']]) }}"
               class="btn-custom btn-custom-outline-primary btn-custom-sm"
               target="_blank"
               rel="noopener"
@@ -181,7 +181,7 @@
   </section>
 
   <div class="d-flex flex-wrap gap-2 mb-3">
-    <form action="{{ route('verifikasi-pemberkasan.update', $pemberkasan->id) }}" method="POST">
+    <form action="{{ route('admin.verifikasi-pemberkasan.update', $pemberkasan->id) }}" method="POST">
       @csrf
       @method('PUT')
       
@@ -193,7 +193,7 @@
     </form>
 
 
-    <form action="{{ route('verifikasi-pemberkasan.update', $pemberkasan->id) }}" method="POST">
+    <form action="{{ route('admin.verifikasi-pemberkasan.update', $pemberkasan->id) }}" method="POST">
       @csrf
       @method('PUT')
       

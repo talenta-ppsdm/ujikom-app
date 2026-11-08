@@ -43,10 +43,10 @@ class UjianController extends Controller
         $now = Carbon::now();
 
         if ($now->lt($waktuMulaiUjian)) {
-            return redirect('/beranda')->with('error', 'Ujian belum dimulai.');
+            return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Ujian belum dimulai.');
         } 
         elseif ($now->gt($waktuSelesaiUjian)) {
-            return redirect('/beranda')->with('error', 'Waktu ujian telah habis.');
+            return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Waktu ujian telah habis.');
         } else {
             if (!$jadwalCbt->realtime_mulai) {
                 $waktuMulai = now();
@@ -68,7 +68,7 @@ class UjianController extends Controller
                         'status'           => StatusJadwalCbtEnum::MENUNGGU_HASIL->value,
                     ]);
                 }
-                return redirect('/beranda')->with('error', 'Waktu ujian telah habis.');
+                return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Waktu ujian telah habis.');
             }
 
             $targetTimestamp = $jadwalCbt->target_selesai ? $jadwalCbt->target_selesai->timestamp : 0;
@@ -221,7 +221,7 @@ class UjianController extends Controller
             return response()->json([
                 'status'       => 'success',
                 'message'      => 'Ujian berhasil dikumpulkan.',
-                'redirect_url' => route('dashboard-peserta.index'), 
+                'redirect_url' => route('peserta.dashboard-peserta.index'), 
             ]);
 
         }catch (\Exception $e) {

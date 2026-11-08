@@ -56,7 +56,7 @@ class PengujiController extends Controller
             $validatedData, ['user_id' => $user->id])
         );
 
-        return redirect()->route('penguji.index')->with('success', 'Data Penguji berhasil ditambahkan.');
+        return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil ditambahkan');
     }
 
     public function update(Request $request, int $id)
@@ -75,13 +75,13 @@ class PengujiController extends Controller
 
         $this->pengujiRepository->update($validatedData, $id);
 
-        return redirect()->route('penguji.index')->with('success', 'Data Penguji berhasil diperbarui.');
+        return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil diperbarui');
     }
 
     public function destroy(int $id)
     {
         $this->pengujiRepository->delete($id);
 
-        return redirect()->route('penguji.index')->with('success', 'Data Penguji berhasil dihapus.');
+        return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil dihapus');
     }
 }

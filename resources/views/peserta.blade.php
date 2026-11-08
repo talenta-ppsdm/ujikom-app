@@ -6,7 +6,7 @@
 <div class="page-header">
     <div>
       <h1 class="page-title">Data Peserta</h1>
-      <p class="page-subtitle">Kelola data peserta, jenjang yang dituju (Pertama/Muda/Madya/Utama), jadwal, dan evaluasi.</p>
+      <p class="page-subtitle">Kelola data peserta, jenjang yang dituju (Pertama/Muda/Madya/Utama), jadwal, dan evaluasi</p>
     </div>
 
     @if(session('success'))
@@ -74,10 +74,9 @@
           </td>
           <td>
             <div class="d-flex justify-content-center gap-1">
-              <a href="#" class="table-btn-action" title="View details"><i class="bi bi-eye"></i></a>
               <button class="table-btn-action" title="Edit row" type="button" data-bs-toggle="modal" data-bs-target="#editPesertaModal-{{ $p->id }}"><i class="bi bi-pencil"></i></button>
               <!-- TODO Alert confirm ubah pakai sweet alert -->
-              <form action="{{ route('peserta.destroy', ['id' => $p->id]) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.peserta.destroy', ['id' => $p->id]) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -94,7 +93,7 @@
                 <h2 class="modal-title fs-5" id="editPesertaModalLabel-{{ $p->id }}">Edit Peserta Uji Kompetensi</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('peserta.update', ['id' => $p->id]) }}" method="POST">
+              <form action="{{ route('admin.peserta.update', ['id' => $p->id]) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 <div class="modal-body">
@@ -147,7 +146,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" class="btn-custom btn-custom-primary">Update Peserta</button>
+                  <button type="submit" class="btn-custom btn-custom-primary">Ubah</button>
                 </div>
               </form>
             </div>
@@ -169,7 +168,7 @@
         <h2 class="modal-title fs-5" id="tambahPesertaModalLabel">Tambah Peserta Uji Kompetensi</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <form action="{{ route('peserta.store') }}" method="POST">
+      <form action="{{ route('admin.peserta.store') }}" method="POST">
         @csrf 
         <div class="modal-body">
           <div class="row g-3">

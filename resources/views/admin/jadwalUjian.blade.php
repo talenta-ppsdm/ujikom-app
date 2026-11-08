@@ -9,42 +9,41 @@
       <p class="page-subtitle">Pengelolaan periode pendaftaran, batas waktu unggah dokumen, pengaturan kuota utama, dan status gelombang uji kompetensi.</p>
     </div>
     <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahJadwalUjianModal">
-      <i class="bi bi-plus-lg me-1"></i>Tambah Data
+      <i class="bi bi-plus-lg me-1"></i>Tambah
     </button>
 
-    <div class="row">
-      @if(session('success'))
-        <div class="col-12 alert alert-custom alert-custom-success mt-3" role="alert">
-          <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-          <div class="alert-custom-content">
-            {{ session('success') }}
-          </div>
-          <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
-            <i class="bi bi-x-lg" aria-hidden="true"></i>
-          </button>
+    @if(session('success'))
+      <div class="col-12 alert alert-custom alert-custom-success mt-3" role="alert">
+        <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
+        <div class="alert-custom-content">
+          {{ session('success') }}
         </div>
-      @endif
-  
-      @if ($errors->any())
-          <div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
-              <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
-              <div class="alert-custom-content">
-                @if ($errors->count() === 1)
-                    {{ $errors->all()[0] }}
-                @else
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                @endif
-              </div>
-              <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
-                <i class="bi bi-x-lg" aria-hidden="true"></i>
-              </button>
-          </div>
-      @endif
-    </div>
+        <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
+    @endif
+
+    @if ($errors->any())
+        <div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill alert-custom-icon" aria-hidden="true"></i>
+            <div class="alert-custom-content">
+              @if ($errors->count() === 1)
+                  {{ $errors->all()[0] }}
+              @else
+                  <ul class="mb-0">
+                      @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                      @endforeach
+                  </ul>
+              @endif
+            </div>
+            <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+              <i class="bi bi-x-lg" aria-hidden="true"></i>
+            </button>
+        </div>
+    @endif
+
 </div>
 @endsection
 
@@ -92,7 +91,7 @@
                 <i class="bi bi-pencil"></i>
               </button>
              
-              <form action="{{ route('jadwal-ujian.destroy', $ju->id) }}" method="POST" class="d-inline form-delete" style="display: inline;">
+              <form action="{{ route('admin.jadwal-ujian.destroy', $ju->id) }}" method="POST" class="d-inline form-delete" style="display: inline;">
                   @csrf
                   @method('DELETE')
                   <button type="submit" class="table-btn-action delete btn-delete-custom" title="Hapus">
@@ -111,7 +110,7 @@
                 <h2 class="modal-title fs-5" id="editJadwalUjianModalLabel-{{ $ju->id }}">Edit Data Jadwal Pemberkasan</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('jadwal-ujian.update', $ju->id) }}" method="POST">
+              <form action="{{ route('admin.jadwal-ujian.update', $ju->id) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 
@@ -244,7 +243,7 @@
         <h2 class="modal-title fs-5" id="tambahJadwalUjianModalLabel">Tambah Jadwal Ujian</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <form action="{{ route('jadwal-ujian.store') }}" method="POST">
+      <form action="{{ route('admin.jadwal-ujian.store') }}" method="POST">
         @csrf 
         <div class="modal-body">
           <div class="row g-3">

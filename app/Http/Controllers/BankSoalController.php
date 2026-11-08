@@ -56,7 +56,7 @@ class BankSoalController extends Controller
             
             $this->bankSoalRepository->create($validatedData);
     
-            return redirect()->route('banksoal.index')->with('success', 'Data Bank Soal berhasil ditambahkan.');
+            return redirect()->route('admin.banksoal.index')->with('success', 'Data Bank Soal berhasil ditambahkan.');
         }catch(\Exception $e){
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
@@ -98,9 +98,9 @@ class BankSoalController extends Controller
     
             $this->bankSoalRepository->update($validatedData, $id);
     
-            return redirect()->route('banksoal.index')->with('success', 'Data Bank Soal berhasil diperbarui.');
+            return redirect()->route('admin.banksoal.index')->with('success', 'Data Bank Soal berhasil diperbarui');
         }catch(\Exception $e){
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data');
         }
     }
 
@@ -108,9 +108,9 @@ class BankSoalController extends Controller
     {
         try{
             $this->bankSoalRepository->delete($id);
-            return redirect()->route('banksoal.index')->with('success', 'Data Bank Soal berhasil dihapus.');
+            return redirect()->route('admin.banksoal.index')->with('success', 'Data Bank Soal berhasil dihapus');
         }catch(\Exception $e){
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menghapus data');
         }
     }
 }

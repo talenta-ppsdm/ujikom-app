@@ -159,9 +159,9 @@
                             };
                         
                             if ($status === 'selesai') {
-                                $targetUrl = route('ujian.result', $dataUjian->id); 
+                                $targetUrl = route('peserta.ujian.result', $dataUjian->id); 
                             } else {
-                                $targetUrl = route('ujian.start', $dataUjian->id); 
+                                $targetUrl = route('peserta.ujian.start', $dataUjian->id); 
                             }
                         @endphp
                         
@@ -176,7 +176,7 @@
                 <!-- END Card List Ujian -->
 
                 <div class="d-flex justify-content-center mt-3">
-                    <a href="/riwayat-ujian">
+                    <a href="{{ route('peserta.riwayat-ujian.index') }}">
                         <button type="button" class="ui-card-action ui-card-action-ghost">
                             Selengkapnya
                             <i class="bi bi-arrow-right" aria-hidden="true"></i>
@@ -322,7 +322,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-3">
-                    <a href="/riwayat-pengumuman">
+                    <a href="{{ route('peserta.riwayat-pengumuman.index') }}">
                         <button type="button" class="ui-card-action ui-card-action-ghost">
                             Selengkapnya
                             <i class="bi bi-arrow-right" aria-hidden="true"></i>

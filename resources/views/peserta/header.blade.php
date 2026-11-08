@@ -1,5 +1,5 @@
 <header class="peserta-header">
-    <a class="peserta-brand" href="{{ route('dashboard-peserta.index') }}" aria-label="Dashboard peserta">
+    <a class="peserta-brand" href="{{ route('peserta.dashboard-peserta.index') }}" aria-label="Dashboard peserta">
         <span class="peserta-brand-mark">
             <img src="{{ asset('assets/images/logo-pkp-khaki.png') }}" alt="Logo Kementerian PKP">
         </span>
@@ -10,11 +10,11 @@
     </a>
     
     <nav class="peserta-nav" id="peserta-navigation" aria-label="Navigasi peserta">
-        <a class="peserta-nav-link {{ request()->routeIs('dashboard-peserta.index') ? 'active' : '' }}" href="{{ route('dashboard-peserta.index') }}">
+        <a class="peserta-nav-link {{ request()->routeIs('peserta.dashboard-peserta.index') ? 'active' : '' }}" href="{{ route('peserta.dashboard-peserta.index') }}">
             <i class="bi bi-house-door" aria-hidden="true"></i>
             <span>Beranda</span>
         </a>
-        <a class="peserta-nav-link {{ request()->routeIs('riwayat-ujian.index') ? 'active' : '' }}" href="{{ route('riwayat-ujian.index') }}">
+        <a class="peserta-nav-link {{ request()->routeIs('peserta.riwayat-ujian.index') ? 'active' : '' }}" href="{{ route('peserta.riwayat-ujian.index') }}">
             <i class="bi bi-journal-check" aria-hidden="true"></i>
             <span>Riwayat Ujian</span>
         </a>
@@ -22,7 +22,7 @@
             <i class="bi bi-pencil-square" aria-hidden="true"></i>
             <span>Pendaftaran</span>
         </a>
-        <a class="peserta-nav-link peserta-nav-announcement {{ request()->routeIs('riwayat-pengumuman.index') ? 'active' : '' }}" href="{{ route('riwayat-pengumuman.index') }}" >
+        <a class="peserta-nav-link peserta-nav-announcement {{ request()->routeIs('peserta.riwayat-pengumuman.index') ? 'active' : '' }}" href="{{ route('peserta.riwayat-pengumuman.index') }}" >
             <i class="bi bi-bell" aria-hidden="true"></i>
             <span>Pengumuman</span>
             <!-- <b aria-label="2 pengumuman baru">2</b> -->

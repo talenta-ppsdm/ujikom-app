@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="col-12 exam-history">
-	<a class="exam-history-back" href="/beranda" aria-label="Kembali ke beranda">
+	<a class="exam-history-back" href="{{ route('peserta.dashboard-peserta.index') }}" aria-label="Kembali ke beranda">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
 		Beranda
 	</a>
@@ -80,9 +80,9 @@
 				};
 			
 				if ($status === 'selesai') {
-					$targetUrl = route('ujian.result', $recentUjianTerjadwal->id); 
+					$targetUrl = route('peserta.ujian.result', $recentUjianTerjadwal->id); 
 				} else {
-					$targetUrl = route('ujian.start', $recentUjianTerjadwal->id); 
+					$targetUrl = route('peserta.ujian.start', $recentUjianTerjadwal->id); 
 				}
 			@endphp
 			
@@ -97,7 +97,7 @@
 	@endif
 	<!-- END Card Ujian Terjadwal -->
 
-	<form action="{{ route('riwayat-ujian.index') }}" method="GET" id="filterYearForm">
+	<form action="{{ route('peserta.riwayat-ujian.index') }}" method="GET" id="filterYearForm">
 		<div class="exam-history-toolbar">
 			<label class="exam-history-year">
 				<i class="bi bi-calendar-event" aria-hidden="true"></i>

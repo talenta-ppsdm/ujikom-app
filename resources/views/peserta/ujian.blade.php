@@ -174,7 +174,7 @@
 				return;
 			}
 		
-			fetch("/ujian/simpan", {
+			fetch("/peserta/ujian/simpan", {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -307,7 +307,7 @@
 			const btnAccept = confirmModal?.querySelector('[data-confirm-accept]');
 			if (btnAccept) btnAccept.disabled = true;
 		
-			fetch("/ujian/selesai", {
+			fetch("/peserta/ujian/selesai", {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

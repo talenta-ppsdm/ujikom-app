@@ -31,19 +31,18 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
+        
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-
             $user = Auth::user();
-          
-            if ($user->role == RoleUserEnum::ADMIN->value) {
-                return redirect()->intended('/jadwal-ujian');
+
+            if ($user->role === RoleUserEnum::ADMIN->value) { 
+                return redirect()->route('admin.peserta.index');
             }elseif ($user->role == RoleUserEnum::PESERTA->value) {
-                return redirect()->intended('/beranda');
+                return redirect()->route('peserta.dashboard-peserta.index');
             }else {
                 return redirect()->intended('/dashboard-penguji');
             }
-        
         }
 
         return back()->with('error', 'Email atau kata sandi salah.')->onlyInput('email');
@@ -114,7 +113,7 @@ class AuthController extends Controller
 
             Auth::login($user);
     
-            return redirect()->intended('/beranda');
+            return redirect()->intended(route('peserta.dashboard-peserta.index'));
     
         } catch (\Throwable $e) {
             Log::error('Register Error: ' . $e->getMessage());

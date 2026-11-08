@@ -25,7 +25,7 @@ class VerifikasiPemberkasanDocumentTest extends TestCase
         $this->app->instance(PemberkasanRepository::class, $repository);
 
         $response = $this->actingAs(new User(['role' => RoleUserEnum::ADMIN->value]))
-            ->get(route('verifikasi-pemberkasan.document', ['id' => 1, 'document' => 'sk-jabatan']));
+            ->get(route('admin.verifikasi-pemberkasan.document', ['id' => 1, 'document' => 'sk-jabatan']));
 
         $response->assertOk()
             ->assertHeader('Content-Type', 'application/pdf')
@@ -40,7 +40,7 @@ class VerifikasiPemberkasanDocumentTest extends TestCase
         $this->app->instance(PemberkasanRepository::class, $repository);
 
         $this->actingAs(new User(['role' => RoleUserEnum::PESERTA->value]))
-            ->get(route('verifikasi-pemberkasan.document', ['id' => 1, 'document' => 'sk-jabatan']))
+            ->get(route('admin.verifikasi-pemberkasan.document', ['id' => 1, 'document' => 'sk-jabatan']))
             ->assertForbidden();
     }
 }

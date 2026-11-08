@@ -9,7 +9,7 @@
     </div>
     
     <button class="btn-custom btn-custom-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambahPengumumanModal">
-      <i class="bi bi-plus-lg me-1"></i>Tambah Pengumuman
+      <i class="bi bi-plus-lg me-1"></i>Tambah
     </button>
 
     @if(session('success'))
@@ -74,7 +74,7 @@
               <button class="table-btn-action" title="Edit Soal" type="button" data-bs-toggle="modal" data-bs-target="#editPengumumanModal-{{ $p->id }}"><i class="bi bi-pencil"></i></button>
 
               <!-- Btn Delete -->
-              <form action="{{ route('pengumuman.destroy', $p->id) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.pengumuman.destroy', $p->id) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -148,7 +148,7 @@
                </div>
 
                <!-- Content Modal -->
-               <form action="{{ route('pengumuman.update', $p->id) }}" method="POST">
+               <form action="{{ route('admin.pengumuman.update', $p->id) }}" method="POST">
                @csrf 
                @method('PUT')
                  <div class="modal-body">
@@ -216,9 +216,7 @@
                  </div>
                  <div class="modal-footer">
                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                   <button type="submit" class="btn-custom btn-custom-primary">
-                     <i class="bi bi-check-lg me-1"></i>Ubah
-                   </button>
+                   <button type="submit" class="btn-custom btn-custom-primary">Ubah</button>
                  </div>
                </form>
             </div>
@@ -238,12 +236,12 @@
     <div class="modal-content bg-white">
       <!-- Header Modal -->
       <div class="modal-header px-6 py-4 ">
-        <h2 class="modal-title fs-5" id="tambahPengumumanModalLabel">Tambah Pengumuman</h2>
+        <h2 class="modal-title fs-5" id="tambahPengumumanModalLabel">Tambah</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
 
       <!-- Content Modal -->
-      <form action="{{ route('pengumuman.store') }}" method="POST">
+      <form action="{{ route('admin.pengumuman.store') }}" method="POST">
         @csrf 
         <div class="modal-body">
           <div class="row g-3">
@@ -314,9 +312,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn-custom btn-custom-primary">
-            <i class="bi bi-check-lg me-1"></i>Simpan
-          </button>
+          <button type="submit" class="btn-custom btn-custom-primary">Simpan</button>
         </div>
       </form>
     </div>

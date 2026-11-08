@@ -223,6 +223,15 @@ a:hover {
     position: relative;
 }
 
+.sidebar-menu-toggle {
+    width: 100%;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+}
+
 .sidebar-menu-link i {
     font-size: 1.15rem;
     transition: color 0.2s ease;
@@ -295,6 +304,11 @@ a:hover {
 
 .sidebar-submenu-link:hover {
     color: #FFFFFF;
+}
+
+.sidebar-submenu-link.active {
+    color: var(--brand-lime);
+    font-weight: 600;
 }
 
 /* Bottom Profile Card in Sidebar */

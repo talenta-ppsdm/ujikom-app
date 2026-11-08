@@ -12,8 +12,8 @@
         <div class="sidebar-menu-title">Menu Utama</div>
         <ul class="sidebar-menu-list">
           <li class="sidebar-menu-item">
-            <a href="/peserta" 
-              class="sidebar-menu-link {{ request()->routeIs('peserta.index') ? 'active' : '' }}" 
+            <a href="{{ route('admin.peserta.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.peserta.index') ? 'active' : '' }}" 
               id="menu-peserta" 
               title="Peserta">
               <i class="bi bi-people-fill"></i>
@@ -21,29 +21,40 @@
             </a>
           </li>
 
+          @php($jadwalMenuActive = request()->routeIs('jadwal-ujian.*', 'jadwal-cbt.*'))
           <li class="sidebar-menu-item">
-            <a href="/jadwal-ujian" 
-              class="sidebar-menu-link {{ request()->routeIs('jadwal-ujian.index') ? 'active' : '' }}" 
-              id="menu-jadwal-ujian" 
-              title="Jadwal Ujian">
+            <button type="button"
+              class="sidebar-menu-link sidebar-menu-toggle {{ $jadwalMenuActive ? 'active' : '' }}"
+              data-bs-toggle="collapse"
+              data-bs-target="#menu-jadwal-submenu"
+              aria-expanded="{{ $jadwalMenuActive ? 'true' : 'false' }}"
+              aria-controls="menu-jadwal-submenu"
+              title="Jadwal">
               <i class="bi bi-calendar-check-fill"></i>
-              <span>Jadwal Ujian</span>
-            </a>
+              <span>Jadwal</span>
+              <i class="bi bi-chevron-down dropdown-caret"></i>
+            </button>
+            <ul class="sidebar-submenu collapse {{ $jadwalMenuActive ? 'show' : '' }}" id="menu-jadwal-submenu">
+              <li>
+                <a href="{{ route('admin.jadwal-ujian.index') }}"
+                  class="sidebar-submenu-link {{ request()->routeIs('admin.jadwal-ujian.*') ? 'active' : '' }}"
+                  id="menu-jadwal-ujian">
+                  Jadwal Ujian
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('admin.jadwal-cbt.index') }}"
+                  class="sidebar-submenu-link {{ request()->routeIs('admin.jadwal-cbt.*') ? 'active' : '' }}"
+                  id="menu-jadwal-cbt">
+                  Jadwal CBT
+                </a>
+              </li>
+            </ul>
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/jadwal-cbt" 
-              class="sidebar-menu-link {{ request()->routeIs('jadwal-cbt.index') ? 'active' : '' }}" 
-              id="menu-jadwal-cbt" 
-              title="Jadwal CBT">
-              <i class="bi bi-calendar-check-fill"></i>
-              <span>Jadwal CBT</span>
-            </a>
-          </li>
-
-          <li class="sidebar-menu-item">
-            <a href="/verifikasi-pemberkasan" 
-              class="sidebar-menu-link {{ request()->routeIs('verifikasi-pemberkasan.index') ? 'active' : '' }}" 
+            <a href="{{ route('admin.verifikasi-pemberkasan.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.verifikasi-pemberkasan.index') ? 'active' : '' }}" 
               id="menu-verifikasi-pemberkasan" 
               title="Verifikasi Pemberkasan">
               <i class="bi bi-clipboard-check-fill"></i>
@@ -52,8 +63,8 @@
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/penguji" 
-              class="sidebar-menu-link {{ request()->routeIs('penguji.index') ? 'active' : '' }}" 
+            <a href="{{ route('admin.penguji.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.penguji.index') ? 'active' : '' }}" 
               id="menu-penguji" 
               title="Penguji Teknis">
               <i class="bi bi-person-fill-gear"></i>
@@ -62,8 +73,8 @@
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/bank-soal" 
-              class="sidebar-menu-link {{ request()->routeIs('bank-soal.index') ? 'active' : '' }}" 
+            <a href="{{ route('admin.banksoal.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.bank-soal.index') ? 'active' : '' }}" 
               id="menu-banksoal" 
               title="Bank Soal">
               <i class="bi bi-collection-fill"></i>
@@ -72,8 +83,8 @@
           </li>
 
           <li class="sidebar-menu-item">
-            <a href="/pengumuman" 
-              class="sidebar-menu-link {{ request()->routeIs('pengumuman.index') ? 'active' : '' }}" 
+            <a href="{{ route('admin.pengumuman.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.pengumuman.index') ? 'active' : '' }}" 
               id="menu-pengumuman" 
               title="Pengumuman">
               <i class="bi bi-megaphone-fill"></i>

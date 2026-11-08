@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="col-12 participant-profile">
-	<a class="exam-history-back participant-profile-back" href="{{ route('dashboard-peserta.index') }}">
+	<a class="exam-history-back participant-profile-back" href="{{ route('peserta.dashboard-peserta.index') }}">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
 		Beranda
 	</a>

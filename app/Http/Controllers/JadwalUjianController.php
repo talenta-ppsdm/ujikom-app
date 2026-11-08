@@ -58,7 +58,7 @@ class JadwalUjianController extends Controller
             ]);
         }
 
-        return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
+        return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
     }
 
     public function update(Request $request, int $id)
@@ -99,13 +99,13 @@ class JadwalUjianController extends Controller
             ]);
         }
 
-        return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diubah.');
+        return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diubah.');
     }
 
     public function destroy(int $id)
     {
         $this->jadwalUjianRepository->delete($id);
 
-        return redirect()->route('jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil dihapus.');
+        return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil dihapus.');
     }
 }

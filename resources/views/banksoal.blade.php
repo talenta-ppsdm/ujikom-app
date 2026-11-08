@@ -6,7 +6,7 @@
 <div class="page-header">
     <div>
       <h1 class="page-title">Bank Soal</h1>
-      <p class="page-subtitle">Koleksi butir soal standar kompetensi Jabatan Fungsional Penata Kelola Perumahan (0 butir terdaftar)</p>
+      <p class="page-subtitle">Koleksi butir soal standar kompetensi Jabatan Fungsional Penata Kelola Perumahan</p>
     </div>
 
     <div class="d-flex gap-2">
@@ -14,14 +14,14 @@
         type="button" 
         data-bs-toggle="modal" 
         data-bs-target="#importSoalModal">
-        <i class="bi bi-plus-lg me-1"></i>Import Soal
+        <i class="bi bi-box-arrow-in-down"></i>Import
       </button>
 
       <button class="btn-custom btn-custom-primary" 
         type="button" 
         data-bs-toggle="modal" 
         data-bs-target="#tambahSoalModal">
-        <i class="bi bi-plus-lg me-1"></i>Tambah Soal
+        <i class="bi bi-plus-lg me-1"></i>Tambah
       </button>
     </div>
 
@@ -81,7 +81,7 @@
 
               <button class="table-btn-action" title="Edit Soal" type="button" data-bs-toggle="modal" data-bs-target="#editBankSoalModal-{{ $bs->id }}"><i class="bi bi-pencil"></i></button>
 
-              <form action="{{ route('banksoal.destroy', $bs->id) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.banksoal.destroy', $bs->id) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -163,7 +163,7 @@
                 <h2 class="modal-title fs-5" id="editBankSoalModalLabel-{{ $bs->id }}">Edit Data Bank Soal</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('banksoal.update', $bs->id) }}" method="POST">
+              <form action="{{ route('admin.banksoal.update', $bs->id) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 <div class="modal-body">
@@ -247,7 +247,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-                  <button type="submit" class="btn-custom btn-custom-primary">Update Soal</button>
+                  <button type="submit" class="btn-custom btn-custom-primary">Ubah</button>
                 </div>
               </form>
             </div>
@@ -270,7 +270,7 @@
         <h2 class="modal-title fs-5" id="tambahSoalModalLabel">Tambah Soal</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <form action="{{ route('banksoal.store') }}" method="POST">
+      <form action="{{ route('admin.banksoal.store') }}" method="POST">
         @csrf 
         <div class="modal-body">
           <div class="row g-3">
@@ -341,7 +341,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-light" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn-custom btn-custom-primary">Simpan Soal</button>
+          <button type="submit" class="btn-custom btn-custom-primary">Simpan</button>
         </div>
       </form>
     </div>
@@ -357,7 +357,7 @@
         <h2 class="modal-title fs-5" id="importSoalModalLabel">Import Bank Soal</h2>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-      <form action="{{ route('banksoal.import') }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.banksoal.import') }}" method="POST" enctype="multipart/form-data">
         @csrf 
         <div class="modal-body">
           <div class="d-flex align-items-center justify-content-between gap-3 p-3 mb-4 border rounded bg-light">
@@ -365,7 +365,7 @@
               <h3 class="h6 mb-1">Belum punya template?</h3>
               <p class="mb-0 text-muted small">Download template Excel untuk melihat format kolom yang diperlukan.</p>
             </div>
-            <a href="{{ route('banksoal.template') }}" class="btn-custom btn-custom-primary flex-shrink-0">
+            <a href="{{ route('admin.banksoal.template') }}" class="btn-custom btn-custom-primary flex-shrink-0">
               <i class="bi bi-download me-1"></i>Download Template
             </a>
           </div>

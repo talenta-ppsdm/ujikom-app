@@ -84,7 +84,7 @@ class JadwalCbtController extends Controller
             'status' => $status, 
         ]));
 
-        return redirect()->route('jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
+        return redirect()->route('admin.jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil ditambahkan');
     }
 
     public function update(Request $request, int $id)
@@ -107,9 +107,9 @@ class JadwalCbtController extends Controller
 
             $this->cbtRepository->update(array_merge($validatedData, ['durasi' => $durasi]), $id);
 
-            return redirect()->route('jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil diperbarui');
+            return redirect()->route('admin.jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil diperbarui');
         } catch (\Exception $e) {
-            return redirect()->route('jadwal-cbt.index')->with('error', 'Jadwal ujian gagal diperbarui');
+            return redirect()->route('admin.jadwal-cbt.index')->with('error', 'Jadwal ujian gagal diperbarui');
         }
     }
 
@@ -117,6 +117,6 @@ class JadwalCbtController extends Controller
     {
         $this->cbtRepository->delete($id);
 
-        return redirect()->route('jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil dihapus.');
+        return redirect()->route('admin.jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil dihapus');
     }
 }

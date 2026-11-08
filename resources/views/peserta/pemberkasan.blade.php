@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="col-12 registration-page">
-	<a class="exam-history-back" href="/beranda" aria-label="Kembali ke beranda">
+	<a class="exam-history-back" href="{{ route('peserta.dashboard-peserta.index') }}" aria-label="Kembali ke beranda">
 		<i class="bi bi-arrow-left" aria-hidden="true"></i>
 		Beranda
 	</a>

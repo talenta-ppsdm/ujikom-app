@@ -54,7 +54,7 @@ class PesertaController extends Controller
             $validatedData, ['user_id' => $user->id])
         );
 
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil ditambahkan.');
+        return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil ditambahkan');
     }
 
     public function update(Request $request,int $id)
@@ -72,13 +72,13 @@ class PesertaController extends Controller
 
         $this->pesertaRepository->update($validatedData, $id);
 
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil diperbarui.');
+        return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil diperbarui');
     }
 
     public function destroy(int $id)
     {
         $this->pesertaRepository->delete($id);
 
-        return redirect()->route('peserta.index')->with('success', 'Data Peserta berhasil dihapus.');
+        return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil dihapus');
     }   
 }
