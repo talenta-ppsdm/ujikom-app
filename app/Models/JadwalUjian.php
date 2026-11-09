@@ -31,4 +31,9 @@ class JadwalUjian extends Model
         'periode_portofolio_awal'   => 'date',
         'periode_portofolio_akhir'  => 'date',
     ];
+
+    public function pemberkasan()
+    {
+        return $this->hasMany(Pemberkasan::class, 'jadwal_ujian_id');
+    }
 }

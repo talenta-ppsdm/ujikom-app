@@ -1,6 +1,6 @@
 <div class="sidebar-wrapper" id="sidebar">
     <!-- Brand Logo / Identity -->
-    <a href="index.html" class="sidebar-brand">
+    <a href="{{ route('admin.dashboard') }}" class="sidebar-brand">
       <i class="bi bi-asterisk"></i>
       <span>UJIKOM PPSDM</span>
     </a>
@@ -11,6 +11,16 @@
       <div class="sidebar-menu-section">
         <div class="sidebar-menu-title">Menu Utama</div>
         <ul class="sidebar-menu-list">
+          <li class="sidebar-menu-item">
+            <a href="{{ route('admin.dashboard') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
+              id="menu-dashboard" 
+              title="Dashboard">
+              <i class="bi bi-speedometer2"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
           <li class="sidebar-menu-item">
             <a href="{{ route('admin.peserta.index') }}" 
               class="sidebar-menu-link {{ request()->routeIs('admin.peserta.index') ? 'active' : '' }}" 

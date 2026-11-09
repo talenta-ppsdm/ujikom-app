@@ -14,6 +14,7 @@ use App\Http\Controllers\RiwayatUjianController;
 use App\Http\Controllers\PesertaProfilController;
 use App\Http\Controllers\PesertaPemberkasanController;
 use App\Http\Controllers\VerifikasiPemberkasanController;
+use App\Http\Controllers\DashboardAdminController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,7 +26,13 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/registrasi', function () {return view('register');})->name('registrasi');
 Route::post('/registrasi', [AuthController::class, 'register'])->name('registrasi.post');
 
+Route::middleware('auth')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function(){
+    Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
+
     Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
     Route::post('/peserta', [PesertaController::class, 'store'])->name('peserta.store');
     Route::put('/peserta/{id}', [PesertaController::class, 'update'])->name('peserta.update');
@@ -85,9 +92,3 @@ Route::middleware('auth')->prefix('peserta')->name('peserta.')->group(function()
     Route::get('/ujian/{id}/hasil', [UjianController::class, 'result'])->name('ujian.result');
 
 });
-
-Route::middleware('auth')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-});
-
-

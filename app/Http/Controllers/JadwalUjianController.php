@@ -48,6 +48,14 @@ class JadwalUjianController extends Controller
                 ]);
             }
 
+            // Check gelombang dan tahun sudah ada atau belum
+            $existingJadwal = $this->jadwalUjianRepository->getByGelombangAndTahun($validateData['gelombang'], $validateData['tahun']);
+            if ($existingJadwal) {
+                return back()->withInput()->withErrors([
+                    'error' => 'Jadwal ujian dengan gelombang dan tahun yang sama sudah ada'
+                ]);
+            }
+
             $this->jadwalUjianRepository->create(array_merge($validateData,[
                 'status'    => 'aktif',
             ]));

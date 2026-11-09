@@ -37,7 +37,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             if ($user->role === RoleUserEnum::ADMIN->value) { 
-                return redirect()->route('admin.peserta.index');
+                return redirect()->route('admin.dashboard');
             }elseif ($user->role == RoleUserEnum::PESERTA->value) {
                 return redirect()->route('peserta.dashboard-peserta.index');
             }else {

@@ -64,4 +64,9 @@ class PemberkasanRepository extends BaseRepository
             'jadwal_ujian_id' => $idJadwalPemberkasan,
         ]);
     }
+
+    public function getByStatus(array $arrStatus)
+    {
+        return $this->model->whereIn('status', $arrStatus);
+    }
 }

@@ -34,4 +34,11 @@ class JadwalUjianRepository extends BaseRepository
             ->whereDate('periode_akhir', '>=', now())
             ->first();
     }
+
+    public function getByGelombangAndTahun(string $gelombang, string $tahun)
+    {
+        return $this->model->where('gelombang', $gelombang)
+            ->where('tahun', $tahun)
+            ->first();
+    }
 }
