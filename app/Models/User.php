@@ -54,6 +54,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Peserta::class, 'user_id');
     }
+
+    public function admin()
+    {
+        return $this->hasOne(Admin::class, 'user_id');
+    }
     
     public function penguji()
     {

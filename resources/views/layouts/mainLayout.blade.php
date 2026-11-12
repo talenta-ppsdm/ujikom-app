@@ -22,6 +22,7 @@
 </head>
 
 <body>
+  @php($adminPhoto = auth()->user()?->admin?->foto)
 
   <!-- ==========================================
          START: Sidebar Component

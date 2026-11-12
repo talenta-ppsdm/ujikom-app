@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProfilController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BankSoalController;
 use App\Http\Controllers\DashboardPesertaController;
@@ -32,6 +33,10 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function(){
     Route::get('/dashboard', [DashboardAdminController::class, 'index'])->name('dashboard');
+
+    Route::get('/profil', [AdminProfilController::class, 'index'])->name('profil');
+    Route::put('/profil/{id}', [AdminProfilController::class, 'update'])->name('profil.update');
+    Route::put('/profil/{id}/foto', [AdminProfilController::class, 'updatePhoto'])->name('profil.photo');
 
     Route::get('/peserta', [PesertaController::class, 'index'])->name('peserta.index');
     Route::post('/peserta', [PesertaController::class, 'store'])->name('peserta.store');
