@@ -25,12 +25,13 @@
 
 <div class="col-12">
     @if(session('success'))
-        <div class="col-12 alert-custom alert-custom-success mt-3" role="alert">
+      <div class="alert alert-custom alert-custom-success mt-3 w-100" role="alert">
         <i class="bi bi-check-circle-fill alert-custom-icon" aria-hidden="true"></i>
-        <div class="alert-custom-content">
-            {{ session('success') }}
-        </div>
-        </div>
+        <div class="alert-custom-content">{{ session('success') }}</div>
+        <button type="button" class="alert-custom-close" data-bs-dismiss="alert" aria-label="Tutup">
+          <i class="bi bi-x-lg" aria-hidden="true"></i>
+        </button>
+      </div>
     @endif
     @if ($errors->any())
         <div class="col-12 alert alert-custom alert-custom-danger mt-3" role="alert">
@@ -84,7 +85,7 @@
                             </label>
                         </form>
                     </div>
-                    <p class="profile-photo-help" id="profile-photo-help" aria-live="polite">Pilih foto profil (maks. 2 MB)</p>
+                    <p class="profile-photo-help" id="profile-photo-help" aria-live="polite">Pilih foto profil (maks. 1 MB)</p>
                     <h2 class="profile-name">{{ ucwords($admin->nama) }}</h2>
                     <p class="profile-email">{{ $admin->email }}</p>
                     <span class="profile-role">

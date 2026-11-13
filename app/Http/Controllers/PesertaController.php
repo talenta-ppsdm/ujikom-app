@@ -77,7 +77,10 @@ class PesertaController extends Controller
 
     public function destroy(int $id)
     {
+        $peserta = $this->pesertaRepository->find($id);
+
         $this->pesertaRepository->delete($id);
+        $this->userRepository->delete($peserta->user_id);
 
         return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil dihapus');
     }   

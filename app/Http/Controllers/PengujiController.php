@@ -45,7 +45,7 @@ class PengujiController extends Controller
         $userData = [
             'name' => $validatedData['nama'],
             'email' => $validatedData['email'],
-            'password' => bcrypt('peserta2026'), 
+            'password' => bcrypt('pengujiJFPKP'), 
             'nip' => $validatedData['nip'],
             'role' => RoleUserEnum::PENGUJI->value,
         ];
@@ -80,6 +80,9 @@ class PengujiController extends Controller
 
     public function destroy(int $id)
     {
+        $penguji = $this->pengujiRepository->find($id);
+        
+        $this->userRepository->delete($penguji->user_id);
         $this->pengujiRepository->delete($id);
 
         return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil dihapus');

@@ -79,7 +79,6 @@
           </td>
           <td>
             <div class="d-flex justify-content-center gap-1">
-              <a href="#" class="table-btn-action" title="View details"><i class="bi bi-eye"></i></a>
               <button class="table-btn-action" title="Edit row" type="button" data-bs-toggle="modal" data-bs-target="#editPengujiModal-{{ $p->id }}"><i class="bi bi-pencil"></i></button>
              
               <form action="{{ route('admin.penguji.destroy', ['id' => $p->id]) }}" method="POST" style="display: inline;">
@@ -122,6 +121,10 @@
                         <option value="IIIb" @selected($p->golongan === 'IIIb')>III/b</option>
                         <option value="IIIC" @selected($p->golongan === 'IIIC')>III/c</option>
                         <option value="IIId" @selected($p->golongan === 'IIId')>III/d</option>
+                        <option value="IVa" @selected($p->golongan === 'IVa')>IV/a</option>
+                        <option value="IVb" @selected($p->golongan === 'IVb')>IV/b</option>
+                        <option value="IVC" @selected($p->golongan === 'IVC')>IV/c</option>
+                        <option value="IVd" @selected($p->golongan === 'IVd')>IV/d</option>
                       </select>
                     </div>
                     
@@ -200,6 +203,10 @@
                 <option value="IIIb">III/b</option>
                 <option value="IIIC">III/c</option>
                 <option value="IIId">III/d</option>
+                <option value="IVa">IV/a</option>
+                <option value="IVb">IV/b</option>
+                <option value="IVC">IV/c</option>
+                <option value="IVd">IV/d</option>
               </select>
             </div>
             

@@ -30,8 +30,6 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-profile" aria-labelledby="profile-dropdown">
           <li><a class="dropdown-item" href="{{ route('admin.profil') }}"><i class="bi bi-person"></i> My Account</a></li>
-          <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Settings</a></li>
-          <li><a class="dropdown-item" href="#"><i class="bi bi-lock"></i> Lock Screen</a></li>
           <li>
             <hr class="dropdown-divider">
           </li>
