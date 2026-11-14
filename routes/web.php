@@ -16,6 +16,7 @@ use App\Http\Controllers\PesertaProfilController;
 use App\Http\Controllers\PesertaPemberkasanController;
 use App\Http\Controllers\VerifikasiPemberkasanController;
 use App\Http\Controllers\DashboardAdminController;
+use App\Http\Controllers\JadwalWawancaraController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -65,6 +66,11 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function(){
     Route::put('/jadwal-ujian/{id}', [JadwalUjianController::class, 'update'])->name('jadwal-ujian.update');
     Route::delete('/jadwal-ujian/{id}', [JadwalUjianController::class, 'destroy'])->name('jadwal-ujian.destroy');
 
+    Route::get('/jadwal-wawancara', [JadwalWawancaraController::class, 'index'])->name('jadwal-wawancara.index');
+    Route::post('/jadwal-wawancara', [JadwalWawancaraController::class, 'store'])->name('jadwal-wawancara.store');
+    Route::put('/jadwal-wawancara/{id}', [JadwalWawancaraController::class, 'update'])->name('jadwal-wawancara.update');
+    Route::delete('/jadwal-wawancara/{id}', [JadwalWawancaraController::class, 'destroy'])->name('jadwal-wawancara.destroy');
+    
     Route::get('/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
     Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
     Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');

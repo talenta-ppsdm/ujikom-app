@@ -71,13 +71,22 @@ class PesertaPemberkasanController extends Controller
 
             if ($peserta) {
                 // Check peserta already submit pemberkasan awal
-                $verifyingPemberkasan = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus($peserta->id, $activeUjianSchedule->id, StatusPemberkasanEnum::VERIFYING->value);
+                $verifyingPemberkasan = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus(
+                    $peserta->id, 
+                    $activeUjianSchedule->id, 
+                    StatusPemberkasanEnum::VERIFYING->value);
 
                 // Check pemberkasan awal already approved
-                $approvedPemberkasan = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus($peserta->id, $activeUjianSchedule->id, StatusPemberkasanEnum::APPROVED->value);
+                $approvedPemberkasan = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus(
+                    $peserta->id, 
+                    $activeUjianSchedule->id, 
+                    StatusPemberkasanEnum::APPROVED->value);
 
                 // Check peserta already submit pemberkasan portofolio
-                $verifyingPortofolio = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus($peserta->id, $activeUjianSchedule->id, StatusPemberkasanEnum::SUBMIT_PORTOFOLIO->value);
+                $verifyingPortofolio = $this->pemberkasanRepository->getByPesertaAndScheduleWithStatus(
+                    $peserta->id, 
+                    $activeUjianSchedule->id, 
+                    StatusPemberkasanEnum::SUBMIT_PORTOFOLIO->value);
             }
         }
 
@@ -119,7 +128,9 @@ class PesertaPemberkasanController extends Controller
                 ]);
             }
 
-            $jumlahPendaftar = $this->pemberkasanRepository->getByScheduleandStatus($activeUjian->id, [StatusPemberkasanEnum::APPROVED->value, StatusPemberkasanEnum::VERIFYING->value])->count();
+            $jumlahPendaftar = $this->pemberkasanRepository->getByScheduleandStatus(
+                $activeUjian->id, 
+                [StatusPemberkasanEnum::APPROVED->value, StatusPemberkasanEnum::VERIFYING->value])->count();
             if ($jumlahPendaftar >= $activeUjian->kuota) {
                 return back()->withInput()->withErrors([
                     'error' => 'Kuota pendaftaran telah penuh.',

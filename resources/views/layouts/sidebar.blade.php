@@ -31,7 +31,7 @@
             </a>
           </li>
 
-          @php($jadwalMenuActive = request()->routeIs('jadwal-ujian.*', 'jadwal-cbt.*'))
+          @php($jadwalMenuActive = request()->routeIs('jadwal-ujian.*', 'jadwal-cbt.*', 'jadwal-wawancara.*'))
           <li class="sidebar-menu-item">
             <button type="button"
               class="sidebar-menu-link sidebar-menu-toggle {{ $jadwalMenuActive ? 'active' : '' }}"
@@ -57,6 +57,13 @@
                   class="sidebar-submenu-link {{ request()->routeIs('admin.jadwal-cbt.*') ? 'active' : '' }}"
                   id="menu-jadwal-cbt">
                   Jadwal CBT
+                </a>
+              </li>
+              <li>
+                <a href="{{ route('admin.jadwal-wawancara.index') }}"
+                  class="sidebar-submenu-link {{ request()->routeIs('admin.jadwal-wawancara.*') ? 'active' : '' }}"
+                  id="menu-jadwal-wawancara">
+                  Jadwal Wawancara
                 </a>
               </li>
             </ul>

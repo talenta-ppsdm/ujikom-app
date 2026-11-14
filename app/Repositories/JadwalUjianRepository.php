@@ -41,4 +41,9 @@ class JadwalUjianRepository extends BaseRepository
             ->where('tahun', $tahun)
             ->first();
     }
+
+    public function getByStatus(string $status)
+    {
+        return $this->model->where('status', $status);
+    }
 }
