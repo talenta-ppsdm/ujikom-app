@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\StatusJadwalCbtEnum;
 use App\Repositories\CbtRepository;
+use App\Repositories\JadwalWawancaraRepository;
 use App\Repositories\PemberkasanRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -12,12 +13,15 @@ class RiwayatUjianController extends Controller
 {
     protected CbtRepository $cbtRepository;
     protected PemberkasanRepository $pemberkasanRepository;
+    protected JadwalWawancaraRepository $jadwalWawancaraRepository; 
 
     public function __construct(CbtRepository $cbtRepository,
-        PemberkasanRepository $pemberkasanRepository
+        PemberkasanRepository $pemberkasanRepository,
+        JadwalWawancaraRepository $jadwalWawancaraRepository
     ){
         $this->cbtRepository = $cbtRepository;
         $this->pemberkasanRepository = $pemberkasanRepository;
+        $this->jadwalWawancaraRepository = $jadwalWawancaraRepository;
     }
 
     public function index(Request $request)
@@ -32,10 +36,8 @@ class RiwayatUjianController extends Controller
             $ujian = $this->cbtRepository->getByPeserta($pesertaId);
         }
 
-        $countUjian = $ujian->count();
-
         // Handle recent ujian terjadwal/berlangsung
-        $ujian = $this->cbtRepository->getByPeserta($pesertaId);
+        $ujianCbt = $this->cbtRepository->getByPeserta($pesertaId);
         $ujianTerjadwal = $ujian->filter(function ($item) {
             $status = strtolower($item->status->value ?? $item->status);
             return in_array($status, [
@@ -55,12 +57,15 @@ class RiwayatUjianController extends Controller
             $jenjangTujuan = $pemberkasan?->tujuan_jenjang;
         }
 
+        // Handle interview schedule
+        $interviewSchedule = $this->jadwalWawancaraRepository->getByPeserta($pesertaId)->get();
+
         return view('peserta.riwayatUjian', compact(
-            'ujian', 
-            'countUjian', 
+            'ujianCbt', 
             'availableYears', 
             'recentUjianTerjadwal', 
-            'jenjangTujuan'
+            'jenjangTujuan',
+            'interviewSchedule'
         ));
     }
 }

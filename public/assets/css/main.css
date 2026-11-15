@@ -488,6 +488,65 @@ body.sidebar-minimized .sidebar-profile {
     font-size: 0.98rem;
 }
 
+.exam-history-demo-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 0.85rem;
+    color: #718096;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.exam-history-switcher .exam-history-tabs {
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+    padding: 0.4rem;
+    border: 1px solid #e7eaf0;
+    border-radius: 0.95rem;
+    background: #ffffff;
+}
+
+.exam-history-tabs .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.7rem 1rem;
+    border-radius: 0.7rem;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.exam-history-tabs .nav-link:hover {
+    color: #3f54e4;
+    background: #f3f5ff;
+}
+
+.exam-history-tabs .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(100deg, #3f54e4, #4930d0);
+}
+
+.exam-history-tab-count {
+    display: inline-flex;
+    min-width: 1.45rem;
+    height: 1.45rem;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: #eef1f7;
+    color: #64748b;
+    font-size: 0.75rem;
+    line-height: 1;
+}
+
+.exam-history-tabs .nav-link.active .exam-history-tab-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+}
+
 .exam-history-toolbar {
     display: flex;
     align-items: center;
@@ -512,15 +571,58 @@ body.sidebar-minimized .sidebar-profile {
     color: #5945e8;
 }
 
-.exam-history-year select {
+.exam-history-year-toggle {
+    display: flex;
     width: 100%;
-    appearance: none;
+    min-width: 0;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    padding: 0;
     border: 0;
     outline: 0;
     background: transparent;
     color: #172033;
-    font: inherit;
-    font-weight: 700;
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.5;
+    text-align: left;
+}
+
+.exam-history-year-toggle::after {
+    display: none;
+}
+
+.exam-history-year-toggle:focus-visible {
+    border-radius: 0.35rem;
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(63, 84, 228, 0.16);
+}
+
+.exam-history-year-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.exam-history-year-menu {
+    width: 100%;
+    min-width: 100%;
+    margin-top: 0.5rem !important;
+}
+
+.exam-history-year-menu .exam-history-year-option.active,
+.exam-history-year-menu .exam-history-year-option.active:hover,
+.exam-history-year-menu .exam-history-year-option.active:focus {
+    background: linear-gradient(100deg, #3f54e4, #4930d0) !important;
+    color: #ffffff !important;
+}
+
+.exam-history-year-menu .exam-history-year-option:focus-visible {
+    border-radius: var(--radius-md);
+    outline: 2px solid rgba(63, 84, 228, 0.3);
+    outline-offset: -2px;
 }
 
 .exam-history-year-chevron {
@@ -565,6 +667,12 @@ body.sidebar-minimized .sidebar-profile {
     .exam-history-year {
         width: 100%;
         flex-basis: auto;
+    }
+
+    .exam-history-tabs .nav-link {
+        width: 100%;
+        padding: 0.65rem 0.5rem;
+        font-size: 0.88rem;
     }
 }
 

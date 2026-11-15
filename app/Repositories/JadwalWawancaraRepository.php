@@ -37,4 +37,9 @@ class JadwalWawancaraRepository extends BaseRepository
             ]
         );
     }
+
+    public function getByPeserta(int $idPeserta)
+    {
+        return $this->model->where('peserta_id', $idPeserta);
+    }
 }

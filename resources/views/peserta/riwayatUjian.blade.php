@@ -9,156 +9,187 @@
 
 	<header class="exam-history-heading">
 		<h1>Riwayat Ujian</h1>
-		<p>Rekapitulasi seluruh ujian yang pernah Anda ikuti</p>
+		<p>Rekapitulasi ujian CBT dan wawancara yang pernah Anda ikuti</p>
 	</header>
 
-	<!-- Card Ujian Terjadwal -->
-	@if($recentUjianTerjadwal)
-	<div class="col-12 mb-3">
-		@php
-		$statusBadgeClass = match(strtolower($recentUjianTerjadwal->status ?? '')) {
-			'terjadwal'          => 'badge-warning',
-			'sedang berlangsung' => 'badge-info',
-			'selesai'            => 'badge-success',
-			default              => 'badge-secondary', 
-		};
-		@endphp
-		<div class="ui-card mb-3">
-			<div class="ui-card-heading">
-				<span class="ui-status-badge {{ $statusBadgeClass }}">{{ ucwords($recentUjianTerjadwal->status) }}</span>
-			</div>
-
-			@if($recentUjianTerjadwal->status == 'selesai')
-			<div class="ui-info-panel ui-info-panel-success">
-				<i class="bi bi-check-circle" aria-hidden="true"></i>
-				<div>
-					<p class="ui-info-title">Ujian Telah Diselesaikan</p>
-					<p class="ui-info-text">Hasil ujian telah tersedia. Tinjau ringkasan dan pembahasan jawaban Anda.</p>
-				</div>
-				<div class="ui-info-panel-score">
-					<span class="ui-info-panel-score-label">Nilai Akhir</span>
-					<span class="ui-info-panel-score-value">{{ number_format($dataUjian->total_skor ?? 0, 0) }}<small>/100</small></span>
-				</div>
-			</div>
-			@else
-			<div class="ui-info-panel">
-				<i class="bi bi-clock-history" aria-hidden="true"></i>
-				<div>
-					<p class="ui-info-title">Sesi Ujian CBT Siap Dimulai</p>
-					<p class="ui-info-text">Soal ujian akan diacak secara otomatis dari bank soal teknis sesuai jenjang <b>{{ucwords($recentUjianTerjadwal->tujuan_jenjang)}}</b></p>
-				</div>
-			</div>
-			@endif
-
-			<div class="ui-metric-grid">
-				<div>
-					<span class="ui-metric-label">Gelombang Ujian</span>
-					<span class="ui-metric-value">Gelombang {{$recentUjianTerjadwal->jadwalUjian->gelombang}} Tahun {{$recentUjianTerjadwal->jadwalUjian->tahun}}</span>
-				</div>
-				<div>
-					<span class="ui-metric-label">Tanggal</span>
-					<span class="ui-metric-value">{{ \Carbon\Carbon::parse($recentUjianTerjadwal->tanggal_ujian)->translatedFormat('d F Y') }}</span>
-				</div>
-				<div>
-					<span class="ui-metric-label">Jumlah Soal</span>
-					<span class="ui-metric-value">30 Butir</span>
-				</div>
-				<div>
-					<span class="ui-metric-label">Durasi Ujian</span>
-					<span class="ui-metric-value">{{$recentUjianTerjadwal->durasi}} Menit</span>
-				</div>
-			</div>
-
-			@php
-				$status = $recentUjianTerjadwal->status;
-
-				$wordingButton = match(strtolower($recentUjianTerjadwal->status)){
-					'terjadwal'         => 'Kerjakan Ujian',
-					'sedang berlangsung'=> 'Kerjakan Ujian',
-					'selesai'           => 'Lihat Hasil Ujian',
-					default             => 'Lihat Selengkapnya'
-				};
-			
-				if ($status === 'selesai') {
-					$targetUrl = route('peserta.ujian.result', $recentUjianTerjadwal->id); 
-				} else {
-					$targetUrl = route('peserta.ujian.start', $recentUjianTerjadwal->id); 
-				}
-			@endphp
-			
-			<a href="{{ $targetUrl }}" class="text-decoration-none">
-				<button class="ui-card-action" type="button">
-					{{ $wordingButton }}
-					<i class="bi bi-arrow-right" aria-hidden="true"></i>
-				</button>
-			</a>
-		</div>
-	</div>
-	@endif
-	<!-- END Card Ujian Terjadwal -->
-
-	<form action="{{ route('peserta.riwayat-ujian.index') }}" method="GET" id="filterYearForm">
-		<div class="exam-history-toolbar">
-			<label class="exam-history-year">
-				<i class="bi bi-calendar-event" aria-hidden="true"></i>
-				<span class="visually-hidden">Pilih tahun</span>
-				<select aria-label="Pilih tahun" name="tahun" onchange="this.form.submit()">
-					<option value="semua" {{ !request('tahun') || request('tahun') == 'semua' ? 'selected' : '' }}>
-						Semua Tahun
-					</option>
-					@foreach($availableYears as $year)
-						<option value="{{ $year }}" {{ request('tahun') == $year ? 'selected' : '' }}>{{ $year }}</option>
-					@endforeach
-				</select>
+	<div class="exam-history-toolbar">
+		<div class="exam-history-year dropdown">
+			<i class="bi bi-calendar-event" aria-hidden="true"></i>
+			<button class="exam-history-year-toggle dropdown-toggle" type="button" id="examHistoryYearFilter" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Pilih tahun riwayat: Semua Tahun">
+				<span class="exam-history-year-label">Semua Tahun</span>
 				<i class="bi bi-chevron-down exam-history-year-chevron" aria-hidden="true"></i>
-			</label>
-		</div>
-	</form>
-
-	<!-- Tabel Riwayat Ujian -->
-	<div class="ui-card table-card-custom">
-		<div class="table-responsive">
-		  <table id="dataTable" class="table-custom w-100" data-datatable data-datatable-page-length="10" data-datatable-actions="4">
-			<thead>
-			  <tr>
-				<th>No</th>
-				<th>Tanggal Pelaksanaan</th>
-				<th>Durasi</th>
-				<th>Status</th>
-				<th>Nilai</th>
-			  </tr>
-			</thead>
-			<tbody>
-			  <?php $no = 1; ?>
-			  @foreach($ujian as $dataUjian)
-			  	@php
-				$statusBadgeClass = match(strtolower($dataUjian->status)){
-					'terjadwal'          => 'ui-badge-warning',
-					'sedang berlangsung' => 'ui-badge-info',
-					'selesai'            => 'ui-badge-success',
-					default              => 'ui-badge-secondary',
-				};
-
-				if(strtolower($dataUjian->status) === 'selesai'){
-					$totalSkor = round($dataUjian->total_skor, 2);
-				}else{
-					$totalSkor = '-';
-				}
-				@endphp
-			  <tr>
-				<td class="table-order-id">{{ $no++ }}</td>
-				<td>{{ $dataUjian->tanggal_ujian->translatedFormat('d F Y') }}</td>
-				<td>{{ $dataUjian->durasi }} menit</td>
-				<td>
-					<span class="badge-table {{ $statusBadgeClass }}">{{ $dataUjian->status }}</span>
-				</td>
-				<td>{{ $totalSkor }}</td>
-			  </tr>
-			  @endforeach
-			</tbody>
-		  </table>
+			</button>
+			<div class="dropdown-menu dropdown-menu-custom exam-history-year-menu" role="menu" aria-labelledby="examHistoryYearFilter">
+				<button class="dropdown-item exam-history-year-option active" type="button" role="menuitemradio" data-history-year="semua" aria-checked="true">Semua Tahun</button>
+				@foreach($availableYears as $year)
+				<button class="dropdown-item exam-history-year-option" type="button" role="menuitemradio" data-history-year="{{$year}}" aria-checked="false">{{$year}}</button>
+				@endforeach
+			</div>
 		</div>
 	</div>
-	<!-- END Tabel Riwayat Ujian -->
+
+	<div class="exam-history-switcher">
+		<ul class="nav nav-pills exam-history-tabs" id="examHistoryTabs" role="tablist" aria-label="Pilih jenis riwayat ujian">
+			<li class="nav-item" role="presentation">
+				<button class="nav-link active" id="cbt-history-tab" data-bs-toggle="pill" data-bs-target="#cbt-history" type="button" role="tab" aria-controls="cbt-history" aria-selected="true">
+					<i class="bi bi-pc-display-horizontal" aria-hidden="true"></i>
+					Ujian CBT
+					<span class="exam-history-tab-count" data-history-count="cbt">{{ count($ujianCbt) }}</span>
+				</button>
+			</li>
+			<li class="nav-item" role="presentation">
+				<button class="nav-link" id="interview-history-tab" data-bs-toggle="pill" data-bs-target="#interview-history" type="button" role="tab" aria-controls="interview-history" aria-selected="false">
+					<i class="bi bi-people" aria-hidden="true"></i>
+					Wawancara
+					<span class="exam-history-tab-count" data-history-count="wawancara">{{ count($interviewSchedule) }}</span>
+				</button>
+			</li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade show active" id="cbt-history" role="tabpanel" aria-labelledby="cbt-history-tab" tabindex="0">
+				<div class="ui-card table-card-custom">
+					<div class="table-responsive">
+						<table class="table-custom w-100" data-history-table="cbt">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Tanggal Pelaksanaan</th>
+									<th>Gelombang</th>
+									<th>Durasi</th>
+									<th>Status</th>
+									<th>Nilai</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($ujianCbt as $index => $dataCbt)
+								@php
+								$statusBadgeClass = match(strtolower($dataCbt->status)){
+									'terjadwal'          => 'ui-badge-warning',
+									'sedang berlangsung' => 'ui-badge-info',
+									'selesai'            => 'ui-badge-success',
+									default              => 'ui-badge-secondary',
+								};
+
+								if(strtolower($dataCbt->status) === 'selesai'){
+									$totalSkor = round($dataCbt->total_skor, 2);
+								}else{
+									$totalSkor = '-';
+								}
+								@endphp
+
+								<tr data-year="{{ substr($dataCbt->tanggal_ujian, 0, 4) }}">
+									<td class="table-order-id" data-row-number>{{ $index + 1 }}</td>
+									<td>{{ \Carbon\Carbon::parse($dataCbt->tanggal_ujian)->translatedFormat('d F Y') }}</td>
+									<td>Gelombang {{ $dataCbt->jadwalUjian->gelombang }} Tahun {{ $dataCbt->jadwalUjian->tahun }}</td>
+									<td>{{ $dataCbt->durasi }} menit</td>
+									<td>
+										<span class="badge-table {{ $statusBadgeClass }}">{{ ucwords($dataCbt->status) }}</span>
+									</td>
+									<td>{{ $totalSkor }}</td>
+								</tr>
+								@endforeach
+								<tr class="exam-history-empty-row" hidden>
+									<td colspan="7">Tidak ada riwayat CBT pada tahun ini.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="interview-history" role="tabpanel" aria-labelledby="interview-history-tab" tabindex="0">
+				<div class="ui-card table-card-custom">
+					<div class="table-responsive">
+						<table class="table-custom w-100" data-history-table="wawancara">
+							<thead>
+								<tr>
+									<th>No</th>
+									<th>Tanggal</th>
+									<th>Gelombang</th>
+									<th>Waktu</th>
+									<th>Penguji</th>
+									<th>Metode</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach($interviewSchedule as $index => $dataWawancara)
+								@php
+									$statusBadgeClass = match(strtolower($dataWawancara->status)){
+										'terjadwal'          => 'ui-badge-warning',
+										'menunggu hasil' 	 => 'ui-badge-info',
+										'selesai'            => 'ui-badge-success',
+										default              => 'ui-badge-secondary',
+									};
+								@endphp
+								<tr data-year="{{ substr($dataWawancara->tanggal, 0, 4) }}">
+									<td class="table-order-id" data-row-number>{{ $index + 1 }}</td>
+									<td>{{ \Carbon\Carbon::parse($dataWawancara->tanggal)->translatedFormat('d F Y') }}</td>
+									<td>Gelombang {{ $dataWawancara->jadwalUjian->gelombang }} Tahun {{ $dataWawancara->jadwalUjian->tahun }}</td>
+									<td>{{ $dataWawancara->jam_mulai }} - {{ $dataWawancara->jam_selesai }}</td>
+									<td>{{ ucwords($dataWawancara->penguji->nama) }}</td>
+									<td>{{ ucwords($dataWawancara->metode) }}</td>
+									<td>
+										<span class="badge-table {{ $statusBadgeClass }}">{{ ucwords($dataWawancara->status) }}</span>
+									</td>
+								</tr>
+								@endforeach
+								<tr class="exam-history-empty-row" hidden>
+									<td colspan="7">Tidak ada riwayat wawancara pada tahun ini.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+	(function () {
+		const yearFilter = document.getElementById('examHistoryYearFilter');
+		const yearOptions = document.querySelectorAll('[data-history-year]');
+
+		if (!yearFilter || yearOptions.length === 0) {
+			return;
+		}
+
+		yearOptions.forEach(function (option) {
+			option.addEventListener('click', function () {
+				const selectedYear = option.dataset.historyYear;
+				const selectedYearLabel = option.textContent.trim();
+				yearFilter.querySelector('.exam-history-year-label').textContent = selectedYearLabel;
+				yearFilter.setAttribute('aria-label', 'Pilih tahun riwayat: ' + selectedYearLabel);
+
+				yearOptions.forEach(function (yearOption) {
+					const isSelected = yearOption === option;
+					yearOption.classList.toggle('active', isSelected);
+					yearOption.setAttribute('aria-checked', String(isSelected));
+				});
+
+				document.querySelectorAll('[data-history-table]').forEach(function (table) {
+					const rows = table.querySelectorAll('tbody tr[data-year]');
+					let visibleCount = 0;
+
+					rows.forEach(function (row) {
+						const isVisible = selectedYear === 'semua' || row.dataset.year === selectedYear;
+						row.hidden = !isVisible;
+
+						if (isVisible) {
+							visibleCount += 1;
+							row.querySelector('[data-row-number]').textContent = visibleCount;
+						}
+					});
+
+					table.querySelector('.exam-history-empty-row').hidden = visibleCount > 0;
+					document.querySelector('[data-history-count="' + table.dataset.historyTable + '"]').textContent = visibleCount;
+				});
+			});
+		});
+	})();
+</script>
+@endpush
