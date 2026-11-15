@@ -26,4 +26,15 @@ class JadwalWawancaraRepository extends BaseRepository
     {
         // Add your boot logic here
     }
+
+    public function getByPesertaJadwalAndStatus(int $idPeserta, int $idJadwalUjian, string $status)
+    {
+        return $this->model->where(
+            [
+                'peserta_id'        => $idPeserta,
+                'jadwal_ujian_id'   => $idJadwalUjian,
+                'status'            => $status
+            ]
+        );
+    }
 }

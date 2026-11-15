@@ -226,15 +226,21 @@ class PesertaPemberkasanController extends Controller
             $pesertaId = Auth::user()->peserta->id;
             $pemberkasan = $this->pemberkasanRepository->getByPesertaAndStatus($pesertaId, StatusPemberkasanEnum::APPROVED->value);
 
-            // Hanlde save data on database
-            $this->pemberkasanRepository->update([
-                'file_portofolio'   => $paths['portofolio'] ?? null,
-                'file_praasesmen'  => $paths['praasesmen'] ?? null,
-                'file_paparan'    => $paths['paparan'] ?? null,
-                'status'            => StatusPemberkasanEnum::SUBMIT_PORTOFOLIO->value,
-            ], $pemberkasan->id);
-            
-            return redirect()->route('peserta.pemberkasan.index');
+            if (!$pemberkasan) {
+                return back()->withInput()->withErrors([
+                    'error' => 'Data pemberkasan awal tidak ditemukan'
+                ]);
+            }else {
+                // Hanlde save data on database
+                $this->pemberkasanRepository->update([
+                    'file_portofolio' => $paths['portofolio'] ?? null,
+                    'file_praasesmen' => $paths['praasesmen'] ?? null,
+                    'file_paparan'    => $paths['paparan'] ?? null,
+                    'status'          => StatusPemberkasanEnum::SUBMIT_PORTOFOLIO->value,
+                ], $pemberkasan->id);
+                
+                return redirect()->route('peserta.pemberkasan.index');
+            }
         }catch (\Throwable $e) {
             return back()->withInput()->withErrors([
                 'error' => $e->getMessage()

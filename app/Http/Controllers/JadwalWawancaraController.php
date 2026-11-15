@@ -61,7 +61,7 @@ class JadwalWawancaraController extends Controller
         try {
             // Handling jadwal ujian
             $activeJadwalUjian = $this->jadwalUjianRepository->getByStatus(StatusUjianEnum::AKTIF->value)->first();
-            $pemberkasan = $this->pemberkasanRepository->getByPesertaAndStatus($validateData['peserta_id'], StatusPemberkasanEnum::SUBMIT_PORTOFOLIO->value);
+            $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule($validateData['peserta_id'], $activeJadwalUjian->id)->first();
 
             if(!$activeJadwalUjian || !$pemberkasan){
                 return back()->withInput()->withErrors([

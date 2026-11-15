@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\StatusJadwalCbtEnum;
+use App\Enums\StatusJadwalWawancaraEnum;
 use App\Repositories\JadwalUjianRepository;
 use App\Repositories\CbtRepository;
+use App\Repositories\JadwalWawancaraRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\PesertaRepository;
@@ -19,6 +21,7 @@ class DashboardPesertaController extends Controller
     protected PesertaRepository $pesertaRepository;
     protected JadwalUjianRepository $jadwalUjianRepository;
     protected PemberkasanRepository $pemberkasanRepository;
+    protected JadwalWawancaraRepository $jadwalWawancaraRepository;
 
     public function __construct(
         UserRepository $userRepository,
@@ -26,7 +29,8 @@ class DashboardPesertaController extends Controller
         PengumumanRepository $pengumumanRepository,
         PesertaRepository $pesertaRepository,
         JadwalUjianRepository $jadwalUjianRepository,
-        PemberkasanRepository $pemberkasanRepository
+        PemberkasanRepository $pemberkasanRepository,
+        JadwalWawancaraRepository $jadwalWawancaraRepository,
     )
     {
         $this->userRepository               = $userRepository;
@@ -35,6 +39,7 @@ class DashboardPesertaController extends Controller
         $this->pesertaRepository            = $pesertaRepository;
         $this->jadwalUjianRepository        = $jadwalUjianRepository;
         $this->pemberkasanRepository        = $pemberkasanRepository;
+        $this->jadwalWawancaraRepository    = $jadwalWawancaraRepository;
     }
 
     public function index()
@@ -89,7 +94,18 @@ class DashboardPesertaController extends Controller
         }
 
         // Check jadwal pemberkasan
-        $activePemberkasanSchedule = $this->jadwalUjianRepository->getActiveSchedule();
+        $activeUjianSchedule = $this->jadwalUjianRepository->getActiveSchedule();
+
+        // Check interview schedule
+        $interviewSchedule = $activeUjianSchedule
+            ? $this->jadwalWawancaraRepository->getByPesertaJadwalAndStatus(
+                $peserta->id,
+                $activeUjianSchedule->id,
+                StatusJadwalWawancaraEnum::TERJADWAL->value
+            )->with('penguji')->get()
+            : collect();
+        // Cari berdasarkan id peserta, aktif jadwal, status = terjadwal
+
     
         return view('peserta.beranda', compact(
             'user', 
@@ -100,7 +116,8 @@ class DashboardPesertaController extends Controller
             'jenjangTujuan',
             'pengumuman',
             'isProfileIncomplete',
-            'activePemberkasanSchedule'
+            'activeUjianSchedule',
+            'interviewSchedule'
         ));
     }
 }

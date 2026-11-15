@@ -35,7 +35,7 @@
 </div>
 <!-- END Hero Beranda -->
 
-@if($activePemberkasanSchedule)
+@if($activeUjianSchedule)
 <div class="col-12 peserta-registration-promo">
     <section class="ui-card peserta-registration-card" aria-labelledby="registration-promo-title">
         <span class="peserta-registration-icon" aria-hidden="true">
@@ -80,6 +80,65 @@
         </div>
         @endif
         <!-- END Alert Complete Personal Data -->
+
+        <!-- Card Interview Schedule -->
+        @if($interviewSchedule->isNotEmpty())
+        @foreach($interviewSchedule as $dataWawancara)
+        <div class="col-12 mb-3">
+            <section class="ui-card" aria-labelledby="interview-schedule-title-{{ $dataWawancara->id }}">
+                <div class="ui-card-heading">
+                    <div>
+                        <h2 class="ui-eyebrow">Jadwal Wawancara</h2>
+                    </div>
+                    <span class="ui-status-badge">{{ ucwords($dataWawancara->status) }}</span>
+                </div>
+
+                <div class="ui-metric-grid">
+                    <div>
+                        <span class="ui-metric-label">Tanggal</span>
+                        <span class="ui-metric-value">{{ \Carbon\Carbon::parse($dataWawancara->tanggal)->translatedFormat('d F Y') }}</span>
+                    </div>
+                    <div>
+                        <span class="ui-metric-label">Waktu</span>
+                        <span class="ui-metric-value">{{ \Carbon\Carbon::parse($dataWawancara->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($dataWawancara->jam_selesai)->format('H:i') }}</span>
+                    </div>
+                    <div>
+                        <span class="ui-metric-label">Penguji</span>
+                        <span class="ui-metric-value">{{ $dataWawancara->penguji?->nama ?? 'Belum ditentukan' }}</span>
+                    </div>
+                    <div>
+                        <span class="ui-metric-label">Metode</span>
+                        <span class="ui-metric-value">{{ ucwords($dataWawancara->metode) }}</span>
+                    </div>
+                </div>
+
+                <div class="ui-info-panel mt-3">
+                    <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                    <div>
+                        @php
+                            $lokasiLink = trim((string) $dataWawancara->lokasi_link);
+                            $isOnline = strtolower(trim((string) $dataWawancara->metode)) === 'online';
+                            $isWebLink = filter_var($lokasiLink, FILTER_VALIDATE_URL)
+                                && in_array(strtolower(parse_url($lokasiLink, PHP_URL_SCHEME)), ['http', 'https'], true);
+                        @endphp
+                        <p class="ui-info-title">{{ $isOnline ? 'Link Wawancara Online' : 'Lokasi Wawancara' }}</p>
+                        @if($isOnline && $isWebLink)
+                            <a class="ui-card-action mt-2" href="{{ $lokasiLink }}" target="_blank" rel="noopener noreferrer">
+                                <i class="bi bi-camera-video-fill" aria-hidden="true"></i>
+                                Gabung Zoom Meeting
+                            </a>
+                        @elseif($isOnline)
+                            <p class="ui-info-text">Link Zoom belum tersedia atau tidak valid.</p>
+                        @else
+                            <p class="ui-info-text">{{ $lokasiLink ?: 'Alamat wawancara belum tersedia' }}</p>
+                        @endif
+                    </div>
+                </div>
+            </section>
+        </div>
+        @endforeach
+        @endif
+        <!-- END Card Interview Schedule -->
 
         <!-- Card Status Ujian -->
         @if($recentUjian->isNotEmpty())
@@ -189,7 +248,7 @@
         <!-- END Card Status Ujian -->
     
         <!-- Card Ujikom Question level -->
-         @if($jenjangTujuan !== null)
+        @if($jenjangTujuan !== null)
         <div class="col-12 mb-3">
             <section class="ui-card" aria-labelledby="level-title">
                 <h2 class="ui-section-heading" id="level-title">
