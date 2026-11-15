@@ -6,6 +6,7 @@ use App\Models\Admin;
 use App\Repositories\AdminRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 use RuntimeException;
 use Throwable;
@@ -24,7 +25,7 @@ class AdminProfilController extends Controller
         return view('admin.profil', compact('admin'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
         $validatedData = $request->validate([
             'nama'      => 'required|string|max:255',
@@ -42,6 +43,8 @@ class AdminProfilController extends Controller
             'email.required'    => 'Email wajib diisi.',
             'email.email'       => 'Format email tidak valid.',
         ]);
+
+        $id = Crypt::decrypt($encryptedId);
 
         $admin = $this->adminRepository->getById($id);
 
@@ -62,7 +65,7 @@ class AdminProfilController extends Controller
         return redirect()->route('admin.profil')->with('success', 'Profil berhasil diperbarui.');
     }
 
-    public function updatePhoto(Request $request, int $id)
+    public function updatePhoto(Request $request, string $encryptedId)
     {
         $request->validate([
             'foto' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
@@ -72,6 +75,8 @@ class AdminProfilController extends Controller
             'foto.mimes' => 'Foto harus berformat JPG, PNG, atau WEBP.',
             'foto.max' => 'Ukuran foto maksimal 2 MB.',
         ]);
+
+        $id = Crypt::decrypt($encryptedId);
 
         $admin = $this->adminRepository->getById($id);
         $oldPhoto = $admin->foto;

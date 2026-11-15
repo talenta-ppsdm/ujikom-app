@@ -69,7 +69,7 @@
                                 @if ($admin->foto) src="{{ asset('storage/' . $admin->foto) }}" @else hidden @endif
                             >
                         </div>
-                        <form action="{{ route('admin.profil.photo', $admin->id) }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.profil.photo', Crypt::encrypt($admin->id)) }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <input
@@ -161,7 +161,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('admin.profil.update', $admin->id) }}" method="POST" id="profile-edit-form">
+                            <form action="{{ route('admin.profil.update', Crypt::encrypt($admin->id)) }}" method="POST" id="profile-edit-form">
                                 @csrf
                                 @method('PUT')
                                 <div class="row g-3">

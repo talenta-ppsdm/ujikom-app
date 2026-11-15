@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Repositories\JadwalUjianRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class JadwalUjianController extends Controller
 {
@@ -69,7 +70,7 @@ class JadwalUjianController extends Controller
         return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil ditambahkan.');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
         $validateData = $request->validate([
             'gelombang'                 => 'required',
@@ -90,6 +91,8 @@ class JadwalUjianController extends Controller
         ]);
 
         try {
+            $id = Crypt::decrypt($encryptedId);
+
             if ($validateData['status'] === 'aktif') {
                 $activeJadwalUjian = $this->jadwalUjianRepository->getActiveSchedule();
                 if ($activeJadwalUjian && $activeJadwalUjian->id !== $id) {
@@ -110,8 +113,10 @@ class JadwalUjianController extends Controller
         return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil diubah.');
     }
 
-    public function destroy(int $id)
+    public function destroy(string $encryptedId)
     {
+        $id = Crypt::decrypt($encryptedId);
+
         $this->jadwalUjianRepository->delete($id);
 
         return redirect()->route('admin.jadwal-ujian.index')->with('success', 'Jadwal ujian berhasil dihapus.');

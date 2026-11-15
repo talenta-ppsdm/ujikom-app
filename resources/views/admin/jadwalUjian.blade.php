@@ -91,7 +91,7 @@
                 <i class="bi bi-pencil"></i>
               </button>
              
-              <form action="{{ route('admin.jadwal-ujian.destroy', $ju->id) }}" method="POST" class="d-inline form-delete" style="display: inline;">
+              <form action="{{ route('admin.jadwal-ujian.destroy', Crypt::encrypt($ju->id)) }}" method="POST" class="d-inline form-delete" style="display: inline;">
                   @csrf
                   @method('DELETE')
                   <button type="submit" class="table-btn-action delete btn-delete-custom" title="Hapus">
@@ -110,7 +110,7 @@
                 <h2 class="modal-title fs-5" id="editJadwalUjianModalLabel-{{ $ju->id }}">Edit Data Jadwal Pemberkasan</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('admin.jadwal-ujian.update', $ju->id) }}" method="POST">
+              <form action="{{ route('admin.jadwal-ujian.update', Crypt::encrypt($ju->id)) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 

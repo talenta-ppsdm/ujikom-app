@@ -7,6 +7,7 @@ use App\Repositories\PengumumanPesertaRepository;
 use App\Repositories\PengumumanRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class PengumumanController extends Controller
 {
@@ -67,7 +68,7 @@ class PengumumanController extends Controller
         }
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
         $validatedData = $request->validate([
             'judul' => 'required|string',
@@ -79,6 +80,8 @@ class PengumumanController extends Controller
         ]);
 
         try {
+            $id = Crypt::decrypt($encryptedId); 
+            
             $recipientIds = $validatedData['peserta_ids'] ?? [];
             unset($validatedData['peserta_ids']);
             
@@ -103,7 +106,8 @@ class PengumumanController extends Controller
         }
     }
 
-    public function destroy(int $id){
+    public function destroy(string $encryptedId){
+        $id = Crypt::decrypt($encryptedId);
         $this->pengumumanRepository->delete($id);
 
         return redirect()->route('admin.pengumuman.index')->with('success', 'Pengumuman berhasil dihapus');

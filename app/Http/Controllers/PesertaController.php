@@ -6,6 +6,7 @@ use App\Enums\RoleUserEnum;
 use App\Repositories\PesertaRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class PesertaController extends Controller
 {
@@ -57,7 +58,7 @@ class PesertaController extends Controller
         return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil ditambahkan');
     }
 
-    public function update(Request $request,int $id)
+    public function update(Request $request,string $cryptedId)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -70,13 +71,23 @@ class PesertaController extends Controller
             'email' => 'nullable|email|max:255',
         ]);
 
-        $this->pesertaRepository->update($validatedData, $id);
+        try {
+            $id = Crypt::decrypt($cryptedId);
+        
+            $this->pesertaRepository->update($validatedData, $id);
+        }catch (\Throwable $e) {
+            return back()->withInput()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
 
         return redirect()->route('admin.peserta.index')->with('success', 'Data Peserta berhasil diperbarui');
     }
 
-    public function destroy(int $id)
+    public function destroy(string $cryptedId)
     {
+        $id = Crypt::decrypt($cryptedId);
+        
         $peserta = $this->pesertaRepository->find($id);
 
         $this->pesertaRepository->delete($id);

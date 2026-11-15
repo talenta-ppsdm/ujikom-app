@@ -81,7 +81,7 @@
 
               <button class="table-btn-action" title="Edit Soal" type="button" data-bs-toggle="modal" data-bs-target="#editBankSoalModal-{{ $bs->id }}"><i class="bi bi-pencil"></i></button>
 
-              <form action="{{ route('admin.banksoal.destroy', $bs->id) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.banksoal.destroy', Crypt::encrypt($bs->id)) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -163,7 +163,7 @@
                 <h2 class="modal-title fs-5" id="editBankSoalModalLabel-{{ $bs->id }}">Edit Data Bank Soal</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('admin.banksoal.update', $bs->id) }}" method="POST">
+              <form action="{{ route('admin.banksoal.update', Crypt::encrypt($bs->id)) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 <div class="modal-body">

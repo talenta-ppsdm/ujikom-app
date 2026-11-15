@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\BankSoalTemplateExport;
 use App\Exports\TemplateBankSoalExport;
 use App\Imports\BankSoalImport;
 use App\Repositories\BankSoalRepository;
 use App\Models\BankSoal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Maatwebsite\Excel\Facades\Excel;
 
 class BankSoalController extends Controller
@@ -78,24 +78,26 @@ class BankSoalController extends Controller
         return Excel::download(new TemplateBankSoalExport(), 'template-import-bank-soal.xlsx');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
+         $id = Crypt::decrypt($encryptedId);
+
+        $validatedData = $request->validate([
+            'kode' => 'required|string|max:50|unique:banksoal,kode,' . $id,
+            'kategori' => 'required|string|max:100',
+            'level' => 'required|string|max:50',
+            'poin' => 'integer|min:1',
+            'soal' => 'required|string',
+            'jawaban_a' => 'required|string',
+            'jawaban_b' => 'required|string',
+            'jawaban_c' => 'required|string',
+            'jawaban_d' => 'required|string',
+            'jawaban_e' => 'required|string',
+            'kunci' => 'required|string|max:50',
+            'pembahasan' => 'string',
+        ]);
+
         try{
-            $validatedData = $request->validate([
-                'kode' => 'required|string|max:50|unique:banksoal,kode,' . $id,
-                'kategori' => 'required|string|max:100',
-                'level' => 'required|string|max:50',
-                'poin' => 'integer|min:1',
-                'soal' => 'required|string',
-                'jawaban_a' => 'required|string',
-                'jawaban_b' => 'required|string',
-                'jawaban_c' => 'required|string',
-                'jawaban_d' => 'required|string',
-                'jawaban_e' => 'required|string',
-                'kunci' => 'required|string|max:50',
-                'pembahasan' => 'string',
-            ]);
-    
             $this->bankSoalRepository->update($validatedData, $id);
     
             return redirect()->route('admin.banksoal.index')->with('success', 'Data Bank Soal berhasil diperbarui');
@@ -104,9 +106,10 @@ class BankSoalController extends Controller
         }
     }
 
-    public function destroy(int $id)
+    public function destroy(string $encryptedId)
     {
         try{
+            $id = Crypt::decrypt($encryptedId);
             $this->bankSoalRepository->delete($id);
             return redirect()->route('admin.banksoal.index')->with('success', 'Data Bank Soal berhasil dihapus');
         }catch(\Exception $e){

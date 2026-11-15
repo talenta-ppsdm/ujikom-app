@@ -74,7 +74,7 @@
               <button class="table-btn-action" title="Edit Soal" type="button" data-bs-toggle="modal" data-bs-target="#editPengumumanModal-{{ $p->id }}"><i class="bi bi-pencil"></i></button>
 
               <!-- Btn Delete -->
-              <form action="{{ route('admin.pengumuman.destroy', $p->id) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.pengumuman.destroy', Crypt::encrypt($p->id)) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -148,7 +148,7 @@
                </div>
 
                <!-- Content Modal -->
-               <form action="{{ route('admin.pengumuman.update', $p->id) }}" method="POST">
+               <form action="{{ route('admin.pengumuman.update', Crypt::encrypt($p->id)) }}" method="POST">
                @csrf 
                @method('PUT')
                  <div class="modal-body">

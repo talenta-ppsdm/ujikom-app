@@ -76,7 +76,7 @@
             <div class="d-flex justify-content-center gap-1">
               <button class="table-btn-action" title="Edit row" type="button" data-bs-toggle="modal" data-bs-target="#editPesertaModal-{{ $p->id }}"><i class="bi bi-pencil"></i></button>
               <!-- TODO Alert confirm ubah pakai sweet alert -->
-              <form action="{{ route('admin.peserta.destroy', ['id' => $p->id]) }}" method="POST" style="display: inline;">
+              <form action="{{ route('admin.peserta.destroy', Crypt::encrypt($p->id)) }}" method="POST" style="display: inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="table-btn-action delete" title="Delete row" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')"><i class="bi bi-trash"></i></button>
@@ -93,7 +93,7 @@
                 <h2 class="modal-title fs-5" id="editPesertaModalLabel-{{ $p->id }}">Edit Peserta Uji Kompetensi</h2>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
               </div>
-              <form action="{{ route('admin.peserta.update', ['id' => $p->id]) }}" method="POST">
+              <form action="{{ route('admin.peserta.update', Crypt::encrypt($p->id)) }}" method="POST">
                 @csrf 
                 @method('PUT')
                 <div class="modal-body">

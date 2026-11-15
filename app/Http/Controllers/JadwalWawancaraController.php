@@ -11,6 +11,7 @@ use App\Repositories\PemberkasanRepository;
 use App\Repositories\PengujiRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class JadwalWawancaraController extends Controller
 {
@@ -85,7 +86,7 @@ class JadwalWawancaraController extends Controller
         return redirect()->route('admin.jadwal-wawancara.index')->with('success', 'Jadwal wawancara berhasil ditambahkan');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
         $validateData = $request->validate([
             'peserta_id'    => 'required|exists:peserta,id',
@@ -100,6 +101,8 @@ class JadwalWawancaraController extends Controller
         ]);
         
         try {
+            $id = Crypt::decrypt($encryptedId);
+
             $jadwalWawancara = $this->jadwalWawancaraRepository->find($id);
             $jadwalWawancara->update($validateData);
         }catch (\Throwable $e) {
@@ -111,8 +114,9 @@ class JadwalWawancaraController extends Controller
         return redirect()->route('admin.jadwal-wawancara.index')->with('success', 'Jadwal wawancara berhasil ditambahkan');
     }
 
-    public function destroy(int $id)
+    public function destroy(string $encryptedId)
     {
+        $id = Crypt::decrypt($encryptedId);
         $this->jadwalWawancaraRepository->delete($id);
 
         return redirect()->route('admin.jadwal-wawancara.index')->with('success', 'Jadwal wawancara berhasil dihapus');

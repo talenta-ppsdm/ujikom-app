@@ -14,6 +14,7 @@ use App\Repositories\PengujiRepository;
 use App\Repositories\PesertaRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class JadwalCbtController extends Controller
 {
@@ -87,7 +88,7 @@ class JadwalCbtController extends Controller
         return redirect()->route('admin.jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil ditambahkan');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $encryptedId)
     {
         $validatedData = $request->validate([
             'peserta_id'        => 'required|exists:peserta,id',
@@ -100,6 +101,8 @@ class JadwalCbtController extends Controller
         ]);
 
         try {
+            $id = Crypt::decrypt($encryptedId);
+
             // count the duration in minutes
             $waktuMulai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_mulai']);
             $waktuSelesai = \Carbon\Carbon::createFromFormat('H:i', $validatedData['waktu_selesai']);
@@ -113,8 +116,9 @@ class JadwalCbtController extends Controller
         }
     }
 
-    public function destroy(int $id)
+    public function destroy(string $encryptedId)
     {
+        $id = Crypt::decrypt($encryptedId);
         $this->cbtRepository->delete($id);
 
         return redirect()->route('admin.jadwal-cbt.index')->with('success', 'Jadwal ujian berhasil dihapus');

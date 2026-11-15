@@ -6,6 +6,7 @@ use App\Enums\RoleUserEnum;
 use App\Repositories\PengujiRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class PengujiController extends Controller
 {
@@ -59,7 +60,7 @@ class PengujiController extends Controller
         return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil ditambahkan');
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, string $cryptedId)
     {
         $validatedData = $request->validate([
             'nama' => 'required|string|max:255',
@@ -73,13 +74,23 @@ class PengujiController extends Controller
             'bidang_keahlian' => 'required|string|max:255',
         ]);
 
-        $this->pengujiRepository->update($validatedData, $id);
+        try {
+            $id = Crypt::decrypt($cryptedId);
+
+            $this->pengujiRepository->update($validatedData, $id);
+        }catch (\Throwable $e) {
+            return back()->withInput()->withErrors([
+                'error' => $e->getMessage()
+            ]);
+        }
 
         return redirect()->route('admin.penguji.index')->with('success', 'Data Penguji berhasil diperbarui');
     }
 
-    public function destroy(int $id)
+    public function destroy(string $cryptedId)
     {
+        $id = Crypt::decrypt($cryptedId);
+        
         $penguji = $this->pengujiRepository->find($id);
         
         $this->userRepository->delete($penguji->user_id);
