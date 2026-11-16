@@ -34,8 +34,9 @@ class UjianController extends Controller
 
     public function start(int $jadwalCbtId)
     {
-        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
+        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId);
         $pesertaId = Auth::user()->peserta->id;
+        $jadwalUjianId = $jadwalCbt->jadwal_ujian_id;
 
         // HANDLING EXAM TIME
         $waktuMulaiUjian = Carbon::parse($jadwalCbt->tanggal_ujian->format('Y-m-d') . ' ' . $jadwalCbt->waktu_mulai);
@@ -46,6 +47,18 @@ class UjianController extends Controller
             return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Ujian belum dimulai.');
         } 
         elseif ($now->gt($waktuSelesaiUjian)) {
+            if ($jadwalCbt->getRawOriginal('status') !== StatusJadwalCbtEnum::SELESAI->value) {
+                $jumlahJawaban = $this->jawabanUjianRepository->getByPesertaAndJadwalUjian($pesertaId, $jadwalUjianId)->count();
+
+                if ($jumlahJawaban > 0) {
+                    $this->calculateAndCompleteExam($pesertaId, $jadwalUjianId);
+                }
+
+                $jadwalCbt->update([
+                    'realtime_selesai' => $jadwalCbt->target_selesai,
+                    'status'           => StatusJadwalCbtEnum::SELESAI->value,
+                ]);
+            }
             return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Waktu ujian telah habis.');
         } else {
             if (!$jadwalCbt->realtime_mulai) {
@@ -62,10 +75,16 @@ class UjianController extends Controller
             }
 
             if ($jadwalCbt->target_selesai && now()->greaterThanOrEqualTo($jadwalCbt->target_selesai)) {
-                if ($jadwalCbt->getRawOriginal('status') !== StatusJadwalCbtEnum::MENUNGGU_HASIL->value) {
+                if ($jadwalCbt->getRawOriginal('status') !== StatusJadwalCbtEnum::SELESAI->value) {
+                    $jumlahJawaban = $this->jawabanUjianRepository->getByPesertaAndJadwalUjian($pesertaId, $jadwalUjianId)->count();
+                    
+                    if ($jumlahJawaban > 0) {
+                        $this->calculateAndCompleteExam($pesertaId, $jadwalUjianId);
+                    }
+
                     $jadwalCbt->update([
                         'realtime_selesai' => $jadwalCbt->target_selesai,
-                        'status'           => StatusJadwalCbtEnum::MENUNGGU_HASIL->value,
+                        'status'           => StatusJadwalCbtEnum::SELESAI->value,
                     ]);
                 }
                 return redirect()->route('peserta.dashboard-peserta.index')->with('error', 'Waktu ujian telah habis.');
@@ -77,7 +96,7 @@ class UjianController extends Controller
             $keyJawabanTerpilih = collect();
             $soalUjian = collect();
             
-            $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwal($pesertaId, $jadwalCbtId);
+            $jawabanTerpilih = $this->jawabanUjianRepository->getByPesertaAndJadwalCbt($pesertaId, $jadwalCbtId);
             
             if ($jawabanTerpilih->isNotEmpty()) {
                 $soalIds = $jawabanTerpilih->pluck('soal_id');
@@ -155,13 +174,12 @@ class UjianController extends Controller
 
     public function saveAnswer(Request $request)
     {
-        $request->validate([
+        $validateData = $request->validate([
             'jadwal_ujian_id' => 'required|exists:jadwal_ujian,id',
             'soal_id'         => 'required|exists:banksoal,id',
             'jawaban'         => 'nullable|in:a,b,c,d,e',
             'is_ragu'         => 'boolean',
         ]);
-
         $jawaban = $this->jawabanUjianRepository->updateOrCreate([
             'jadwal_ujian_id'   => $request->jadwal_ujian_id,
             'peserta_id'        => Auth::user()->peserta->id,
@@ -184,52 +202,77 @@ class UjianController extends Controller
         $request->validate([
             'jadwal_ujian_id' => 'required|integer',
         ]);
-
+    
         $pesertaId = Auth::user()->peserta->id;
         $jadwalUjianId = $request->jadwal_ujian_id;
-
-        $skorFinal = 0;
-
-        try{
-            $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwalUjian($pesertaId, $jadwalUjianId);
-           
-            $jumlahJawaban = $jawabanPeserta->count();
-            $skorSoal = 100/$jumlahJawaban;
-            
-            foreach ($jawabanPeserta as $jawaban) {
-                $dataSoal = $jawaban->soal;
-
-                if ($jawaban->jawaban_terpilih === $dataSoal->kunci) {
-                    $skorFinal += $skorSoal;
-                    
-                    $jawaban->update([
-                        'is_benar' => true
-                    ]);
-                }
-
+    
+        DB::beginTransaction(); 
+        try {
+            $result = $this->calculateAndCompleteExam($pesertaId, $jadwalUjianId);
+    
+            if (!$result) {
+                DB::rollBack();
+                return response()->json([
+                    'message' => 'Data jawaban peserta tidak ditemukan.'
+                ], 404);
             }
-
-            $jadwalCbt = $this->cbtRepository->find($jawabanPeserta->first()->cbt_id, 'id')->first();
-            if ($jadwalCbt) {
-                $jadwalCbt->update([
-                    'realtime_selesai'  => now(),
-                    'status'            => StatusJadwalCbtEnum::SELESAI->value,
-                    'total_skor'        => $skorFinal
-                ]);
-            }
-
+    
+            DB::commit();
+    
             return response()->json([
                 'status'       => 'success',
                 'message'      => 'Ujian berhasil dikumpulkan.',
                 'redirect_url' => route('peserta.dashboard-peserta.index'), 
             ]);
-
-        }catch (\Exception $e) {
+    
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'message' => 'Gagal mengoreksi ujian: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    protected function calculateAndCompleteExam(int $pesertaId, int $jadwalUjianId)
+    {
+        $jawabanPeserta = $this->jawabanUjianRepository->getByPesertaAndJadwalUjian($pesertaId, $jadwalUjianId);
+        
+        if ($jawabanPeserta->isEmpty()) {
+            return null;
+        }
+    
+        $jumlahJawaban = $jawabanPeserta->count();
+        $skorSoal = $jumlahJawaban > 0 ? (100 / $jumlahJawaban) : 0;
+        $skorFinal = 0;
+        
+        foreach ($jawabanPeserta as $jawaban) {
+            $dataSoal = $jawaban->soal;
+    
+            if ($dataSoal && $jawaban->jawaban_terpilih === $dataSoal->kunci) {
+                $skorFinal += $skorSoal;
+                
+                $jawaban->update([
+                    'is_benar' => true
+                ]);
+            }
+        }
+    
+        // Ambil data jadwal CBT
+        $cbtId = $jawabanPeserta->first()->cbt_id;
+        $jadwalCbt = $this->cbtRepository->find($cbtId);
+    
+        if ($jadwalCbt) {
+            $jadwalCbt->update([
+                'realtime_selesai'  => now(),
+                'status'            => StatusJadwalCbtEnum::SELESAI->value,
+                'total_skor'        => $skorFinal
+            ]);
+        }
+    
+        return [
+            'skor_final' => $skorFinal,
+            'jadwal_cbt' => $jadwalCbt
+        ];
     }
 
     public function result(int $jadwalCbtId)

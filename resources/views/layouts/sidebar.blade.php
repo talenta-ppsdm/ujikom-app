@@ -108,6 +108,16 @@
               <span>Pengumuman</span>
             </a>
           </li>
+
+          <li class="sidebar-menu-item">
+            <a href="{{ route('admin.timekeeper.index') }}" 
+              class="sidebar-menu-link {{ request()->routeIs('admin.timekeeper.index') ? 'active' : '' }}" 
+              id="menu-pengumuman" 
+              title="Pengumuman">
+              <i class="bi bi-people-fill"></i>
+              <span>Timekeeper</span>
+            </a>
+          </li>
         </ul>
       </div>
     </div>

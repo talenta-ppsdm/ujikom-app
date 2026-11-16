@@ -5098,6 +5098,11 @@ span.flatpickr-weekday {
     color: var(--sys-red);
 }
 
+.badge-table.info {
+    background-color: #8bd2fe;
+    color: #0085d8;
+}
+
 /* Table Controls Top bar */
 .table-header-control {
     background-color: #FFFFFF;

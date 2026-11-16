@@ -80,10 +80,11 @@
                 'verifikasi'  => 'warning',
                 'approved'    => 'success',
                 'rejected'    => 'danger',
+                'submit portofolio'    => 'info',
                 default       => 'primary',
               };
             @endphp
-            <span class="badge-table {{ $statusClass }}">{{ ucfirst($data->status->label()) }}</span>
+            <span class="badge-table {{ $statusClass }}">{{ ucfirst($data->status->value) }}</span>
           </td>
           <td>
             <div class="d-flex justify-content-center gap-1">

@@ -17,6 +17,7 @@ use App\Http\Controllers\PesertaPemberkasanController;
 use App\Http\Controllers\VerifikasiPemberkasanController;
 use App\Http\Controllers\DashboardAdminController;
 use App\Http\Controllers\JadwalWawancaraController;
+use App\Http\Controllers\TimekeeperController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -80,6 +81,9 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function(){
     Route::get('/verifikasi-pemberkasan/{id}', [VerifikasiPemberkasanController::class, 'edit'])->name('verifikasi-pemberkasan.edit');
     Route::get('/verifikasi-pemberkasan/{id}/dokumen/{document}', [VerifikasiPemberkasanController::class, 'document'])->name('verifikasi-pemberkasan.document');
     Route::put('/verifikasi-pemberkasan/{id}', [VerifikasiPemberkasanController::class, 'update'])->name('verifikasi-pemberkasan.update');
+
+    Route::get('/timekeeper', [TimekeeperController::class, 'index'])->name('timekeeper.index');
+
 });
 
 Route::middleware('auth')->prefix('peserta')->name('peserta.')->group(function(){

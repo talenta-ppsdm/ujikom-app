@@ -62,14 +62,15 @@
       @php
         $statusString = strtolower($pemberkasan->status->value);
         $statusClass = match ($statusString) {
-          'verifikasi'  => 'warning',
-          'approved'    => 'success',
-          'rejected'    => 'danger',
-          default       => 'primary',
+          'verifikasi'        => 'warning',
+          'approved'          => 'success',
+          'rejected'          => 'danger',
+          'submit portofolio' => 'info',
+          default             => 'primary',
         };
       @endphp
       <span class="badge-table {{ $statusClass }}">
-        {{ ucwords($pemberkasan->status->label()) }}
+        {{ ucwords($pemberkasan->status->value) }}
       </span>
     </div>
 

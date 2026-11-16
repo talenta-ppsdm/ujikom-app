@@ -59,7 +59,7 @@ class DashboardPesertaController extends Controller
         });
         
         $jenjangTujuan = null;
-        $recentUjian = $ujian->take(2)->values()->map(function ($item) {
+        $recentUjian = $ujian->sortByDesc('id')->take(2)->values()->map(function ($item) {
             $pemberkasan = $this->pemberkasanRepository->getByPesertaAndSchedule(
                 $item->peserta_id, 
                 $item->jadwal_ujian_id
