@@ -86,7 +86,19 @@
 									<td>
 										<span class="badge-table {{ $statusBadgeClass }}">{{ ucwords($dataCbt->status) }}</span>
 									</td>
-									<td>{{ $totalSkor }}</td>
+									<td>
+										@if(strtolower($dataCbt->status) === 'selesai')
+										<div class="d-flex flex-column align-items-center gap-2">
+											<span class="badge-table info">{{ $totalSkor }} / 100</span>
+											<a class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1" href="{{ route('peserta.ujian.result', $dataCbt->id) }}">
+												<i class="bi bi-eye" aria-hidden="true"></i>
+												Lihat Hasil
+											</a>
+										</div>
+										@else
+										{{ $totalSkor }}
+										@endif
+									</td>
 								</tr>
 								@endforeach
 								<tr class="exam-history-empty-row" hidden>

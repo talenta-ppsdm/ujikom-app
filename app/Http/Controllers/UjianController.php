@@ -278,7 +278,7 @@ class UjianController extends Controller
     public function result(int $jadwalCbtId)
     {   
         $pesertaId = Auth::user()->peserta->id;
-        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId, 'id')->first();
+        $jadwalCbt = $this->cbtRepository->find($jadwalCbtId);
 
         abort_unless($jadwalCbt && (int) $jadwalCbt->peserta_id === (int) $pesertaId, 404);
 
